@@ -5,15 +5,13 @@ namespace Z80Emu.Core.Processor;
 
 public class CPU
 {
-    private readonly Clock _clock;
     private readonly Interupts _int;
     private readonly MMU _mmu;
     private readonly Registers _reg;
     private readonly OpcodeHandler _opcodeHandler;
 
-    public CPU(Clock clock, Interupts interupts, MMU mmu)
+    public CPU(Interupts interupts, MMU mmu)
     {
-        _clock = clock;
         _int = interupts;
         _mmu = mmu;
 

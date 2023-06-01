@@ -1,6 +1,6 @@
 using Z80Emu.Core;
 
-var gameboy = new GameBoy();
+var gameboy = new Emulator();
 
 while(true)
 {
