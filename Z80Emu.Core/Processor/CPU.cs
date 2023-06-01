@@ -17,11 +17,11 @@ public class CPU
 
         _reg = new Registers
         {
-            AF = 0x01B0,
-            BC = 0x0013,
-            DE = 0x00D8,
-            HL = 0x014d,
-            PC = (word)(_mmu.BootRomBankedIn ? 0x0000 : 0x0100),
+            AF = 0x0000,
+            BC = 0x0000,
+            DE = 0x0000,
+            HL = 0x0000,
+            PC = 0x0100,
             SP = 0xFFFE
         };
         _int.IME = false;

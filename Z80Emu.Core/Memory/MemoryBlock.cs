@@ -33,10 +33,10 @@ public class MemoryBlock
         }
     }
 
-    public void Copy(byte[] data)
+    public void Copy(byte[] data, int offset)
     {
-        int len = Math.Min(data.Length, _data.Length);
-        Array.Copy(data, _data, len);
+        int len = Math.Min(data.Length, _data.Length - offset);
+        Array.Copy(data, 0, _data, offset, len);
     }
 
     /// <summary>
