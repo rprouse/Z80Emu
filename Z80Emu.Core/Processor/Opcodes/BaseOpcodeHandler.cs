@@ -1,4 +1,3 @@
-using Z80Emu.Core.Graphics;
 using Z80Emu.Core.Memory;
 
 namespace Z80Emu.Core.Processor.Opcodes;
@@ -7,16 +6,14 @@ public abstract class BaseOpcodeHandler
 {
     protected readonly Registers _reg;
     protected readonly MMU _mmu;
-    protected readonly VPU _vpu;
     protected readonly Interupts _int;
 
     protected Dictionary<byte, Opcode> _opcodes;
 
-    public BaseOpcodeHandler(Registers registers, MMU mmu, VPU vpu, Interupts interupts)
+    public BaseOpcodeHandler(Registers registers, MMU mmu, Interupts interupts)
     {
         _reg = registers;
         _mmu = mmu;
-        _vpu = vpu;
         _int = interupts;
         _opcodes = Initialize();
     }

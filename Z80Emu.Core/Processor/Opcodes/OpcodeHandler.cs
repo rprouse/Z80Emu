@@ -1,5 +1,4 @@
 using System;
-using Z80Emu.Core.Graphics;
 using Z80Emu.Core.Memory;
 using Z80Emu.Core.Utilities;
 
@@ -22,10 +21,10 @@ public partial class OpcodeHandler : BaseOpcodeHandler
 
     private readonly CbOpcodeHandler _cbOpcodeHandler;
 
-    public OpcodeHandler(Registers registers, MMU mmu, VPU vpu, Interupts interupts)
-        : base(registers, mmu, vpu, interupts)
+    public OpcodeHandler(Registers registers, MMU mmu, Interupts interupts)
+        : base(registers, mmu, interupts)
     {
-        _cbOpcodeHandler = new CbOpcodeHandler(registers, mmu, vpu, interupts);
+        _cbOpcodeHandler = new CbOpcodeHandler(registers, mmu, interupts);
     }
 
     public override Opcode FetchInstruction()

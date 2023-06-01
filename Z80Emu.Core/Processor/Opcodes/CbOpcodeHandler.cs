@@ -1,4 +1,3 @@
-using Z80Emu.Core.Graphics;
 using Z80Emu.Core.Memory;
 
 namespace Z80Emu.Core.Processor.Opcodes;
@@ -9,8 +8,8 @@ public partial class CbOpcodeHandler : BaseOpcodeHandler
     private byte _operand;
     private byte _result;
 
-    public CbOpcodeHandler(Registers registers, MMU mmu, VPU vpu, Interupts interupts)
-        : base(registers, mmu, vpu, interupts) { }
+    public CbOpcodeHandler(Registers registers, MMU mmu, Interupts interupts)
+        : base(registers, mmu, interupts) { }
 
     private void BIT(int bit, byte value)
     {

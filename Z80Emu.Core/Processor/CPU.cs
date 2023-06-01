@@ -1,4 +1,3 @@
-using Z80Emu.Core.Graphics;
 using Z80Emu.Core.Memory;
 using Z80Emu.Core.Processor.Opcodes;
 
@@ -8,16 +7,14 @@ public class CPU
 {
     private readonly Clock _clock;
     private readonly Interupts _int;
-    private readonly VPU _vpu;
     private readonly MMU _mmu;
     private readonly Registers _reg;
     private readonly OpcodeHandler _opcodeHandler;
 
-    public CPU(Clock clock, Interupts interupts, VPU vpu, MMU mmu)
+    public CPU(Clock clock, Interupts interupts, MMU mmu)
     {
         _clock = clock;
         _int = interupts;
-        _vpu = vpu;
         _mmu = mmu;
 
         _reg = new Registers
@@ -31,7 +28,7 @@ public class CPU
         };
         _int.IME = false;
 
-        _opcodeHandler = new OpcodeHandler(_reg, _mmu, _vpu, _int);
+        _opcodeHandler = new OpcodeHandler(_reg, _mmu, _int);
     }
 
     public void Tick()
