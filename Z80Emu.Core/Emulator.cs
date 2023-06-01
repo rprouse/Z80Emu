@@ -9,7 +9,6 @@ public class Emulator
     public MMU _mmu;
     public Interupts _int;
 
-    // constructor
     public Emulator()
     {
         _mmu = new MMU();
@@ -17,9 +16,17 @@ public class Emulator
         _cpu = new CPU(_int, _mmu);
     }
 
+    public bool LoadProgram(string filename) =>
+        _mmu.LoadProgram(filename);
+
     public int Tick()
     {
         _cpu.Tick();
         return 1;
+    }
+
+    public override string ToString()
+    {
+        return _cpu.ToString();
     }
 }

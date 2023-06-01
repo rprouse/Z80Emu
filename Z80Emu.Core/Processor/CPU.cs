@@ -32,11 +32,7 @@ public class CPU
     public void Tick()
     {
         var opcode = _opcodeHandler.FetchInstruction();
-        foreach (var tick in opcode.Ticks)
-        {
-            tick();
-            if (_opcodeHandler.Stop) break;
-        }
+        opcode.Tick();
     }
 
     public override string ToString()

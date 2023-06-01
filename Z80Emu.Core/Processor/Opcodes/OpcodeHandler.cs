@@ -149,11 +149,12 @@ public partial class OpcodeHandler : BaseOpcodeHandler
         _reg.FlagC = false;
     }
 
-    private Tick[] RST(word address) =>
-        new Tick[] {
-            () => { _mmu[--_reg.SP] = _reg.PC.Msb(); },
-            () => { _mmu[--_reg.SP] = _reg.PC.Lsb(); },
-            () => { _reg.PC = address; }
+    private Action RST(word address) =>
+        () =>
+        {
+            _mmu[--_reg.SP] = _reg.PC.Msb();
+            _mmu[--_reg.SP] = _reg.PC.Lsb();
+            _reg.PC = address;
         };
 
     private void SBC(byte value)
