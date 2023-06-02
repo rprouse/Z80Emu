@@ -6,27 +6,48 @@ public partial class OpcodeHandler
 {
     protected override Dictionary<byte, Opcode> Initialize() => new Dictionary<byte, Opcode>
     {
+        // TODO
+        { 0x08, new Opcode(0x08, "EX AF,AF'", () => throw new NotImplementedException() ) },
+        { 0x10, new Opcode(0x10, "STOP", () => throw new NotImplementedException() ) },
+        { 0xD3, new Opcode(0xD3, "OUT (n),A",() => throw new NotImplementedException() ) },
+        { 0xD9, new Opcode(0xD9, "EXX",() => throw new NotImplementedException() ) },
+        { 0xDB, new Opcode(0xDB, "IN A,(n)",() => throw new NotImplementedException() ) },
+        { 0xE0, new Opcode(0xE0, "RET PO",() => throw new NotImplementedException() ) },
+        { 0xE2, new Opcode(0xE2, "JP PO,nn",() => throw new NotImplementedException() ) },
+        { 0xE3, new Opcode(0xE3, "EX (SP),HL",() => throw new NotImplementedException() ) },
+        { 0xE4, new Opcode(0xE4, "CALL PO,nn",() => throw new NotImplementedException() ) },
+        { 0xE8, new Opcode(0xE8, "RET PE",() => throw new NotImplementedException() ) },
+        { 0xEA, new Opcode(0xEA, "JP PE,nn",() => throw new NotImplementedException() ) },
+        { 0xEB, new Opcode(0xEB, "EX DE,HL",() => throw new NotImplementedException() ) },
+        { 0xEC, new Opcode(0xEC, "CALL PE,nn",() => throw new NotImplementedException() ) },
+        { 0xF0, new Opcode(0xF0, "RET P",() => throw new NotImplementedException() ) },
+        { 0xF2, new Opcode(0xF2, "JP P,nn",() => throw new NotImplementedException() ) },
+        { 0xF4, new Opcode(0xF4, "CALL P,nn",() => throw new NotImplementedException() ) },
+        { 0xF8, new Opcode(0xF8, "RET M",() => throw new NotImplementedException() ) },
+        { 0xFA, new Opcode(0xFA, "JP M,nn",() => throw new NotImplementedException() ) },
+        { 0xFC, new Opcode(0xFC, "CALL M,nn",() => throw new NotImplementedException() ) },
+
         // control/br
-        { 0x18, new Opcode(0x18, "JR {0}", () => { _reg.PC = (word)(_reg.PC + (sbyte)NextByte()); } ) },
-        { 0x20, new Opcode(0x20, "JR NZ,{0}", 
+        { 0x18, new Opcode(0x18, "JR n", () => { _reg.PC = (word)(_reg.PC + (sbyte)NextByte()); } ) },
+        { 0x20, new Opcode(0x20, "JR NZ,n", 
             () => { 
                 _operand = NextByte(); 
                 if (_reg.FlagZ) return;
                 _reg.PC = (word)(_reg.PC + (sbyte)_operand); 
         } ) },
-        { 0x28, new Opcode(0x28, "JR Z,{0}", 
+        { 0x28, new Opcode(0x28, "JR Z,n", 
             () => { 
                 _operand = NextByte(); 
                 if (!_reg.FlagZ) return;
                 _reg.PC = (word)(_reg.PC + (sbyte)_operand); 
         } ) },
-        { 0x30, new Opcode(0x30, "JR NC,{0}", 
+        { 0x30, new Opcode(0x30, "JR NC,n", 
             () => { 
                 _operand = NextByte(); 
                 if (_reg.FlagC) return;
                 _reg.PC = (word)(_reg.PC + (sbyte)_operand); 
         } ) },
-        { 0x38, new Opcode(0x38, "JR C,{0}", 
+        { 0x38, new Opcode(0x38, "JR C,n", 
             () => { 
                 _operand = NextByte(); 
                 if (!_reg.FlagC) return;
@@ -39,20 +60,20 @@ public partial class OpcodeHandler
                 _msb = _mmu[_reg.SP++];
                 _reg.PC = BitUtils.ToWord(_msb, _lsb); 
         } ) },
-        { 0xC2, new Opcode(0xC2, "JP NZ,${0:X4}", 
+        { 0xC2, new Opcode(0xC2, "JP NZ,nn", 
             () => { 
                 _lsb = NextByte();
                 _msb = NextByte(); 
                 if (_reg.FlagZ) return;
                 _reg.PC = BitUtils.ToWord(_msb, _lsb); 
         } ) },
-        { 0xC3, new Opcode(0xC3, "JP ${0:X4}", 
+        { 0xC3, new Opcode(0xC3, "JP nn", 
             () => { 
                 _lsb = NextByte();
                 _msb = NextByte();
                 _reg.PC = BitUtils.ToWord(_msb, _lsb); 
         } ) },
-        { 0xC4, new Opcode(0xC4, "CALL NZ,${0:X4}", 
+        { 0xC4, new Opcode(0xC4, "CALL NZ,nn", 
             () => { 
                 _lsb = NextByte();
                 _msb = NextByte(); 
@@ -75,14 +96,14 @@ public partial class OpcodeHandler
                 _msb = _mmu[_reg.SP++];
                 _reg.PC = BitUtils.ToWord(_msb, _lsb); 
         } ) },
-        { 0xCA, new Opcode(0xCA, "JP Z,${0:X4}", 
+        { 0xCA, new Opcode(0xCA, "JP Z,nn", 
             () => { 
                 _lsb = NextByte();
                 _msb = NextByte(); 
                 if (!_reg.FlagZ) return;
                 _reg.PC = BitUtils.ToWord(_msb, _lsb); 
         } ) },
-        { 0xCC, new Opcode(0xCC, "CALL Z,${0:X4}", 
+        { 0xCC, new Opcode(0xCC, "CALL Z,nn", 
             () => { 
                 _lsb = NextByte();
                 _msb = NextByte(); 
@@ -91,7 +112,7 @@ public partial class OpcodeHandler
                 _reg.SP--; _mmu[_reg.SP] = _reg.PC.Lsb();
                 _reg.PC = BitUtils.ToWord(_msb, _lsb); 
         } ) },
-        { 0xCD, new Opcode(0xCD, "CALL ${0:X4}", 
+        { 0xCD, new Opcode(0xCD, "CALL nn", 
             () => { 
                 _lsb = NextByte();
                 _msb = NextByte();
@@ -107,14 +128,14 @@ public partial class OpcodeHandler
                 _msb = _mmu[_reg.SP++];
                 _reg.PC = BitUtils.ToWord(_msb, _lsb); 
         } ) },
-        { 0xD2, new Opcode(0xD2, "JP NC,${0:X4}", 
+        { 0xD2, new Opcode(0xD2, "JP NC,nn", 
             () => { 
                 _lsb = NextByte();
                 _msb = NextByte(); 
                 if (_reg.FlagC) return;
                 _reg.PC = BitUtils.ToWord(_msb, _lsb); 
         } ) },
-        { 0xD4, new Opcode(0xD4, "CALL NC,${0:X4}", 
+        { 0xD4, new Opcode(0xD4, "CALL NC,nn", 
             () => { 
                 _lsb = NextByte();
                 _msb = NextByte(); 
@@ -131,21 +152,14 @@ public partial class OpcodeHandler
                 _msb = _mmu[_reg.SP++];
                 _reg.PC = BitUtils.ToWord(_msb, _lsb); 
         } ) },
-        { 0xD9, new Opcode(0xD9, "RETI", 
-            () => { 
-                _lsb = _mmu[_reg.SP++];
-                _msb = _mmu[_reg.SP++];
-                _reg.PC = BitUtils.ToWord(_msb, _lsb); 
-                _int.Enable(false); 
-        } ) },
-        { 0xDA, new Opcode(0xDA, "JP C,${0:X4}", 
+        { 0xDA, new Opcode(0xDA, "JP C,nn", 
             () => { 
                 _lsb = NextByte();
                 _msb = NextByte(); 
                 if (!_reg.FlagC) return;
                 _reg.PC = BitUtils.ToWord(_msb, _lsb); 
         } ) },
-        { 0xDC, new Opcode(0xDC, "CALL C,${0:X4}", 
+        { 0xDC, new Opcode(0xDC, "CALL C,nn", 
             () => { 
                 _lsb = NextByte();
                 _msb = NextByte(); 
@@ -156,31 +170,22 @@ public partial class OpcodeHandler
         } ) },
         { 0xDF, new Opcode(0xDF, "RST 18h", () => RST(0x18) ) },
         { 0xE7, new Opcode(0xE7, "RST 20h", () => RST(0x20) ) },
-        { 0xE9, new Opcode(0xE9, "JP HL", () => { _reg.PC = _mmu[_reg.HL]; } ) },
+        { 0xE9, new Opcode(0xE9, "JP (HL)", () => { _reg.PC = _mmu[_reg.HL]; } ) },
         { 0xEF, new Opcode(0xEF, "RST 28h", () => RST(0x28) ) },
         { 0xF7, new Opcode(0xF7, "RST 30h", () => RST(0x30) ) },
         { 0xFF, new Opcode(0xFF, "RST 38h", () => RST(0x38) ) },
 
         // control/misc
         { 0x00, new Opcode(0x00, "NOP", () => { } ) },
-        { 0x10, new Opcode(0x10, "STOP", () => { throw new NotImplementedException(); } ) },
         { 0x76, new Opcode(0x76, "HALT", () => { _reg.PC--; } ) },
         { 0xCB, new Opcode(0xCB, "PREFIX CB", () => { } ) },
         { 0xF3, new Opcode(0xF3, "DI", () => { _int.Disable(); } ) },
         { 0xFB, new Opcode(0xFB, "EI", () => { _int.Enable(true); } ) },
 
-        // unused
-        { 0xD3, new Opcode(0xD3, "UNUSED",() => { throw new NotImplementedException(); } ) },
-        { 0xDB, new Opcode(0xDB, "UNUSED",() => { throw new NotImplementedException(); } ) },
-        { 0xDD, new Opcode(0xDD, "PREFIX DD",() => { throw new NotImplementedException(); } ) },
-        { 0xE3, new Opcode(0xE3, "UNUSED",() => { throw new NotImplementedException(); } ) },
-        { 0xE4, new Opcode(0xE4, "UNUSED",() => { throw new NotImplementedException(); } ) },
-        { 0xEB, new Opcode(0xEB, "UNUSED",() => { throw new NotImplementedException(); } ) },
-        { 0xEC, new Opcode(0xEC, "UNUSED",() => { throw new NotImplementedException(); } ) },
-        { 0xED, new Opcode(0xED, "PREFIX ED",() => { throw new NotImplementedException(); } ) },
-        { 0xF4, new Opcode(0xF4, "UNUSED",() => { throw new NotImplementedException(); } ) },
-        { 0xFC, new Opcode(0xFC, "UNUSED",() => { throw new NotImplementedException(); } ) },
-        { 0xFD, new Opcode(0xFD, "PREFIX FD",() => { throw new NotImplementedException(); } ) },
+        // multi-byte instructions
+        { 0xDD, new Opcode(0xDD, "PREFIX DD",() => throw new NotImplementedException() ) },
+        { 0xED, new Opcode(0xED, "PREFIX ED",() => throw new NotImplementedException() ) },
+        { 0xFD, new Opcode(0xFD, "PREFIX FD",() => throw new NotImplementedException() ) },
 
         // x16/alu
         { 0x03, new Opcode(0x03, "INC BC", () => { _reg.BC++; } ) },
@@ -195,40 +200,37 @@ public partial class OpcodeHandler
         { 0x33, new Opcode(0x33, "INC SP", () => { _reg.SP++; } ) },
         { 0x39, new Opcode(0x39, "ADD HL,SP", () => { ADDHL(_reg.SP); } ) },
         { 0x3B, new Opcode(0x3B, "DEC SP", () => { _reg.SP--; } ) },
-        { 0xE8, new Opcode(0xE8, "ADD SP,${0:X2}", () => { ADDSP(NextByte()); } ) },
-        { 0xF8, new Opcode(0xF8, "LD HL,SP+${0:X2}", 
-            () => { 
-                _reg.HL = (word)(_reg.SP + (sbyte)NextByte()); 
-        } ) },
 
         // x16/lsm
-        { 0x01, new Opcode(0x01, "LD BC,${0:X4}", 
+        { 0x01, new Opcode(0x01, "LD BC,nn", 
             () => { 
                 _lsb = NextByte();
                 _msb = NextByte(); 
                 _reg.BC = BitUtils.ToWord(_msb, _lsb); 
         } ) },
-        { 0x08, new Opcode(0x08, "LD (${0:X4}),SP", 
-            () => { 
-                _lsb = NextByte();
-                _msb = NextByte(); 
-                _address = BitUtils.ToWord(_msb, _lsb);
-                _mmu[_address] = _reg.SP.Lsb();
-                _mmu[_address + 1] = _reg.SP.Msb(); 
-        } ) },
-        { 0x11, new Opcode(0x11, "LD DE,${0:X4}", 
+        { 0x11, new Opcode(0x11, "LD DE,nn", 
             () => { 
                 _lsb = NextByte();
                 _msb = NextByte(); 
                 _reg.DE = BitUtils.ToWord(_msb, _lsb); 
         } ) },
-        { 0x21, new Opcode(0x21, "LD HL,${0:X4}", 
+        { 0x21, new Opcode(0x21, "LD HL,nn", 
             () => { 
                 _lsb = NextByte();
                 _msb = NextByte(); 
                 _reg.HL = BitUtils.ToWord(_msb, _lsb); 
         } ) },
-        { 0x31, new Opcode(0x31, "LD SP,${0:X4}", 
+        { 0x22, new Opcode(0x22, "LD (nn),HL", () => {
+            _address = NextByte();
+            _mmu[_address] = _reg.H;
+            _mmu[_address+1] = _reg.L;
+        } ) },
+        { 0x2A, new Opcode(0x2A, "LD HL,(nn)", () =>{
+            _address = NextByte();
+            _reg.H = _mmu[_address];
+            _reg.L = _mmu[_address+1];
+        } ) },
+        { 0x31, new Opcode(0x31, "LD SP,nn", 
             () => { 
                 _lsb = NextByte();
                 _msb = NextByte(); 
@@ -384,32 +386,40 @@ public partial class OpcodeHandler
         { 0xBD, new Opcode(0xBD, "CP A,L", () => { CP(_reg.L); } ) },
         { 0xBE, new Opcode(0xBE, "CP A,(HL)", () => { CP(_mmu[_reg.HL]); } ) },
         { 0xBF, new Opcode(0xBF, "CP A,A", () => { CP(_reg.A); } ) },
-        { 0xC6, new Opcode(0xC6, "ADD A,${0:X2}", () => { ADD(NextByte()); } ) },
-        { 0xCE, new Opcode(0xCE, "ADC A,${0:X2}", () => { ADC(NextByte()); } ) },
-        { 0xD6, new Opcode(0xD6, "SUB A,${0:X2}", () => { SUB(NextByte()); } ) },
-        { 0xDE, new Opcode(0xDE, "SBC A,${0:X2}", () => { SBC(NextByte()); } ) },
-        { 0xE6, new Opcode(0xE6, "AND ${0:X2}", () => { AND(NextByte()); } ) },
-        { 0xEE, new Opcode(0xEE, "XOR ${0:X2}", () => { XOR(NextByte()); } ) },
-        { 0xF6, new Opcode(0xF6, "OR ${0:X2}", () => { OR(NextByte()); } ) },
-        { 0xFE, new Opcode(0xFE, "CP A,${0:X2}", () => { CP(NextByte()); } ) },
+        { 0xC6, new Opcode(0xC6, "ADD A,n", () => { ADD(NextByte()); } ) },
+        { 0xCE, new Opcode(0xCE, "ADC A,n", () => { ADC(NextByte()); } ) },
+        { 0xD6, new Opcode(0xD6, "SUB A,n", () => { SUB(NextByte()); } ) },
+        { 0xDE, new Opcode(0xDE, "SBC A,n", () => { SBC(NextByte()); } ) },
+        { 0xE6, new Opcode(0xE6, "AND n", () => { AND(NextByte()); } ) },
+        { 0xEE, new Opcode(0xEE, "XOR n", () => { XOR(NextByte()); } ) },
+        { 0xF6, new Opcode(0xF6, "OR n", () => { OR(NextByte()); } ) },
+        { 0xFE, new Opcode(0xFE, "CP A,n", () => { CP(NextByte()); } ) },
 
         // x8/lsm
         { 0x02, new Opcode(0x02, "LD (BC),A", () => { _mmu[_reg.BC] = _reg.A; } ) },
-        { 0x06, new Opcode(0x06, "LD B,${0:X2}", () => { _reg.B = NextByte(); } ) },
+        { 0x06, new Opcode(0x06, "LD B,n", () => { _reg.B = NextByte(); } ) },
         { 0x0A, new Opcode(0x0A, "LD A,(BC)", () => { _reg.A = _mmu[_reg.BC]; } ) },
-        { 0x0E, new Opcode(0x0E, "LD C,${0:X2}", () => { _reg.C = NextByte(); } ) },
+        { 0x0E, new Opcode(0x0E, "LD C,n", () => { _reg.C = NextByte(); } ) },
         { 0x12, new Opcode(0x12, "LD (DE),A", () => { _mmu[_reg.DE] = _reg.A; } ) },
-        { 0x16, new Opcode(0x16, "LD D,${0:X2}", () => { _reg.D = NextByte(); } ) },
+        { 0x16, new Opcode(0x16, "LD D,n", () => { _reg.D = NextByte(); } ) },
         { 0x1A, new Opcode(0x1A, "LD A,(DE)", () => { _reg.A = _mmu[_reg.DE]; } ) },
-        { 0x1E, new Opcode(0x1E, "LD E,${0:X2}", () => { _reg.E = NextByte(); } ) },
-        { 0x22, new Opcode(0x22, "LD [HLI],A", () => { _reg.A = _mmu[_reg.HL++]; } ) },
-        { 0x26, new Opcode(0x26, "LD H,${0:X2}", () => { _reg.H = NextByte(); } ) },
-        { 0x2A, new Opcode(0x2A, "LD A,[HLI]", () => { _reg.A = _mmu[_reg.HL++]; } ) },
-        { 0x2E, new Opcode(0x2E, "LD L,${0:X2}", () => { _reg.L = NextByte(); } ) },
-        { 0x32, new Opcode(0x32, "LD (HLD),A", () => { _mmu[_reg.HL--] = _reg.A; } ) },
-        { 0x36, new Opcode(0x36, "LD (HL),${0:X2}", () => { _mmu[_reg.HL] = NextByte(); } ) },
-        { 0x3A, new Opcode(0x3A, "LD A,(HLD)", () => { _mmu[_reg.HL--] = _reg.A; } ) },
-        { 0x3E, new Opcode(0x3E, "LD A,${0:X2}", () => { _reg.A = NextByte(); } ) },
+        { 0x1E, new Opcode(0x1E, "LD E,n", () => { _reg.E = NextByte(); } ) },
+        { 0x26, new Opcode(0x26, "LD H,n", () => { _reg.H = NextByte(); } ) },
+        { 0x2E, new Opcode(0x2E, "LD L,n", () => { _reg.L = NextByte(); } ) },
+        { 0x32, new Opcode(0x32, "LD (nn),A",
+            () => {
+                _lsb = NextByte();
+                _msb = NextByte();
+                _mmu[BitUtils.ToWord(_msb, _lsb)] = _reg.A;
+        } ) },
+        { 0x36, new Opcode(0x36, "LD (HL),n", () => { _mmu[_reg.HL] = NextByte(); } ) },
+        { 0x3A, new Opcode(0x3A, "LD A,(nn)",
+            () => {
+                _lsb = NextByte();
+                _msb = NextByte();
+                _reg.A = _mmu[BitUtils.ToWord(_msb, _lsb)];
+        } ) },
+        { 0x3E, new Opcode(0x3E, "LD A,n", () => { _reg.A = NextByte(); } ) },
         { 0x40, new Opcode(0x40, "LD B,B", () => { } ) },
         { 0x41, new Opcode(0x41, "LD B,C", () => { _reg.B = _reg.C; } ) },
         { 0x42, new Opcode(0x42, "LD B,D", () => { _reg.B = _reg.D; } ) },
@@ -473,23 +483,6 @@ public partial class OpcodeHandler
         { 0x7D, new Opcode(0x7D, "LD A,L", () => { _reg.A = _reg.L; } ) },
         { 0x7E, new Opcode(0x7E, "LD A,(HL)", () => { _reg.A = _mmu[_reg.HL]; } ) },
         { 0x7F, new Opcode(0x7F, "LD A,A", () => { } ) },
-        // LDH - Put memory address $FF00+n into A
-        { 0xE0, new Opcode(0xE0, "LDH [${0:X2}],A", () => { _mmu[0xFF00 + NextByte()] = _reg.A; } ) },
-        { 0xE2, new Opcode(0xE2, "LDH [C],A", () => { _mmu[0xFF00 + _reg.C] = _reg.A; } ) },
-        { 0xEA, new Opcode(0xEA, "LD [${0:X4}],A", 
-            () => { 
-                _lsb = NextByte();
-                _msb = NextByte();
-                _mmu[BitUtils.ToWord(_msb, _lsb)] = _reg.A; 
-        } ) },
-        { 0xF0, new Opcode(0xF0, "LDH A,[${0:X2}]", () => { _reg.A = _mmu[0xFF00 + NextByte()]; } ) },
-        { 0xF2, new Opcode(0xF2, "LDH A,[C]", () => { _reg.A = _mmu[0xFF00 + _reg.C]; } ) },
-        { 0xFA, new Opcode(0xFA, "LD A,[${0:X4}]", 
-            () => { 
-                _lsb = NextByte();
-                _msb = NextByte();
-                _reg.A = _mmu[BitUtils.ToWord(_msb, _lsb)]; 
-        } ) },
 
         // x8/rsb
         { 0x07, new Opcode(0x07, "RLCA", 

@@ -15,17 +15,17 @@ public partial class OpcodeHandler : BaseOpcodeHandler
 
     // Multi-byte instruction sets 0xCB, 0xDD, 0xED, 0xFD 
     private readonly CbOpcodeHandler _cbOpcodeHandler;
-    private readonly DdOpcodeHandler _ddOpcodeHandler;
+    private readonly IxIyOpcodeHandler _ddOpcodeHandler;
     private readonly EdOpcodeHandler _edOpcodeHandler;
-    private readonly FdOpcodeHandler _fdOpcodeHandler;
+    private readonly IxIyOpcodeHandler _fdOpcodeHandler;
 
     public OpcodeHandler(Registers registers, MMU mmu, Interupts interupts)
         : base(registers, mmu, interupts)
     {
         _cbOpcodeHandler = new CbOpcodeHandler(registers, mmu, interupts);
-        _ddOpcodeHandler = new DdOpcodeHandler(registers, mmu, interupts);
+        _ddOpcodeHandler = new IxIyOpcodeHandler(registers, mmu, interupts, "IX", () => _reg.IX, (word value) => _reg.IX = value);
         _edOpcodeHandler = new EdOpcodeHandler(registers, mmu, interupts);
-        _fdOpcodeHandler = new FdOpcodeHandler(registers, mmu, interupts);
+        _fdOpcodeHandler = new IxIyOpcodeHandler(registers, mmu, interupts, "IY", () => _reg.IY, (word value) => _reg.IY = value);
     }
 
     public override Opcode FetchInstruction()
@@ -71,16 +71,6 @@ public partial class OpcodeHandler : BaseOpcodeHandler
         _reg.FlagH = (_reg.HL & 0x0FFF) + (value & 0x0FFF) > 0x0FFF;
         _reg.FlagC = result > 0xFFFF;
         _reg.HL = (word)result;
-    }
-
-    private void ADDSP(byte value)
-    {
-        int result = _reg.SP + value;
-        _reg.FlagZ = false;
-        _reg.FlagN = false;
-        _reg.FlagH = (_reg.SP & 0x000F) + (value & 0x0F) > 0x000F;
-        _reg.FlagC = (_reg.SP & 0x00FF) + value > 0x00FF;
-        _reg.SP = (word)result;
     }
 
     private void AND(byte value)

@@ -4,6 +4,16 @@ public partial class CbOpcodeHandler
 {
     protected override Dictionary<byte, Opcode> Initialize() => new Dictionary<byte, Opcode>
     {
+        // Unknown, not in Z80
+        { 0x30, new Opcode(0x30, "SWAP B", () => { _reg.B = SWAP(_reg.B); } ) },
+        { 0x31, new Opcode(0x31, "SWAP C", () => { _reg.C = SWAP(_reg.C); } ) },
+        { 0x32, new Opcode(0x32, "SWAP D", () => { _reg.D = SWAP(_reg.D); } ) },
+        { 0x33, new Opcode(0x33, "SWAP E", () => { _reg.E = SWAP(_reg.E); } ) },
+        { 0x34, new Opcode(0x34, "SWAP H", () => { _reg.H = SWAP(_reg.H); } ) },
+        { 0x35, new Opcode(0x35, "SWAP L", () => { _reg.L = SWAP(_reg.L); } ) },
+        { 0x36, new Opcode(0x36, "SWAP (HL)", () => { _mmu[_reg.HL] = SWAP(_mmu[_reg.HL]); } ) },
+        { 0x37, new Opcode(0x37, "SWAP A", () => { _reg.A = SWAP(_reg.A); } ) },
+
         // x8/rsb
         { 0x00, new Opcode(0x00, "RLC B", () => { _reg.B = RLC(_reg.B); } ) },
         { 0x01, new Opcode(0x01, "RLC C", () => { _reg.C = RLC(_reg.C); } ) },
@@ -53,14 +63,7 @@ public partial class CbOpcodeHandler
         { 0x2D, new Opcode(0x2D, "SRA L", () => { _reg.L = SRA(_reg.L); } ) },
         { 0x2E, new Opcode(0x2E, "SRA (HL)", () => {     _mmu[_reg.HL] = SRA(_mmu[_reg.HL]); } ) },
         { 0x2F, new Opcode(0x2F, "SRA A", () => { _reg.A = SRA(_reg.A); } ) },
-        { 0x30, new Opcode(0x30, "SWAP B", () => { _reg.B = SWAP(_reg.B); } ) },
-        { 0x31, new Opcode(0x31, "SWAP C", () => { _reg.C = SWAP(_reg.C); } ) },
-        { 0x32, new Opcode(0x32, "SWAP D", () => { _reg.D = SWAP(_reg.D); } ) },
-        { 0x33, new Opcode(0x33, "SWAP E", () => { _reg.E = SWAP(_reg.E); } ) },
-        { 0x34, new Opcode(0x34, "SWAP H", () => { _reg.H = SWAP(_reg.H); } ) },
-        { 0x35, new Opcode(0x35, "SWAP L", () => { _reg.L = SWAP(_reg.L); } ) },
-        { 0x36, new Opcode(0x36, "SWAP (HL)", () => { _mmu[_reg.HL] = SWAP(_mmu[_reg.HL]); } ) },
-        { 0x37, new Opcode(0x37, "SWAP A", () => { _reg.A = SWAP(_reg.A); } ) },
+
         { 0x38, new Opcode(0x38, "SRL B", () => { _reg.B = SRL(_reg.B); } ) },
         { 0x39, new Opcode(0x39, "SRL C", () => { _reg.C = SRL(_reg.C); } ) },
         { 0x3A, new Opcode(0x3A, "SRL D", () => { _reg.D = SRL(_reg.D); } ) },

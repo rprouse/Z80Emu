@@ -53,6 +53,9 @@ public class Registers
         }
     }
 
+    public word IX { get; set; }
+    public word IY { get; set; }
+
     public word SP { get; set; }
     public word PC { get; set; }
 
