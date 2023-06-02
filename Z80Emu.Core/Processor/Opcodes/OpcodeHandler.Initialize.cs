@@ -172,15 +172,15 @@ public partial class OpcodeHandler
         // unused
         { 0xD3, new Opcode(0xD3, "UNUSED",() => { throw new NotImplementedException(); } ) },
         { 0xDB, new Opcode(0xDB, "UNUSED",() => { throw new NotImplementedException(); } ) },
-        { 0xDD, new Opcode(0xDD, "UNUSED",() => { throw new NotImplementedException(); } ) },
+        { 0xDD, new Opcode(0xDD, "PREFIX DD",() => { throw new NotImplementedException(); } ) },
         { 0xE3, new Opcode(0xE3, "UNUSED",() => { throw new NotImplementedException(); } ) },
         { 0xE4, new Opcode(0xE4, "UNUSED",() => { throw new NotImplementedException(); } ) },
         { 0xEB, new Opcode(0xEB, "UNUSED",() => { throw new NotImplementedException(); } ) },
         { 0xEC, new Opcode(0xEC, "UNUSED",() => { throw new NotImplementedException(); } ) },
-        { 0xED, new Opcode(0xED, "UNUSED",() => { throw new NotImplementedException(); } ) },
+        { 0xED, new Opcode(0xED, "PREFIX ED",() => { throw new NotImplementedException(); } ) },
         { 0xF4, new Opcode(0xF4, "UNUSED",() => { throw new NotImplementedException(); } ) },
         { 0xFC, new Opcode(0xFC, "UNUSED",() => { throw new NotImplementedException(); } ) },
-        { 0xFD, new Opcode(0xFD, "UNUSED",() => { throw new NotImplementedException(); } ) },
+        { 0xFD, new Opcode(0xFD, "PREFIX FD",() => { throw new NotImplementedException(); } ) },
 
         // x16/alu
         { 0x03, new Opcode(0x03, "INC BC", () => { _reg.BC++; } ) },

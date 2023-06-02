@@ -4,6 +4,7 @@ using Z80Emu.Core.Utilities;
 
 namespace Z80Emu.Core.Processor.Opcodes;
 
+// https://map.grauw.nl/resources/z80instr.php
 public partial class OpcodeHandler : BaseOpcodeHandler
 {
     // Some variables to carry values between ticks
@@ -12,26 +13,34 @@ public partial class OpcodeHandler : BaseOpcodeHandler
     private byte _operand;
     private word _address;
 
-    /// <summary>
-    /// For branch instructions that have a different
-    /// number of cycles, indicates to stop execution
-    /// early
-    /// </summary>
-    public bool Stop { get; private set; }
-
+    // Multi-byte instruction sets 0xCB, 0xDD, 0xED, 0xFD 
     private readonly CbOpcodeHandler _cbOpcodeHandler;
+    private readonly DdOpcodeHandler _ddOpcodeHandler;
+    private readonly EdOpcodeHandler _edOpcodeHandler;
+    private readonly FdOpcodeHandler _fdOpcodeHandler;
 
     public OpcodeHandler(Registers registers, MMU mmu, Interupts interupts)
         : base(registers, mmu, interupts)
     {
         _cbOpcodeHandler = new CbOpcodeHandler(registers, mmu, interupts);
+        _ddOpcodeHandler = new DdOpcodeHandler(registers, mmu, interupts);
+        _edOpcodeHandler = new EdOpcodeHandler(registers, mmu, interupts);
+        _fdOpcodeHandler = new FdOpcodeHandler(registers, mmu, interupts);
     }
 
     public override Opcode FetchInstruction()
     {
-        Stop = false;
         var opcode = base.FetchInstruction();
-        return opcode.Value == 0xCB ? _cbOpcodeHandler.FetchInstruction() : opcode;
+
+        // Multi-byte instruction sets 0xCB, 0xDD, 0xED, 0xFD 
+        return opcode.Value switch
+        {
+            0xCB => _cbOpcodeHandler.FetchInstruction(),
+            0xDD => _ddOpcodeHandler.FetchInstruction(),
+            0xED => _edOpcodeHandler.FetchInstruction(),
+            0xFD => _fdOpcodeHandler.FetchInstruction(),
+            _ => opcode,
+        };
     }
 
     private void ADC(byte value)
