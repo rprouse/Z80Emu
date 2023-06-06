@@ -170,8 +170,7 @@ public partial class IxIyOpcodeHandler
             { 0xBE, new Opcode(0xBE, "CP (IX+o)", () => throw new NotImplementedException() ) },
             { 0xBF, new Opcode(0xBF, "CP IX+A", () => throw new NotImplementedException() ) },
 
-            // TODO: Need a "DD DB o XX" opcode handler
-            { 0xCB, new Opcode(0xCB, "PREFIX CB", () => throw new NotImplementedException() ) },
+            { 0xCB, new Opcode(0xCB, "PREFIX CB", () => { } ) },
 
             { 0xE1, new Opcode(0xE1, "POP IX", () => throw new NotImplementedException() ) },
             { 0xE3, new Opcode(0xE3, "EX (SP),IX", () => throw new NotImplementedException() ) },

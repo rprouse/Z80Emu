@@ -183,9 +183,9 @@ public partial class OpcodeHandler
         { 0xFB, new Opcode(0xFB, "EI", () => { _int.Enable(true); } ) },
 
         // multi-byte instructions
-        { 0xDD, new Opcode(0xDD, "PREFIX DD",() => throw new NotImplementedException() ) },
-        { 0xED, new Opcode(0xED, "PREFIX ED",() => throw new NotImplementedException() ) },
-        { 0xFD, new Opcode(0xFD, "PREFIX FD",() => throw new NotImplementedException() ) },
+        { 0xDD, new Opcode(0xDD, "PREFIX DD",() => { } ) },
+        { 0xED, new Opcode(0xED, "PREFIX ED",() => { } ) },
+        { 0xFD, new Opcode(0xFD, "PREFIX FD",() => { } ) },
 
         // x16/alu
         { 0x03, new Opcode(0x03, "INC BC", () => { _reg.BC++; } ) },

@@ -12,12 +12,24 @@ if (!emulator.LoadProgram(@"../../../../bin/8BitAdd.com"))
     return -1;
 }
 
-string command = "step";
+string command = "s";
 
 while(true)
 {
-    AnsiConsole.Write("> ");
-    command = Console.ReadLine()?.ToLower() ?? command;
+    //AnsiConsole.Write("> ");
+    command = AnsiConsole.Prompt(
+        new TextPrompt<string>(">")
+            .HideChoices()
+            .HideDefaultValue()
+            .PromptStyle("green")
+            .AddChoice("?")
+            .AddChoice("s")
+            .AddChoice("m")
+            .AddChoice("r")
+            .AddChoice("d")
+            .AddChoice("q")
+            .DefaultValue(command)
+        );
 
     switch (command.FirstOrDefault())
     {
@@ -34,7 +46,7 @@ while(true)
         case 'd':   // Disassemble
             // ViewDisassembly(emulator);
             break;
-        case 'h':
+        case '?':
             AnsiConsole.MarkupLine("[blue]s[/]tep");
             AnsiConsole.MarkupLine("[blue]m[/]emory");
             AnsiConsole.MarkupLine("[blue]r[/]egisters");
@@ -71,7 +83,7 @@ static void ViewMemory(Emulator emulator, ushort startAddr = 0x0100, ushort len 
         for (ushort i = 0; i < 0xF; i++)
         {
             char c = (char)emulator.Memory[addr + i];
-            AnsiConsole.Markup($"[green]{(char.IsControl(c) ? '.' : c)}[/] ");
+            AnsiConsole.Markup($"[green]{(char.IsControl(c) ? '.' : c)}[/]");
         }
         AnsiConsole.WriteLine();
     }
