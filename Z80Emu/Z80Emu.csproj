@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Spectre.Console" Version="0.47.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Z80Emu.Core\Z80Emu.Core.csproj" />
   </ItemGroup>
 

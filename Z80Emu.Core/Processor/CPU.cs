@@ -5,6 +5,8 @@ namespace Z80Emu.Core.Processor;
 
 public class CPU
 {
+    public Registers Registers => _reg;
+
     private readonly Interupts _int;
     private readonly MMU _mmu;
     private readonly Registers _reg;

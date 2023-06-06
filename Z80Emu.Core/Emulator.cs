@@ -5,28 +5,30 @@ namespace Z80Emu.Core;
 
 public class Emulator
 {
-    public CPU _cpu;
-    public MMU _mmu;
-    public Interupts _int;
+    public CPU CPU { get; }
+
+    public MMU Memory { get; }
+    
+    public Interupts Interupts { get; }
 
     public Emulator()
     {
-        _mmu = new MMU();
-        _int = new Interupts(_mmu);
-        _cpu = new CPU(_int, _mmu);
+        Memory = new MMU();
+        Interupts = new Interupts(Memory);
+        CPU = new CPU(Interupts, Memory);
     }
 
     public bool LoadProgram(string filename) =>
-        _mmu.LoadProgram(filename);
+        Memory.LoadProgram(filename);
 
     public int Tick()
     {
-        _cpu.Tick();
+        CPU.Tick();
         return 1;
     }
 
     public override string ToString()
     {
-        return _cpu.ToString();
+        return CPU.ToString();
     }
 }
