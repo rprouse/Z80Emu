@@ -26,7 +26,7 @@ public partial class OpcodeHandler
         InitializeMethods();
     }
 
-    public virtual Opcode FetchInstruction()
+    public Opcode FetchInstruction()
     {
         Opcode? opcode = _opcodes.Values.FirstOrDefault(o => o.Match(_mmu, _reg.PC));
         if (opcode == null) throw new NotImplementedException($"Opcode 0x{_mmu[_reg.PC]:X2} does not exist");

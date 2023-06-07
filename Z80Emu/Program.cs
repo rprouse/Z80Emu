@@ -3,6 +3,7 @@ using System.Text;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 using Z80Emu.Core;
+using Z80Emu.Core.Processor.Opcodes;
 
 // TODO: Pass in the program to load as a command line argument
 var emulator = new Emulator();
@@ -21,7 +22,7 @@ while(true)
         new TextPrompt<string>(">")
             .HideChoices()
             .HideDefaultValue()
-            .PromptStyle("green")
+            .PromptStyle("white")
             .AddChoice("?")
             .AddChoice("s")
             .AddChoice("m")
@@ -34,7 +35,13 @@ while(true)
     switch (command.FirstOrDefault())
     {
         case 's':   // Step
-            emulator.Tick();
+            Opcode? opcode = emulator.Tick();
+            if (opcode != null)
+            {
+                AnsiConsole.Markup($"[silver]{opcode.Mnemonic}[/]");
+                AnsiConsole.MarkupLine($"\t[green]; {opcode.Description}[/]");
+                AnsiConsole.WriteLine();
+            }
             ViewRegisters(emulator);
             break;
         case 'm':   // Memory
@@ -65,9 +72,10 @@ while(true)
 static void ViewRegisters(Emulator emulator)
 {
     var r = emulator.CPU.Registers;
-    AnsiConsole.MarkupLine($"[blue]AF:[/][white]{r.AF:X4}[/] [blue]BC:[/][white]{r.BC:X4}[/] [blue]DE:[/][white]{r.DE:X4}[/] [blue]HL:[/][white]{r.HL:X4}[/]");
-    AnsiConsole.MarkupLine($"[blue]SP:[/][white]{r.SP:X4}[/] [blue]PC:[/][white]{r.PC:X4}[/]");
-    AnsiConsole.MarkupLine($"[blue]Z:[/][white]{(r.FlagZ ? '1' : '0')}[/] [blue]N:[/][white]{(r.FlagN ? '1' : '0')}[/] [blue]H:[/][white]{(r.FlagH ? '1' : '0')}[/] [blue]C:[/][white]{(r.FlagC ? '1' : '0')}[/]");
+    AnsiConsole.Markup($"[blue]AF:[/][aqua]{r.AF:X4}[/] [blue]BC:[/][aqua]{r.BC:X4}[/] [blue]DE:[/][aqua]{r.DE:X4}[/] [blue]HL:[/][aqua]{r.HL:X4}[/]");
+    AnsiConsole.MarkupLine($"    [blue]SP:[/][aqua]{r.SP:X4}[/] [blue]PC:[/][aqua]{r.PC:X4}[/]");
+    AnsiConsole.MarkupLine($"[blue]Z:[/][aqua]{(r.FlagZ ? '1' : '0')}[/] [blue]N:[/][aqua]{(r.FlagN ? '1' : '0')}[/] [blue]H:[/][aqua]{(r.FlagH ? '1' : '0')}[/] [blue]C:[/][aqua]{(r.FlagC ? '1' : '0')}[/]");
+    AnsiConsole.WriteLine();
 }
 
 static void ViewMemory(Emulator emulator, ushort startAddr = 0x0100, ushort len = 0x6F)

@@ -43,6 +43,8 @@ public class Opcode
 
     public string Id => $"{Bytes[0]} {Mnemonic}";
 
+    override public string ToString() => Mnemonic;
+
     public string ToCodeString() =>
         $"new Opcode(new [] {{ {string.Join(", ", Bytes.Select(b => $"\"{b}\""))} }}, \"{Mnemonic}\", \"{Cycles}\", {Flags.ToCodeString()}, \"{Description}\")";
 }
