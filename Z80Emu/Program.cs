@@ -2,6 +2,14 @@ using Spectre.Console;
 using Z80Emu.Core;
 using Z80Emu.Core.Processor.Opcodes;
 
+FigletFont font = FigletFont.Load(@"font/ANSI Shadow.flf");
+
+AnsiConsole.Write(
+    new FigletText(font, "Zilog Z80")
+        .LeftJustified()
+        .Color(Color.Blue));
+AnsiConsole.MarkupLine("[Yellow]8-Bit Retro Emulator by Rob Prouse[/]");
+
 // TODO: Pass in the program to load as a command line argument
 var emulator = new Emulator();
 if (!emulator.LoadProgram(@"../../../../bin/8BitAdd.com"))
@@ -14,7 +22,6 @@ string command = "s";
 
 while(true)
 {
-    //AnsiConsole.Write("> ");
     command = AnsiConsole.Prompt(
         new TextPrompt<string>(">")
             .HideChoices()
@@ -77,13 +84,13 @@ static void ViewRegisters(Emulator emulator)
 
 static void ViewMemory(Emulator emulator, word startAddr = 0x0100, word len = 0x6F)
 {
-    startAddr = (word)(startAddr / 0xF * 0xF);
+    startAddr = (word)(startAddr / 0xF * 0xF + 1);
     for (word addr = startAddr; addr < startAddr + len; addr += 0xF)
     {
         AnsiConsole.Markup($"[cyan]{addr:X4}[/] ");
         for (word i = 0; i < 0xF; i++)
         {
-            AnsiConsole.Markup($"[yellow]{emulator.Memory[addr + i]:X2}[/] ");
+            AnsiConsole.Markup($"[silver]{emulator.Memory[addr + i]:X2}[/] ");
         }
         for (word i = 0; i < 0xF; i++)
         {

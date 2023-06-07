@@ -25,12 +25,6 @@ public class MemoryBlock
         _start = start;
         _end = end;
         _data = new byte[_end - _start + 1];
-
-        // Initialize to non-zero marker bytes
-        for (int i = 0; i < _data.Length; i++)
-        {
-            _data[i] = (byte)(i % 2 == 0 ? 0xBE : 0xEF);
-        }
     }
 
     public void Copy(byte[] data, int offset)

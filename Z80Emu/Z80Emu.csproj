@@ -15,4 +15,14 @@
     <ProjectReference Include="..\Z80Emu.Core\Z80Emu.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="font\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="font\ANSI Shadow.flf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
