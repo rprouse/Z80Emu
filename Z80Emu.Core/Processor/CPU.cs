@@ -31,10 +31,11 @@ public class CPU
         _opcodeHandler = new OpcodeHandler(_reg, _mmu, _int);
     }
 
-    public void Tick()
+    public Opcode? Tick()
     {
         var opcode = _opcodeHandler.FetchInstruction();
-        opcode.Tick();
+        if (opcode != null) opcode.Execute();
+        return opcode;
     }
 
     public override string ToString()
