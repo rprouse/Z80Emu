@@ -76,8 +76,10 @@ while(true)
 static void ViewRegisters(Emulator emulator)
 {
     var r = emulator.CPU.Registers;
-    AnsiConsole.Markup($"[blue]AF:[/][aqua]{r.AF:X4}[/] [blue]BC:[/][aqua]{r.BC:X4}[/] [blue]DE:[/][aqua]{r.DE:X4}[/] [blue]HL:[/][aqua]{r.HL:X4}[/]");
-    AnsiConsole.MarkupLine($"    [blue]SP:[/][aqua]{r.SP:X4}[/] [blue]PC:[/][aqua]{r.PC:X4}[/]");
+    AnsiConsole.Markup($"[blue]AF [/][aqua]{r.AF:X4}[/] [blue]BC [/][aqua]{r.BC:X4}[/] [blue]DE [/][aqua]{r.DE:X4}[/] [blue]HL [/][aqua]{r.HL:X4}[/]");
+    AnsiConsole.MarkupLine($"    [blue]SP [/][aqua]{r.SP:X4}[/] [blue]PC [/][aqua]{r.PC:X4}[/]");
+    AnsiConsole.Markup($"[blue]AF`[/][aqua]{r.AF:X4}[/] [blue]BC`[/][aqua]{r.BC:X4}[/] [blue]DE`[/][aqua]{r.DE:X4}[/] [blue]HL`[/][aqua]{r.HL:X4}[/]");
+    AnsiConsole.MarkupLine($"    [blue]SP`[/][aqua]{r.SP:X4}[/] [blue]PC`[/][aqua]{r.PC:X4}[/]");
     AnsiConsole.MarkupLine($"[blue]Z:[/][aqua]{(r.FlagZ ? '1' : '0')}[/] [blue]N:[/][aqua]{(r.FlagN ? '1' : '0')}[/] [blue]H:[/][aqua]{(r.FlagH ? '1' : '0')}[/] [blue]C:[/][aqua]{(r.FlagC ? '1' : '0')}[/]");
     AnsiConsole.WriteLine();
 }

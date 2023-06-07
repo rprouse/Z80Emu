@@ -59,6 +59,62 @@ public class Registers
     public word SP { get; set; }
     public word PC { get; set; }
 
+
+    public byte A2 { get; set; }
+    public byte F2 { get; set; }
+    public byte B2 { get; set; }
+    public byte C2 { get; set; }
+    public byte D2 { get; set; }
+    public byte E2 { get; set; }
+    public byte H2 { get; set; }
+    public byte L2 { get; set; }
+
+    public word AF2
+    {
+        get => (word)(A2 << 8 | F2);
+        set
+        {
+            A2 = (byte)(value >> 8);
+            F2 = (byte)(value & 0x00FF);
+        }
+    }
+
+    public word BC2
+    {
+        get => (word)(B2 << 8 | C2);
+        set
+        {
+            B2 = (byte)(value >> 8);
+            C2 = (byte)(value & 0x00FF);
+        }
+    }
+
+    public word DE2
+    {
+        get => (word)(D2 << 8 | E2);
+        set
+        {
+            D2 = (byte)(value >> 8);
+            E2 = (byte)(value & 0x00FF);
+        }
+    }
+
+    public word HL2
+    {
+        get => (word)(H2 << 8 | L2);
+        set
+        {
+            H2 = (byte)(value >> 8);
+            L2 = (byte)(value & 0x00FF);
+        }
+    }
+
+    public word IX2 { get; set; }
+    public word IY2 { get; set; }
+
+    public word SP2 { get; set; }
+    public word PC2 { get; set; }
+
     // Zero
     public bool FlagZ
     {
