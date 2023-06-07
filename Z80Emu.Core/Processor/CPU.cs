@@ -34,7 +34,7 @@ public class CPU
     public void Tick()
     {
         var opcode = _opcodeHandler.FetchInstruction();
-        opcode.Tick();
+        if (opcode != null) opcode.Execute();
     }
 
     public override string ToString()

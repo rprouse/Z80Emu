@@ -1,49 +1,45 @@
-using System;
 using Z80Emu.Core.Memory;
 using Z80Emu.Core.Utilities;
 
 namespace Z80Emu.Core.Processor.Opcodes;
 
-// https://map.grauw.nl/resources/z80instr.php
-public partial class OpcodeHandler : BaseOpcodeHandler
+public partial class OpcodeHandler
 {
     // Some variables to carry values between ticks
-    private byte _lsb;
-    private byte _msb;
-    private byte _operand;
-    private word _address;
+    byte _lsb;
+    byte _msb;
+    byte _operand;
+    word _address;
 
-    // Multi-byte instruction sets 0xCB, 0xDD, 0xED, 0xFD 
-    private readonly CbOpcodeHandler _cbOpcodeHandler;
-    private readonly IxIyOpcodeHandler _ddOpcodeHandler;
-    private readonly EdOpcodeHandler _edOpcodeHandler;
-    private readonly IxIyOpcodeHandler _fdOpcodeHandler;
+    readonly Registers _reg;
+    readonly MMU _mmu;
+    readonly Interupts _int;
+
+    Dictionary<string, Opcode> _opcodes;
 
     public OpcodeHandler(Registers registers, MMU mmu, Interupts interupts)
-        : base(registers, mmu, interupts)
     {
-        _cbOpcodeHandler = new CbOpcodeHandler(registers, mmu, interupts);
-        _ddOpcodeHandler = new IxIyOpcodeHandler(registers, mmu, interupts, "IX", () => _reg.IX, (word value) => _reg.IX = value);
-        _edOpcodeHandler = new EdOpcodeHandler(registers, mmu, interupts);
-        _fdOpcodeHandler = new IxIyOpcodeHandler(registers, mmu, interupts, "IY", () => _reg.IY, (word value) => _reg.IY = value);
+        _reg = registers;
+        _mmu = mmu;
+        _int = interupts;
+        _opcodes = Initialize();
+        InitializeMethods();
     }
 
-    public override Opcode FetchInstruction()
+    public virtual Opcode FetchInstruction()
     {
-        var opcode = base.FetchInstruction();
-
-        // Multi-byte instruction sets 0xCB, 0xDD, 0xED, 0xFD 
-        return opcode.Value switch
-        {
-            0xCB => _cbOpcodeHandler.FetchInstruction(),
-            0xDD => _ddOpcodeHandler.FetchInstruction(),
-            0xED => _edOpcodeHandler.FetchInstruction(),
-            0xFD => _fdOpcodeHandler.FetchInstruction(),
-            _ => opcode,
-        };
+        Opcode? opcode = _opcodes.Values.FirstOrDefault(o => o.Match(_mmu, _reg.PC));
+        if (opcode == null) throw new NotImplementedException($"Opcode 0x{_mmu[_reg.PC]:X2} does not exist");
+        return opcode;
     }
 
-    private void ADC(byte value)
+    /// <summary>
+    /// Reads the next byte from memory and increments PC
+    /// </summary>
+    /// <returns></returns>
+    protected byte NextByte() => _mmu[_reg.PC++];
+
+    protected void ADC(byte value)
     {
         int carry = _reg.FlagC ? 1 : 0;
         int result = _reg.A + value + carry;
@@ -54,7 +50,7 @@ public partial class OpcodeHandler : BaseOpcodeHandler
         _reg.A = (byte)result;
     }
 
-    private void ADD(byte value)
+    protected void ADD(byte value)
     {
         int result = _reg.A + value;
         _reg.FlagZ = result == 0;
@@ -64,7 +60,7 @@ public partial class OpcodeHandler : BaseOpcodeHandler
         _reg.A = (byte)result;
     }
 
-    private void ADDHL(word value)
+    protected void ADDHL(word value)
     {
         int result = _reg.HL + value;
         _reg.FlagN = false;
@@ -73,7 +69,7 @@ public partial class OpcodeHandler : BaseOpcodeHandler
         _reg.HL = (word)result;
     }
 
-    private void AND(byte value)
+    protected void AND(byte value)
     {
         _reg.A &= value;
         _reg.FlagZ = _reg.A == 0;
@@ -82,7 +78,14 @@ public partial class OpcodeHandler : BaseOpcodeHandler
         _reg.FlagC = false;
     }
 
-    private void CP(byte value)
+    protected void BIT(int bit, byte value)
+    {
+        _reg.FlagZ = (value & 1 << bit) == 0;
+        _reg.FlagN = false;
+        _reg.FlagH = true;
+    }
+
+    protected void CP(byte value)
     {
         _reg.FlagZ = _reg.A == value;
         _reg.FlagN = true;
@@ -90,7 +93,7 @@ public partial class OpcodeHandler : BaseOpcodeHandler
         _reg.FlagC = value > _reg.A;
     }
 
-    private void DAA()
+    protected void DAA()
     {
         if (_reg.FlagN)
         {
@@ -112,7 +115,7 @@ public partial class OpcodeHandler : BaseOpcodeHandler
         _reg.FlagH = false;
     }
 
-    private byte DEC(byte value)
+    protected byte DEC(byte value)
     {
         int result = value - 1;
         _reg.FlagZ = result == 0;
@@ -121,7 +124,7 @@ public partial class OpcodeHandler : BaseOpcodeHandler
         return (byte)result;
     }
 
-    private byte INC(byte value)
+    protected byte INC(byte value)
     {
         int result = value + 1;
         _reg.FlagZ = result == 0;
@@ -130,7 +133,7 @@ public partial class OpcodeHandler : BaseOpcodeHandler
         return (byte)result;
     }
 
-    private void OR(byte value)
+    protected void OR(byte value)
     {
         _reg.A = (byte)(_reg.A | value);
         _reg.FlagZ = _reg.A == 0;
@@ -139,16 +142,51 @@ public partial class OpcodeHandler : BaseOpcodeHandler
         _reg.FlagC = false;
     }
 
-    private void XOR(byte value)
+    // Reset bit in value
+    protected byte RES(int bit, byte value) =>
+        (byte)(value & ~(1 << bit));
+
+    protected byte RL(byte value)
     {
-        _reg.A = (byte)(_reg.A ^ value);
-        _reg.FlagZ = _reg.A == 0;
+        byte result = (byte)((value << 1) | (_reg.FlagC ? 1 : 0));
+        _reg.FlagZ = result == 0;
         _reg.FlagN = false;
         _reg.FlagH = false;
-        _reg.FlagC = false;
+        _reg.FlagC = (value & 0x80) == 0x80;
+        return result;
     }
 
-    private Action RST(word address) =>
+    protected byte RLC(byte value)
+    {
+        byte result = (byte)((value << 1) | (value >> 7));
+        _reg.FlagZ = result == 0;
+        _reg.FlagN = false;
+        _reg.FlagH = false;
+        _reg.FlagC = (value & 0x80) == 0x80;
+        return result;
+    }
+
+    protected byte RR(byte value)
+    {
+        byte result = (byte)((value >> 1) | (_reg.FlagC ? 0x80 : 0));
+        _reg.FlagZ = result == 0;
+        _reg.FlagN = false;
+        _reg.FlagH = false;
+        _reg.FlagC = (value & 1) == 1;
+        return result;
+    }
+
+    protected byte RRC(byte value)
+    {
+        byte result = (byte)((value >> 1) | (value << 7));
+        _reg.FlagZ = result == 0;
+        _reg.FlagN = false;
+        _reg.FlagH = false;
+        _reg.FlagC = (value & 1) == 1;
+        return result;
+    }
+
+    protected Action RST(word address) =>
         () =>
         {
             _mmu[--_reg.SP] = _reg.PC.Msb();
@@ -156,7 +194,7 @@ public partial class OpcodeHandler : BaseOpcodeHandler
             _reg.PC = address;
         };
 
-    private void SBC(byte value)
+    protected void SBC(byte value)
     {
         int carry = _reg.FlagC ? 1 : 0;
         int result = _reg.A - value - carry;
@@ -167,7 +205,47 @@ public partial class OpcodeHandler : BaseOpcodeHandler
         _reg.A = (byte)result;
     }
 
-    private void SUB(byte value)
+    // Set bit in value
+    protected byte SET(int bit, byte value) =>
+        (byte)(value | (1 << bit));
+
+    // Shift Left Arithmetically register r8
+    // C<- [7 < -0] <- 0
+    protected byte SLA(byte value)
+    {
+        byte result = (byte)(value << 1);
+        _reg.FlagZ = result == 0;
+        _reg.FlagN = false;
+        _reg.FlagH = false;
+        _reg.FlagC = (value & 0x80) == 0x80;
+        return result;
+    }
+
+    // Shift Right Arithmetically register r8
+    // [7] -> [7 -> 0] -> C
+    protected byte SRA(byte value)
+    {
+        byte result = (byte)((value >> 1) | value & 0x80);
+        _reg.FlagZ = result == 0;
+        _reg.FlagN = false;
+        _reg.FlagH = false;
+        _reg.FlagC = (value & 1) == 1;
+        return result;
+    }
+
+    // Shift Right Logically register r8.
+    // 0 -> [7 -> 0] -> C
+    protected byte SRL(byte value)
+    {
+        byte result = (byte)(value >> 1);
+        _reg.FlagZ = result == 0;
+        _reg.FlagN = false;
+        _reg.FlagH = false;
+        _reg.FlagC = (value & 1) == 1;
+        return result;
+    }
+
+    protected void SUB(byte value)
     {
         int result = _reg.A - value;
         _reg.FlagZ = result == 0;
@@ -175,5 +253,25 @@ public partial class OpcodeHandler : BaseOpcodeHandler
         _reg.FlagH = (value & 0x0F) > (_reg.A & 0x0F);
         _reg.FlagC = value > _reg.A;
         _reg.A = (byte)result;
+    }
+
+    // Swap the upper 4 bits in register r8 and the lower 4 ones.
+    protected byte SWAP(byte value)
+    {
+        byte result = (byte)((value >> 4) | (value << 4));
+        _reg.FlagZ = result == 0;
+        _reg.FlagN = false;
+        _reg.FlagH = false;
+        _reg.FlagC = false;
+        return result;
+    }
+
+    protected void XOR(byte value)
+    {
+        _reg.A = (byte)(_reg.A ^ value);
+        _reg.FlagZ = _reg.A == 0;
+        _reg.FlagN = false;
+        _reg.FlagH = false;
+        _reg.FlagC = false;
     }
 }
