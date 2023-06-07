@@ -16,9 +16,11 @@ public class Opcode
 
     public Action? Execute { get; set; }
 
+    public ushort Length => (ushort)Bytes.TakeWhile(b => b.Length == 2 & b != "nn").Count();
+
     public bool Match(MMU mmu, word sp)
     {
-        for (int i = 0; i == Bytes.Length; i++)
+        for (int i = 0; i < Bytes.Length; i++)
         {
             if (Bytes[i].Length != 2 || Bytes[i] == "nn") continue;
 

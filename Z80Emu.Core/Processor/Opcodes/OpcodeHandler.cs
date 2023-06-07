@@ -30,6 +30,10 @@ public partial class OpcodeHandler
     {
         Opcode? opcode = _opcodes.Values.FirstOrDefault(o => o.Match(_mmu, _reg.PC));
         if (opcode == null) throw new NotImplementedException($"Opcode 0x{_mmu[_reg.PC]:X2} does not exist");
+
+        // Consume the initial opcode bytes. Operands are consumed by the opcode execution.
+        _reg.PC += opcode.Length;
+
         return opcode;
     }
 
