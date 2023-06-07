@@ -1,4 +1,6 @@
+using System;
 using System.Text;
+using Z80Emu.Core.Processor.Opcodes;
 
 namespace Z80Emu.Core.Processor;
 
@@ -115,32 +117,55 @@ public class Registers
     public word SP2 { get; set; }
     public word PC2 { get; set; }
 
-    // Zero
-    public bool FlagZ
+    // Bit 7: Sign Flag
+    // Bit 6: Zero Flag
+    // Bit 5: Not Used
+    // Bit 4: Half Carry Flag
+    // Bit 3: Not Used
+    // Bit 2: Parity / Overflow Flag
+    // Bit 1: Add / Subtract Flag
+    // Bit 0: Carry Flag
+
+    // Sign
+    public bool FlagS
     {
         get => (F & 0b1000_0000) != 0;
         set => F = (byte)(value ? F | 0b1000_0000 : F & 0b0111_1111);
     }
 
-    // Subtract
-    public bool FlagN
+    // Zero
+    public bool FlagZ
     {
         get => (F & 0b0100_0000) != 0;
         set => F = (byte)(value ? F | 0b0100_0000 : F & 0b1011_1111);
     }
 
+    // Parity/Overflow
+    public bool FlagPV
+    {
+        get => (F & 0b0000_0100) != 0;
+        set => F = (byte)(value ? F | 0b0000_0100 : F & 0b1111_1011);
+    }
+
+    // Add/Subtract
+    public bool FlagN
+    {
+        get => (F & 0b0000_0010) != 0;
+        set => F = (byte)(value ? F | 0b0000_0010 : F & 0b1111_1101);
+    }
+
     // Half-Carry
     public bool FlagH
     {
-        get => (F & 0b0010_0000) != 0;
-        set => F = (byte)(value ? F | 0b0010_0000 : F & 0b1101_1111);
+        get => (F & 0b0001_0000) != 0;
+        set => F = (byte)(value ? F | 0b0001_0000 : F & 0b1110_1111);
     }
 
     // Carry
     public bool FlagC
     {
-        get => (F & 0b0001_0000) != 0;
-        set => F = (byte)(value ? F | 0b0001_0000 : F & 0b1110_1111);
+        get => (F & 0b0000_0001) != 0;
+        set => F = (byte)(value ? F | 0b0000_0001 : F & 0b1111_1110);
     }
 
     public override string ToString()
