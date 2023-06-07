@@ -19,16 +19,9 @@ public class Emulator
         CPU = new CPU(Interupts, Memory);
     }
 
-    public bool LoadProgram(string filename) =>
-        Memory.LoadProgram(filename);
+    public bool LoadProgram(string filename) => Memory.LoadProgram(filename);
 
-    public Opcode? Tick()
-    {
-        return CPU.Tick();
-    }
+    public Opcode Tick() => CPU.Tick();
 
-    public override string ToString()
-    {
-        return CPU.ToString();
-    }
+    public Opcode Disassemble(word addr) => CPU.Disassemble(addr);
 }

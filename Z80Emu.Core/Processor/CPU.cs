@@ -31,15 +31,16 @@ public class CPU
         _opcodeHandler = new OpcodeHandler(_reg, _mmu, _int);
     }
 
-    public Opcode? Tick()
+    public Opcode Tick()
     {
         var opcode = _opcodeHandler.FetchInstruction();
-        if (opcode != null) opcode.Execute();
+        opcode.Execute();
         return opcode;
     }
 
-    public override string ToString()
-    {
-        return _reg.ToString();
-    }
+    public Opcode Disassemble(word addr) =>
+        _opcodeHandler.Disassemble(addr);
+
+    public override string ToString() => 
+        _reg.ToString();
 }

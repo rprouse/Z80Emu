@@ -16,7 +16,15 @@ public class Opcode
 
     public Action? Execute { get; set; }
 
-    public ushort Length => (ushort)Bytes.TakeWhile(b => b.Length == 2 & b != "nn").Count();
+    /// <summary>
+    /// This is just the length of the opcode without the operands
+    /// </summary>
+    public ushort OpcodeLength => (ushort)Bytes.TakeWhile(b => b.Length == 2 & b != "nn").Count();
+
+    /// <summary>
+    /// This is the full length of the opcode including the operands
+    /// </summary>
+    public ushort Length => (ushort)(Bytes.Length + Bytes.Count(b => b == "nn"));
 
     public bool Match(MMU mmu, word sp)
     {

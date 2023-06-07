@@ -28,12 +28,18 @@ public partial class OpcodeHandler
 
     public Opcode FetchInstruction()
     {
-        Opcode? opcode = _opcodes.Values.FirstOrDefault(o => o.Match(_mmu, _reg.PC));
-        if (opcode == null) throw new NotImplementedException($"Opcode 0x{_mmu[_reg.PC]:X2} does not exist");
+        Opcode opcode = Disassemble(_reg.PC);
 
         // Consume the initial opcode bytes. Operands are consumed by the opcode execution.
-        _reg.PC += opcode.Length;
+        _reg.PC += opcode.OpcodeLength;
 
+        return opcode;
+    }
+
+    public Opcode Disassemble(word addr)
+    {
+        Opcode? opcode = _opcodes.Values.FirstOrDefault(o => o.Match(_mmu, addr));
+        if (opcode == null) throw new NotImplementedException($"Opcode 0x{_mmu[addr]:X2} does not exist");
         return opcode;
     }
 

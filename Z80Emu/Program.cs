@@ -1,7 +1,4 @@
-using System.Diagnostics.Tracing;
-using System.Text;
 using Spectre.Console;
-using Spectre.Console.Rendering;
 using Z80Emu.Core;
 using Z80Emu.Core.Processor.Opcodes;
 
@@ -51,7 +48,7 @@ while(true)
             ViewRegisters(emulator);
             break;
         case 'd':   // Disassemble
-            // ViewDisassembly(emulator);
+            ViewDisassembly(emulator);
             break;
         case '?':
             AnsiConsole.MarkupLine("[blue]s[/]tep");
@@ -78,21 +75,50 @@ static void ViewRegisters(Emulator emulator)
     AnsiConsole.WriteLine();
 }
 
-static void ViewMemory(Emulator emulator, ushort startAddr = 0x0100, ushort len = 0x6F)
+static void ViewMemory(Emulator emulator, word startAddr = 0x0100, word len = 0x6F)
 {
-    startAddr = (ushort)(startAddr / 0xF * 0xF);
-    for (ushort addr = startAddr; addr < startAddr + len; addr += 0xF)
+    startAddr = (word)(startAddr / 0xF * 0xF);
+    for (word addr = startAddr; addr < startAddr + len; addr += 0xF)
     {
         AnsiConsole.Markup($"[cyan]{addr:X4}[/] ");
-        for (ushort i = 0; i < 0xF; i++)
+        for (word i = 0; i < 0xF; i++)
         {
             AnsiConsole.Markup($"[yellow]{emulator.Memory[addr + i]:X2}[/] ");
         }
-        for (ushort i = 0; i < 0xF; i++)
+        for (word i = 0; i < 0xF; i++)
         {
             char c = (char)emulator.Memory[addr + i];
             AnsiConsole.Markup($"[green]{(char.IsControl(c) ? '.' : c)}[/]");
         }
         AnsiConsole.WriteLine();
     }
+}
+
+/// <summary>
+/// View the disassembly of the program from the current PC
+/// </summary>
+static void ViewDisassembly(Emulator emulator)
+{
+    word len = 0x1F;
+    word startAddr = emulator.CPU.Registers.PC;
+    word addr = startAddr;
+
+    while (addr < startAddr + len)
+    {
+        AnsiConsole.Markup($"[cyan]{addr:X4}[/] ");
+        try
+        {
+            Opcode opcode = emulator.Disassemble(addr);
+            addr += opcode.Length;
+            AnsiConsole.Markup($"[silver]{opcode.Mnemonic}[/]");
+            AnsiConsole.MarkupLine($"\t[green]; {opcode.Description}[/]");
+
+        }
+        catch (Exception)
+        {
+            AnsiConsole.MarkupLine($"[silver]{emulator.Memory[addr]:X2}[/]");
+            addr++;
+        }
+    }
+    AnsiConsole.WriteLine();
 }
