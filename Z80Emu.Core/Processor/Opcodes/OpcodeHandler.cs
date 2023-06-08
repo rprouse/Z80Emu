@@ -49,65 +49,160 @@ public partial class OpcodeHandler
     /// <returns></returns>
     protected byte NextByte() => _mmu[_reg.PC++];
 
-    protected void ADC(byte value)
+    // Parity lookup table
+    static byte[] ParityTable = {
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1 };
+
+    private byte AddSubtractByte(byte value, bool withCarry, bool subtract)
     {
-        int carry = _reg.FlagC ? 1 : 0;
-        int result = _reg.A + value + carry;
-        _reg.FlagZ = result == 0;
+        ushort result;  // To detect carry and overflow
+
+        if (subtract)
+        {
+            _reg.FlagN = true;
+            _reg.FlagH = (_reg.A & 0x0F) < (value & 0x0F) + (withCarry ? 1 : 0);
+            result = (ushort)(_reg.A - value - (withCarry ? 1 : 0));
+        }
+        else
+        {
+            _reg.FlagN = false;
+            _reg.FlagH = (_reg.A & 0x0F) + (value & 0x0F) + (withCarry ? 1 : 0) > 0x0F;
+            result = (ushort)(_reg.A + value + (withCarry ? 1 : 0));
+        }
+        _reg.FlagS = (result & 0x80) != 0;
+        _reg.FlagC = (result & 0x100) != 0;
+        _reg.FlagZ = (result & 0xFF) == 0;
+
+        // Overflow is set if the result is greater than 127 or less than -128
+        int minuend_sign = _reg.A & 0x80;
+        int subtrahend_sign = value & 0x80;
+        int result_sign = result & 0x80;
+        if (subtract)
+            _reg.FlagPV = minuend_sign != subtrahend_sign && result_sign != minuend_sign;
+        else
+            _reg.FlagPV = minuend_sign == subtrahend_sign && result_sign != minuend_sign;
+
+        return (byte)result;
+    }
+
+    private word AddSubtractWord(word value1, word value2, bool withCarry, bool subtract)
+    {
+        if (withCarry && _reg.FlagC)
+            value2++;
+
+        int sum;
+
+        if (subtract)
+        {
+            sum = value1 - value2;
+            _reg.FlagH = (value1 & 0x0FFF) < (value2 & 0x0FFF);
+        }
+        else
+        {
+            sum = value1 + value2;
+            _reg.FlagH = (value1 & 0x0FFF) + (value2 & 0x0FFF) > 0x0FFF;
+        }
+        _reg.FlagC = sum > 0xFFFF;
+        _reg.FlagN = subtract;
+        if (withCarry || subtract)
+        {
+            int minuend_sign = value1 & 0x8000;
+            int subtrahend_sign = value2 & 0x8000;
+            int result_sign = sum & 0x8000;
+            if (subtract)
+                _reg.FlagPV = minuend_sign != subtrahend_sign && result_sign != minuend_sign;
+            else
+                _reg.FlagPV = minuend_sign == subtrahend_sign && result_sign != minuend_sign;
+            _reg.FlagS = (sum & 0x8000) != 0;
+            _reg.FlagZ = (sum & 0xFFFF) == 0;
+        }
+        return (word)sum;
+    }
+
+    private void SetLogicFlags(bool flagH)
+    {
+        _reg.FlagS = (_reg.A & 0x80) != 0;
+        _reg.FlagZ = _reg.A == 0;
+        _reg.FlagH = flagH;
         _reg.FlagN = false;
-        _reg.FlagH = (_reg.A & 0x0F) + (value & 0x0F) + carry > 0x0F;
-        _reg.FlagC = result > 0xFF;
-        _reg.A = (byte)result;
+        _reg.FlagC = false;
+        _reg.FlagPV = ParityTable[_reg.A] == 1;
+    }
+
+    protected void ADC(byte value)
+    {        
+        _reg.A = AddSubtractByte(value, true, false);
+    }
+
+    protected void ADCHL(word value)
+    {
+        _reg.HL = AddSubtractWord(_reg.HL, value, true, false);
     }
 
     protected void ADD(byte value)
     {
-        int result = _reg.A + value;
-        _reg.FlagZ = result == 0;
-        _reg.FlagN = false;
-        _reg.FlagH = (_reg.A & 0x0F) + (value & 0x0F) > 0x0F;
-        _reg.FlagC = result > 0xFF;
-        _reg.A = (byte)result;
+        _reg.A = AddSubtractByte(value, false, false);
     }
 
     protected void ADDHL(word value)
     {
-        int result = _reg.HL + value;
-        _reg.FlagN = false;
-        _reg.FlagH = (_reg.HL & 0x0FFF) + (value & 0x0FFF) > 0x0FFF;
-        _reg.FlagC = result > 0xFFFF;
-        _reg.HL = (word)result;
+        _reg.HL = AddSubtractWord(_reg.HL, value, false, false);
+    }
+
+    protected void ADDIX(word value)
+    {
+        _reg.IX = AddSubtractWord(_reg.IX, value, false, false);
+    }
+
+    protected void ADDIY(word value)
+    {
+        _reg.IY = AddSubtractWord(_reg.IY, value, false, false);
     }
 
     protected void AND(byte value)
     {
         _reg.A &= value;
-        _reg.FlagZ = _reg.A == 0;
-        _reg.FlagN = false;
-        _reg.FlagH = true;
-        _reg.FlagC = false;
+        SetLogicFlags(true);
     }
 
     protected void BIT(int bit, byte value)
     {
         _reg.FlagZ = (value & 1 << bit) == 0;
+        _reg.FlagPV = _reg.FlagZ;
         _reg.FlagN = false;
         _reg.FlagH = true;
+        _reg.FlagS = false;
+        if (bit == 7 && !_reg.FlagZ)
+            _reg.FlagS = true;
     }
 
     protected void CP(byte value)
     {
-        _reg.FlagZ = _reg.A == value;
-        _reg.FlagN = true;
-        _reg.FlagH = (value & 0x0F) > (_reg.A & 0x0F);
-        _reg.FlagC = value > _reg.A;
+        AddSubtractByte(value, false, true);
     }
 
     protected void DAA()
     {
+        var a = _reg.A;
         if (_reg.FlagN)
         {
             _reg.A -= (byte)(_reg.FlagC ? 0x60 : 0x06);
+            _reg.FlagC = false;
         }
         else
         {
@@ -119,37 +214,41 @@ public partial class OpcodeHandler
             if (_reg.FlagH || (_reg.A & 0x0F) > 0x09)
             {
                 _reg.A += 0x06;
+                _reg.FlagC = false;
             }
         }
+        _reg.FlagH = ((a ^ _reg.A) & 0x10) != 0;
+        _reg.FlagS = (_reg.A & 0x80) != 0;
         _reg.FlagZ = _reg.A == 0;
-        _reg.FlagH = false;
+        _reg.FlagPV = ParityTable[_reg.A] == 1;
     }
 
     protected byte DEC(byte value)
     {
+        _reg.FlagPV = (value & 0x80) == 0 && ((value - 1) & 0x80) != 0;
         int result = value - 1;
         _reg.FlagZ = result == 0;
         _reg.FlagN = true;
-        _reg.FlagH = (value & 0x0F) == 0x00;
+        _reg.FlagH = (value & 0x0F) == 0x0F;
+        _reg.FlagS = (result & 0x80) != 0;
         return (byte)result;
     }
 
     protected byte INC(byte value)
     {
+        _reg.FlagPV = (value & 0x80) != 0 && ((value + 1) & 0x80) == 0;
         int result = value + 1;
         _reg.FlagZ = result == 0;
         _reg.FlagN = false;
-        _reg.FlagH = (value & 0x0F) == 0x0F;
+        _reg.FlagH = (value & 0x0F) == 0x00;
+        _reg.FlagS = (result & 0x80) != 0;
         return (byte)result;
     }
 
     protected void OR(byte value)
     {
         _reg.A = (byte)(_reg.A | value);
-        _reg.FlagZ = _reg.A == 0;
-        _reg.FlagN = false;
-        _reg.FlagH = false;
-        _reg.FlagC = false;
+        SetLogicFlags(false);
     }
 
     // Reset bit in value
@@ -163,16 +262,20 @@ public partial class OpcodeHandler
         _reg.FlagN = false;
         _reg.FlagH = false;
         _reg.FlagC = (value & 0x80) == 0x80;
+        _reg.FlagS = (result & 0x80) != 0;
+        _reg.FlagPV = ParityTable[result] == 1;
         return result;
     }
 
     protected byte RLC(byte value)
     {
-        byte result = (byte)((value << 1) | (value >> 7));
+        _reg.FlagC = (value & 0x80) == 0x80;
+        byte result = (byte)((value << 1) | (_reg.FlagC ? 1 : 0));
         _reg.FlagZ = result == 0;
         _reg.FlagN = false;
         _reg.FlagH = false;
-        _reg.FlagC = (value & 0x80) == 0x80;
+        _reg.FlagS = (result & 0x80) != 0;
+        _reg.FlagPV = ParityTable[result] == 1;
         return result;
     }
 
@@ -183,6 +286,8 @@ public partial class OpcodeHandler
         _reg.FlagN = false;
         _reg.FlagH = false;
         _reg.FlagC = (value & 1) == 1;
+        _reg.FlagS = (result & 0x80) != 0;
+        _reg.FlagPV = ParityTable[result] == 1;
         return result;
     }
 
@@ -193,6 +298,8 @@ public partial class OpcodeHandler
         _reg.FlagN = false;
         _reg.FlagH = false;
         _reg.FlagC = (value & 1) == 1;
+        _reg.FlagS = (result & 0x80) != 0;
+        _reg.FlagPV = ParityTable[result] == 1;
         return result;
     }
 
@@ -206,13 +313,12 @@ public partial class OpcodeHandler
 
     protected void SBC(byte value)
     {
-        int carry = _reg.FlagC ? 1 : 0;
-        int result = _reg.A - value - carry;
-        _reg.FlagZ = result == 0;
-        _reg.FlagN = true;
-        _reg.FlagH = ((value + carry) & 0x0F) > (_reg.A & 0x0F);
-        _reg.FlagC = value + carry > _reg.A;
-        _reg.A = (byte)result;
+        _reg.A = AddSubtractByte(value, true, true);
+    }
+
+    protected void SBCHL(word value)
+    {
+        _reg.HL = AddSubtractWord(_reg.HL, value, true, true);
     }
 
     // Set bit in value
@@ -228,6 +334,8 @@ public partial class OpcodeHandler
         _reg.FlagN = false;
         _reg.FlagH = false;
         _reg.FlagC = (value & 0x80) == 0x80;
+        _reg.FlagS = (result & 0x80) != 0;
+        _reg.FlagPV = ParityTable[result] == 1;
         return result;
     }
 
@@ -240,6 +348,8 @@ public partial class OpcodeHandler
         _reg.FlagN = false;
         _reg.FlagH = false;
         _reg.FlagC = (value & 1) == 1;
+        _reg.FlagS = (result & 0x80) != 0;
+        _reg.FlagPV = ParityTable[result] == 1;
         return result;
     }
 
@@ -252,36 +362,19 @@ public partial class OpcodeHandler
         _reg.FlagN = false;
         _reg.FlagH = false;
         _reg.FlagC = (value & 1) == 1;
+        _reg.FlagS = (result & 0x80) != 0;
+        _reg.FlagPV = ParityTable[result] == 1;
         return result;
     }
 
     protected void SUB(byte value)
     {
-        int result = _reg.A - value;
-        _reg.FlagZ = result == 0;
-        _reg.FlagN = true;
-        _reg.FlagH = (value & 0x0F) > (_reg.A & 0x0F);
-        _reg.FlagC = value > _reg.A;
-        _reg.A = (byte)result;
-    }
-
-    // Swap the upper 4 bits in register r8 and the lower 4 ones.
-    protected byte SWAP(byte value)
-    {
-        byte result = (byte)((value >> 4) | (value << 4));
-        _reg.FlagZ = result == 0;
-        _reg.FlagN = false;
-        _reg.FlagH = false;
-        _reg.FlagC = false;
-        return result;
+        _reg.A = AddSubtractByte(value, false, true);
     }
 
     protected void XOR(byte value)
     {
         _reg.A = (byte)(_reg.A ^ value);
-        _reg.FlagZ = _reg.A == 0;
-        _reg.FlagN = false;
-        _reg.FlagH = false;
-        _reg.FlagC = false;
+        SetLogicFlags(false);
     }
 }

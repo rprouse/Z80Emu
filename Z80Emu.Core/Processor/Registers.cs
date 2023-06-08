@@ -14,6 +14,9 @@ public class Registers
     public byte E { get; set; }
     public byte H { get; set; }
     public byte L { get; set; }
+    public byte I { get; set; }
+    public byte X { get; set; }
+    public byte Y { get; set; }
 
     public word AF
     {
@@ -55,8 +58,25 @@ public class Registers
         }
     }
 
-    public word IX { get; set; }
-    public word IY { get; set; }
+    public word IX
+    {
+        get => (word)(I << 8 | X);
+        set
+        {
+            I = (byte)(value >> 8);
+            X = (byte)(value & 0x00FF);
+        }
+    }
+
+    public word IY
+    {
+        get => (word)(I << 8 | Y);
+        set
+        {
+            I = (byte)(value >> 8);
+            Y = (byte)(value & 0x00FF);
+        }
+    }
 
     public word SP { get; set; }
     public word PC { get; set; }
@@ -126,42 +146,55 @@ public class Registers
     // Bit 1: Add / Subtract Flag
     // Bit 0: Carry Flag
 
-    // Sign
+    /// <summary>
+    /// Sign status (value of bit 7)
+    /// </summary>
     public bool FlagS
     {
         get => (F & 0b1000_0000) != 0;
         set => F = (byte)(value ? F | 0b1000_0000 : F & 0b0111_1111);
     }
 
-    // Zero
+    /// <summary>
+    /// Zero status (1 for zero, 0 for non-zero)
+    /// </summary>
     public bool FlagZ
     {
         get => (F & 0b0100_0000) != 0;
         set => F = (byte)(value ? F | 0b0100_0000 : F & 0b1011_1111);
     }
 
-    // Parity/Overflow
-    public bool FlagPV
-    {
-        get => (F & 0b0000_0100) != 0;
-        set => F = (byte)(value ? F | 0b0000_0100 : F & 0b1111_1011);
-    }
-
-    // Add/Subtract
-    public bool FlagN
-    {
-        get => (F & 0b0000_0010) != 0;
-        set => F = (byte)(value ? F | 0b0000_0010 : F & 0b1111_1101);
-    }
-
-    // Half-Carry
+    /// <summary>
+    /// Half-Carry (carry/borrow from bit 3 to bit 4)
+    /// </summary>
     public bool FlagH
     {
         get => (F & 0b0001_0000) != 0;
         set => F = (byte)(value ? F | 0b0001_0000 : F & 0b1110_1111);
     }
 
-    // Carry
+    /// <summary>
+    /// Parity/Overflow (for logical operations 1 for even parity 0 for odd,
+    /// for arithmetic operations 1 for overflow)
+    /// </summary>
+    public bool FlagPV
+    {
+        get => (F & 0b0000_0100) != 0;
+        set => F = (byte)(value ? F | 0b0000_0100 : F & 0b1111_1011);
+    }
+
+    /// <summary>
+    /// Subtract status (1 after subtract operation, 0 otherwise)
+    /// </summary>
+    public bool FlagN
+    {
+        get => (F & 0b0000_0010) != 0;
+        set => F = (byte)(value ? F | 0b0000_0010 : F & 0b1111_1101);
+    }
+
+    /// <summary>
+    /// Carry status (carry out of bit 7)
+    /// </summary>
     public bool FlagC
     {
         get => (F & 0b0000_0001) != 0;
