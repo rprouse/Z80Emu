@@ -16,10 +16,12 @@ if (args.Length != 1)
     return -1;
 }
 
+AnsiConsole.MarkupLine($"[Blue]Loading {args[0]}[/]");
+
 var emulator = new Emulator();
 if (!emulator.LoadProgram(args[0]))
 {
-    AnsiConsole.MarkupLine($"[Red]File {args[0]} not found[/]");
+    AnsiConsole.MarkupLine("[Red]File not found[/]");
     return -1;
 }
 
