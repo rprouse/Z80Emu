@@ -474,28 +474,14 @@ public partial class OpcodeHandler
             _reg.L = _mmu[_address + 1];
         };
         _opcodes["ED LD I,A"].Execute = () => { };
-        _opcodes["DD LD IX,(nn)"].Execute = () =>
-        {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _address = BitUtils.ToWord(_msb, _lsb);
-            _reg.I = _mmu[_address];
-            _reg.X = _mmu[_address + 1];
-        };
+        _opcodes["DD LD IX,(nn)"].Execute = () => { };
         _opcodes["DD LD IX,nn"].Execute = () =>
         {
             _lsb = NextByte();
             _msb = NextByte();
             _reg.IX = BitUtils.ToWord(_msb, _lsb);
         };
-        _opcodes["FD LD IY,(nn)"].Execute = () =>
-        {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _address = BitUtils.ToWord(_msb, _lsb);
-            _reg.I = _mmu[_address];
-            _reg.Y = _mmu[_address + 1];
-        };
+        _opcodes["FD LD IY,(nn)"].Execute = () => { };
         _opcodes["FD LD IY,nn"].Execute = () =>
         {
             _lsb = NextByte();
@@ -657,16 +643,8 @@ public partial class OpcodeHandler
             _reg.L = _mmu[_reg.SP++];
             _reg.H = _mmu[_reg.SP++];
         };
-        _opcodes["DD POP IX"].Execute = () =>
-        {
-            _reg.I = _mmu[_reg.SP++];
-            _reg.X = _mmu[_reg.SP++];
-        };
-        _opcodes["FD POP IY"].Execute = () =>
-        {
-            _reg.I = _mmu[_reg.SP++];
-            _reg.Y = _mmu[_reg.SP++];
-        };
+        _opcodes["DD POP IX"].Execute = () => { };
+        _opcodes["FD POP IY"].Execute = () => { };
         _opcodes["F5 PUSH AF"].Execute = () =>
         {
             _mmu[--_reg.SP] = _reg.A;
@@ -687,16 +665,8 @@ public partial class OpcodeHandler
             _mmu[--_reg.SP] = _reg.H;
             _mmu[--_reg.SP] = _reg.L;
         };
-        _opcodes["DD PUSH IX"].Execute = () =>
-        {
-            _mmu[--_reg.SP] = _reg.I;
-            _mmu[--_reg.SP] = _reg.X;
-        };
-        _opcodes["FD PUSH IY"].Execute = () =>
-        {
-            _mmu[--_reg.SP] = _reg.I;
-            _mmu[--_reg.SP] = _reg.Y;
-        };
+        _opcodes["DD PUSH IX"].Execute = () => { };
+        _opcodes["FD PUSH IY"].Execute = () => { };
         _opcodes["CB RES 0,(HL)"].Execute = () => { _mmu[_reg.HL] = RES(0, _mmu[_reg.HL]); };
         _opcodes["CB RES 1,(HL)"].Execute = () => { _mmu[_reg.HL] = RES(2, _mmu[_reg.HL]); };
         _opcodes["CB RES 2,(HL)"].Execute = () => { _mmu[_reg.HL] = RES(2, _mmu[_reg.HL]); };

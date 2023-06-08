@@ -14,9 +14,9 @@ public class Registers
     public byte E { get; set; }
     public byte H { get; set; }
     public byte L { get; set; }
+
     public byte I { get; set; }
-    public byte X { get; set; }
-    public byte Y { get; set; }
+    public byte R { get; set; }
 
     public word AF
     {
@@ -58,25 +58,9 @@ public class Registers
         }
     }
 
-    public word IX
-    {
-        get => (word)(I << 8 | X);
-        set
-        {
-            I = (byte)(value >> 8);
-            X = (byte)(value & 0x00FF);
-        }
-    }
+    public word IX { get; set; }
 
-    public word IY
-    {
-        get => (word)(I << 8 | Y);
-        set
-        {
-            I = (byte)(value >> 8);
-            Y = (byte)(value & 0x00FF);
-        }
-    }
+    public word IY { get; set; }
 
     public word SP { get; set; }
     public word PC { get; set; }
