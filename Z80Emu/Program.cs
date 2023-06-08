@@ -10,11 +10,16 @@ AnsiConsole.Write(
         .Color(Color.Blue));
 AnsiConsole.MarkupLine("[Yellow]8-Bit Retro Emulator by Rob Prouse[/]");
 
-// TODO: Pass in the program to load as a command line argument
-var emulator = new Emulator();
-if (!emulator.LoadProgram(@"../../../../bin/8BitAdd.com"))
+if (args.Length != 1)
 {
-    AnsiConsole.MarkupLine("[Red]File not found[/]");
+    AnsiConsole.MarkupLine("[Red]Usage: Z80Emu <program.com>[/]");
+    return -1;
+}
+
+var emulator = new Emulator();
+if (!emulator.LoadProgram(args[0]))
+{
+    AnsiConsole.MarkupLine($"[Red]File {args[0]} not found[/]");
     return -1;
 }
 

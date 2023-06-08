@@ -87,7 +87,7 @@ public class Opcode
             for (byte r = 0; r < 8; r++)
             {
                 if (r == 6) continue;
-                bytes[i] = (r + offset).ToString("X2");
+                bytes[i] = ((r << 3) + offset).ToString("X2");
                 string mn = mnemonic.Replace("r", EightBitRegisterNames[Category][r]);
                 string ds = description.Replace("$r", EightBitRegisterNames[Category][r]);
                 yield return new OC((string[])bytes.Clone(), mn, cycles, GenerateFlags(), ds);
