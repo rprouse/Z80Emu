@@ -132,7 +132,8 @@ static void ViewDisassembly(Emulator emulator)
                     AnsiConsole.Markup($"   ");
             }
 
-            AnsiConsole.Markup($"[silver]{opcode.Mnemonic}[/]");
+            // Longest opcode without substitution is 12 characters
+            AnsiConsole.Markup($"[silver]{opcode.Mnemonic.PadRight(12)}[/]");
 
             if (opcode.Mnemonic != "NOP")
                 AnsiConsole.MarkupLine($"\t[green]; {opcode.Description}[/]");
