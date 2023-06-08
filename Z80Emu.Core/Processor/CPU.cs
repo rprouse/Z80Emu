@@ -26,7 +26,6 @@ public class CPU
             PC = 0x0100,
             SP = 0xFFFE
         };
-        _int.IME = false;
 
         _opcodeHandler = new OpcodeHandler(_reg, _mmu, _int);
     }
@@ -34,7 +33,10 @@ public class CPU
     public Opcode Tick()
     {
         var opcode = _opcodeHandler.FetchInstruction();
+        // Dereference of a possibly null reference.
+#pragma warning disable CS8602 
         opcode.Execute();
+#pragma warning restore CS8602
         return opcode;
     }
 

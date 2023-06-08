@@ -68,6 +68,8 @@ public partial class OpcodeHandler
         0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
         1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1 };
 
+    static bool IsEvenParity(byte value) => ParityTable[value] == 1;
+
     private byte AddSubtractByte(byte value, bool withCarry, bool subtract)
     {
         ushort result;  // To detect carry and overflow
@@ -141,7 +143,7 @@ public partial class OpcodeHandler
         _reg.FlagH = flagH;
         _reg.FlagN = false;
         _reg.FlagC = false;
-        _reg.FlagPV = ParityTable[_reg.A] == 1;
+        _reg.FlagPV = IsEvenParity(_reg.A);
     }
 
     protected void ADC(byte value)
@@ -220,7 +222,7 @@ public partial class OpcodeHandler
         _reg.FlagH = ((a ^ _reg.A) & 0x10) != 0;
         _reg.FlagS = (_reg.A & 0x80) != 0;
         _reg.FlagZ = _reg.A == 0;
-        _reg.FlagPV = ParityTable[_reg.A] == 1;
+        _reg.FlagPV = IsEvenParity(_reg.A);
     }
 
     protected byte DEC(byte value)
@@ -263,7 +265,7 @@ public partial class OpcodeHandler
         _reg.FlagH = false;
         _reg.FlagC = (value & 0x80) == 0x80;
         _reg.FlagS = (result & 0x80) != 0;
-        _reg.FlagPV = ParityTable[result] == 1;
+        _reg.FlagPV = IsEvenParity(result);
         return result;
     }
 
@@ -275,7 +277,7 @@ public partial class OpcodeHandler
         _reg.FlagN = false;
         _reg.FlagH = false;
         _reg.FlagS = (result & 0x80) != 0;
-        _reg.FlagPV = ParityTable[result] == 1;
+        _reg.FlagPV = IsEvenParity(result);
         return result;
     }
 
@@ -287,7 +289,7 @@ public partial class OpcodeHandler
         _reg.FlagH = false;
         _reg.FlagC = (value & 1) == 1;
         _reg.FlagS = (result & 0x80) != 0;
-        _reg.FlagPV = ParityTable[result] == 1;
+        _reg.FlagPV = IsEvenParity(result);
         return result;
     }
 
@@ -299,7 +301,7 @@ public partial class OpcodeHandler
         _reg.FlagH = false;
         _reg.FlagC = (value & 1) == 1;
         _reg.FlagS = (result & 0x80) != 0;
-        _reg.FlagPV = ParityTable[result] == 1;
+        _reg.FlagPV = IsEvenParity(result);
         return result;
     }
 
@@ -335,7 +337,7 @@ public partial class OpcodeHandler
         _reg.FlagH = false;
         _reg.FlagC = (value & 0x80) == 0x80;
         _reg.FlagS = (result & 0x80) != 0;
-        _reg.FlagPV = ParityTable[result] == 1;
+        _reg.FlagPV = IsEvenParity(result);
         return result;
     }
 
@@ -349,7 +351,7 @@ public partial class OpcodeHandler
         _reg.FlagH = false;
         _reg.FlagC = (value & 1) == 1;
         _reg.FlagS = (result & 0x80) != 0;
-        _reg.FlagPV = ParityTable[result] == 1;
+        _reg.FlagPV = IsEvenParity(result);
         return result;
     }
 
@@ -363,7 +365,7 @@ public partial class OpcodeHandler
         _reg.FlagH = false;
         _reg.FlagC = (value & 1) == 1;
         _reg.FlagS = (result & 0x80) != 0;
-        _reg.FlagPV = ParityTable[result] == 1;
+        _reg.FlagPV = IsEvenParity(result);
         return result;
     }
 

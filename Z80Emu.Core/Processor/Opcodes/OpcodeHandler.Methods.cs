@@ -237,14 +237,70 @@ public partial class OpcodeHandler
         _opcodes["0A DEC L"].Execute = () => { _reg.L = DEC(_reg.L); };
         _opcodes["0C DEC A"].Execute = () => { _reg.A = DEC(_reg.A); };
         _opcodes["F3 DI"].Execute = () => { _int.Disable(); };
-        _opcodes["10 DJNZ d"].Execute = () => { };
-        _opcodes["FB EI"].Execute = () => { _int.Enable(true); };
-        _opcodes["E3 EX (SP),HL"].Execute = () => { };
-        _opcodes["DD EX (SP),IX"].Execute = () => { };
-        _opcodes["FD EX (SP),IY"].Execute = () => { };
-        _opcodes["08 EX AF,AF'"].Execute = () => { };
-        _opcodes["EB EX DE,HL"].Execute = () => { };
-        _opcodes["D9 EXX"].Execute = () => { };
+        _opcodes["10 DJNZ d"].Execute = () =>
+        {
+            _operand = NextByte();
+            _reg.B--;
+            if (_reg.B == 0) return;
+            _reg.PC = (word)(_reg.PC + (sbyte)_operand);
+        };
+        _opcodes["FB EI"].Execute = () => { _int.Enable(); };
+        _opcodes["E3 EX (SP),HL"].Execute = () =>
+        {
+            _lsb = NextByte();
+            _msb = NextByte();
+            _address = BitUtils.ToWord(_msb, _lsb);
+            word temp = _reg.HL;
+            _reg.HL = _mmu[_address];
+            _mmu[_address] = temp.Lsb();
+            _mmu[_address + 1] = temp.Msb();
+        };
+        _opcodes["DD EX (SP),IX"].Execute = () =>
+        {
+            _lsb = NextByte();
+            _msb = NextByte();
+            _address = BitUtils.ToWord(_msb, _lsb);
+            word temp = _reg.IX;
+            _reg.IX = _mmu[_address];
+            _mmu[_address] = temp.Lsb();
+            _mmu[_address + 1] = temp.Msb();
+        };
+        _opcodes["FD EX (SP),IY"].Execute = () =>
+        {
+            _lsb = NextByte();
+            _msb = NextByte();
+            _address = BitUtils.ToWord(_msb, _lsb);
+            word temp = _reg.IY;
+            _reg.IY = _mmu[_address];
+            _mmu[_address] = temp.Lsb();
+            _mmu[_address + 1] = temp.Msb();
+        };
+        _opcodes["08 EX AF,AF'"].Execute = () =>
+        {
+            word temp = _reg.AF;
+            _reg.AF = _reg.AF_;
+            _reg.AF_ = temp;
+        };
+        _opcodes["EB EX DE,HL"].Execute = () =>
+        {
+            word temp = _reg.DE;
+            _reg.DE = _reg.HL;
+            _reg.HL = temp;
+        };
+        _opcodes["D9 EXX"].Execute = () =>
+        {
+            word temp = _reg.BC;
+            _reg.BC = _reg.BC_;
+            _reg.BC_ = temp;
+
+            temp = _reg.DE;
+            _reg.DE = _reg.DE_;
+            _reg.DE_ = temp;
+
+            temp = _reg.HL;
+            _reg.HL = _reg.HL_;
+            _reg.HL_ = temp;
+        };
         _opcodes["76 HALT"].Execute = () => { _reg.PC--; };
         _opcodes["ED IM 0"].Execute = () => { };
         _opcodes["ED IM 1"].Execute = () => { };
@@ -447,8 +503,24 @@ public partial class OpcodeHandler
             _msb = NextByte();
             _reg.A = _mmu[BitUtils.ToWord(_msb, _lsb)];
         };
-        _opcodes["ED LD A,I"].Execute = () => { };
-        _opcodes["ED LD A,R"].Execute = () => { };
+        _opcodes["ED LD A,I"].Execute = () =>
+        {
+            _reg.A = _reg.I;
+            _reg.FlagS = (_reg.A & 0x80) != 0;
+            _reg.FlagZ = _reg.A == 0;
+            _reg.FlagH = false;
+            _reg.FlagN = false;
+            _reg.FlagPV = _int.IFF2;
+        };
+        _opcodes["ED LD A,R"].Execute = () =>
+        {
+            _reg.A = _reg.R;
+            _reg.FlagS = (_reg.A & 0x80) != 0;
+            _reg.FlagZ = _reg.A == 0;
+            _reg.FlagH = false;
+            _reg.FlagN = false;
+            _reg.FlagPV = _int.IFF2;
+        };
         _opcodes["ED LD BC,(nn)"].Execute = () =>
         {
             _lsb = NextByte();
@@ -473,23 +545,38 @@ public partial class OpcodeHandler
             _reg.H = _mmu[_address];
             _reg.L = _mmu[_address + 1];
         };
-        _opcodes["ED LD I,A"].Execute = () => { };
-        _opcodes["DD LD IX,(nn)"].Execute = () => { };
+        _opcodes["ED LD I,A"].Execute = () => { _reg.I = _reg.A; };
+        _opcodes["DD LD IX,(nn)"].Execute = () =>
+        {
+            _lsb = NextByte();
+            _msb = NextByte();
+            _reg.IX = BitUtils.ToWord(_mmu[_msb], _mmu[_lsb]);
+        };
         _opcodes["DD LD IX,nn"].Execute = () =>
         {
             _lsb = NextByte();
             _msb = NextByte();
             _reg.IX = BitUtils.ToWord(_msb, _lsb);
         };
-        _opcodes["FD LD IY,(nn)"].Execute = () => { };
+        _opcodes["FD LD IY,(nn)"].Execute = () =>
+        {
+            _lsb = NextByte();
+            _msb = NextByte();
+            _reg.IY = BitUtils.ToWord(_mmu[_msb], _mmu[_lsb]);
+        };
         _opcodes["FD LD IY,nn"].Execute = () =>
         {
             _lsb = NextByte();
             _msb = NextByte();
             _reg.IY = BitUtils.ToWord(_msb, _lsb);
         };
-        _opcodes["ED LD R,A"].Execute = () => { };
-        _opcodes["ED LD SP,(nn)"].Execute = () => { };
+        _opcodes["ED LD R,A"].Execute = () => { _reg.R = _reg.A; };
+        _opcodes["ED LD SP,(nn)"].Execute = () =>
+        {
+            _lsb = NextByte();
+            _msb = NextByte();
+            _reg.SP = BitUtils.ToWord(_mmu[_msb], _mmu[_lsb]);
+        };
         _opcodes["F9 LD SP,HL"].Execute = () => { _reg.SP = _reg.HL; };
         _opcodes["DD LD SP,IX"].Execute = () => { _reg.SP = _reg.IY; };
         _opcodes["FD LD SP,IY"].Execute = () => { _reg.SP = _reg.IY; };
@@ -790,7 +877,7 @@ public partial class OpcodeHandler
             _lsb = _mmu[_reg.SP++];
             _msb = _mmu[_reg.SP++];
             _reg.PC = BitUtils.ToWord(_msb, _lsb);
-            _int.Enable(false);
+            _int.Enable();
         };
         _opcodes["ED RETN"].Execute = () => { };
         _opcodes["CB RL (HL)"].Execute = () => { _mmu[_reg.HL] = RL(_mmu[_reg.HL]); };
@@ -1007,7 +1094,7 @@ public partial class OpcodeHandler
         _opcodes["97 SUB A"].Execute = () => SUB(_reg.A);
         _opcodes["AE XOR (HL)"].Execute = () => XOR(_mmu[_reg.HL]);
         _opcodes["DD XOR (IX+d)"].Execute = () => XOR(_mmu[_reg.IX + (sbyte)NextByte()]);
-        _opcodes["FD XOR (IY+d)"].Execute = () => XOR(_mmu[_reg.IY + (sbyte)NextByte()]); 
+        _opcodes["FD XOR (IY+d)"].Execute = () => XOR(_mmu[_reg.IY + (sbyte)NextByte()]);
         _opcodes["EE XOR n"].Execute = () => XOR(NextByte());
         _opcodes["A8 XOR B"].Execute = () => XOR(_reg.B);
         _opcodes["A9 XOR C"].Execute = () => XOR(_reg.C);

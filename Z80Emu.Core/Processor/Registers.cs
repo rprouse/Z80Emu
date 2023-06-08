@@ -1,6 +1,4 @@
-using System;
 using System.Text;
-using Z80Emu.Core.Processor.Opcodes;
 
 namespace Z80Emu.Core.Processor;
 
@@ -14,9 +12,6 @@ public class Registers
     public byte E { get; set; }
     public byte H { get; set; }
     public byte L { get; set; }
-
-    public byte I { get; set; }
-    public byte R { get; set; }
 
     public word AF
     {
@@ -65,61 +60,63 @@ public class Registers
     public word SP { get; set; }
     public word PC { get; set; }
 
+    public byte I { get; set; }
+    public byte R { get; set; }
 
-    public byte A2 { get; set; }
-    public byte F2 { get; set; }
-    public byte B2 { get; set; }
-    public byte C2 { get; set; }
-    public byte D2 { get; set; }
-    public byte E2 { get; set; }
-    public byte H2 { get; set; }
-    public byte L2 { get; set; }
+    public byte A_ { get; set; }
+    public byte F_ { get; set; }
+    public byte B_ { get; set; }
+    public byte C_ { get; set; }
+    public byte D_ { get; set; }
+    public byte E_ { get; set; }
+    public byte H_ { get; set; }
+    public byte L_ { get; set; }
 
-    public word AF2
+    public word AF_
     {
-        get => (word)(A2 << 8 | F2);
+        get => (word)(A_ << 8 | F_);
         set
         {
-            A2 = (byte)(value >> 8);
-            F2 = (byte)(value & 0x00FF);
+            A_ = (byte)(value >> 8);
+            F_ = (byte)(value & 0x00FF);
         }
     }
 
-    public word BC2
+    public word BC_
     {
-        get => (word)(B2 << 8 | C2);
+        get => (word)(B_ << 8 | C_);
         set
         {
-            B2 = (byte)(value >> 8);
-            C2 = (byte)(value & 0x00FF);
+            B_ = (byte)(value >> 8);
+            C_ = (byte)(value & 0x00FF);
         }
     }
 
-    public word DE2
+    public word DE_
     {
-        get => (word)(D2 << 8 | E2);
+        get => (word)(D_ << 8 | E_);
         set
         {
-            D2 = (byte)(value >> 8);
-            E2 = (byte)(value & 0x00FF);
+            D_ = (byte)(value >> 8);
+            E_ = (byte)(value & 0x00FF);
         }
     }
 
-    public word HL2
+    public word HL_
     {
-        get => (word)(H2 << 8 | L2);
+        get => (word)(H_ << 8 | L_);
         set
         {
-            H2 = (byte)(value >> 8);
-            L2 = (byte)(value & 0x00FF);
+            H_ = (byte)(value >> 8);
+            L_ = (byte)(value & 0x00FF);
         }
     }
 
-    public word IX2 { get; set; }
-    public word IY2 { get; set; }
+    public word IX_ { get; set; }
+    public word IY_ { get; set; }
 
-    public word SP2 { get; set; }
-    public word PC2 { get; set; }
+    public word SP_ { get; set; }
+    public word PC_ { get; set; }
 
     // Bit 7: Sign Flag
     // Bit 6: Zero Flag
