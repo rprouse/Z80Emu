@@ -1,5 +1,3 @@
-using Spectre.Console;
-using Z80Emu.Core;
 using Monitor = Z80Emu.Monitor;
 
 var monitor = new Monitor(new Emulator());

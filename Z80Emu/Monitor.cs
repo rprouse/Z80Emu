@@ -1,5 +1,3 @@
-using Spectre.Console;
-using Z80Emu.Core;
 using Z80Emu.Core.Processor.Opcodes;
 
 namespace Z80Emu;

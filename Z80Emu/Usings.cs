@@ -2,3 +2,6 @@
 #pragma warning disable CS8981
 global using word = System.UInt16;
 #pragma warning restore CS8981
+
+global using Spectre.Console;
+global using Z80Emu.Core;
