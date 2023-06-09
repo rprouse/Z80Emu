@@ -101,50 +101,74 @@ public class TestRegisters
     }
 
     [Test]
-    public void TestSetUnsetFlagZ()
+    public void TestSetUnsetFlagS()
     {
         _reg.F = 0b0111_1111;
+        _reg.FlagS = true;
+        _reg.FlagS.Should().Be(true);
+        _reg.F.Should().Be(0b1111_1111);
+        _reg.FlagS = false;
+        _reg.FlagS.Should().Be(false);
+        _reg.F.Should().Be(0b0111_1111);
+    }
+
+    [Test]
+    public void TestSetUnsetFlagZ()
+    {
+        _reg.F = 0b1011_1111;
         _reg.FlagZ = true;
         _reg.FlagZ.Should().Be(true);
         _reg.F.Should().Be(0b1111_1111);
         _reg.FlagZ = false;
         _reg.FlagZ.Should().Be(false);
-        _reg.F.Should().Be(0b0111_1111);
-    }
-
-    [Test]
-    public void TestSetUnsetFlagN()
-    {
-        _reg.F = 0b1011_1111;
-        _reg.FlagN = true;
-        _reg.FlagN.Should().Be(true);
-        _reg.F.Should().Be(0b1111_1111);
-        _reg.FlagN = false;
-        _reg.FlagN.Should().Be(false);
         _reg.F.Should().Be(0b1011_1111);
     }
 
     [Test]
     public void TestSetUnsetFlagH()
     {
-        _reg.F = 0b1101_1111;
+        _reg.F = 0b1110_1111;
         _reg.FlagH = true;
         _reg.FlagH.Should().Be(true);
         _reg.F.Should().Be(0b1111_1111);
         _reg.FlagH = false;
         _reg.FlagH.Should().Be(false);
-        _reg.F.Should().Be(0b1101_1111);
+        _reg.F.Should().Be(0b1110_1111);
+    }
+
+    [Test]
+    public void TestSetUnsetFlagPV()
+    {
+        _reg.F = 0b1111_1011;
+        _reg.FlagPV = true;
+        _reg.FlagPV.Should().Be(true);
+        _reg.F.Should().Be(0b1111_1111);
+        _reg.FlagPV = false;
+        _reg.FlagPV.Should().Be(false);
+        _reg.F.Should().Be(0b1111_1011);
+    }
+
+    [Test]
+    public void TestSetUnsetFlagN()
+    {
+        _reg.F = 0b1111_1101;
+        _reg.FlagN = true;
+        _reg.FlagN.Should().Be(true);
+        _reg.F.Should().Be(0b1111_1111);
+        _reg.FlagN = false;
+        _reg.FlagN.Should().Be(false);
+        _reg.F.Should().Be(0b1111_1101);
     }
 
     [Test]
     public void TestSetUnsetFlagC()
     {
-        _reg.F = 0b1110_1111;
+        _reg.F = 0b1111_1110;
         _reg.FlagC = true;
         _reg.FlagC.Should().Be(true);
         _reg.F.Should().Be(0b1111_1111);
         _reg.FlagC = false;
         _reg.FlagC.Should().Be(false);
-        _reg.F.Should().Be(0b1110_1111);
+        _reg.F.Should().Be(0b1111_1110);
     }
 }
