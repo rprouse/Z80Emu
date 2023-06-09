@@ -9,6 +9,9 @@ internal class Monitor
     readonly Emulator _emulator;
     readonly TextPrompt<string> _prompt;
 
+    word? _lastMemAddr;
+    word? _lastDisAddr;
+
     public Monitor(Emulator emulator)
     {
         _emulator = emulator;
@@ -44,18 +47,26 @@ internal class Monitor
             {
                 case 's':   // Step
                     Step();
+                    _lastMemAddr = null;
+                    _lastDisAddr = null;
                     break;
                 case 'm':   // Memory
-                    ViewMemory();
+                    _lastMemAddr = ViewMemory(_lastMemAddr ?? 0x100);
+                    _lastDisAddr = null;
                     break;
                 case 'r':   // Registers
                     ViewRegisters();
+                    _lastMemAddr = null;
+                    _lastDisAddr = null;
                     break;
                 case 'd':   // Disassemble
-                    ViewDisassembly();
+                    _lastMemAddr = null;
+                    _lastDisAddr = ViewDisassembly(_lastDisAddr ?? _emulator.CPU.Registers.PC);
                     break;
                 case 'h':   // Help
                     ViewHelp();
+                    _lastMemAddr = null;
+                    _lastDisAddr = null;
                     break;
                 case 'q':   // Quit
                     return 0;
@@ -111,35 +122,41 @@ internal class Monitor
         AnsiConsole.WriteLine();
     }
 
-    void ViewMemory(word startAddr = 0x0100, word len = 0x6F)
+    /// <summary>
+    /// View memory starting at startAddr and return the next address to view
+    /// </summary>
+    /// <param name="startAddr">Address to start viewing</param>
+    /// <param name="len">The length in bytes to view</param>
+    /// <returns></returns>
+    word ViewMemory(word startAddr = 0x0100, word len = 0x60)
     {
-        startAddr = (word)(startAddr / 0xF * 0xF + 1);
-        for (word addr = startAddr; addr < startAddr + len; addr += 0xF)
+        startAddr = (word)(startAddr / 0x10 * 0x10);
+        for (word addr = startAddr; addr < startAddr + len; addr += 0x10)
         {
             AnsiConsole.Markup($"[blue]{addr:X4}[/] ");
-            for (word i = 0; i < 0xF; i++)
+            for (word i = 0; i <= 0xF; i++)
             {
                 AnsiConsole.Markup($"[aqua]{_emulator.Memory[addr + i]:X2}[/] ");
             }
-            for (word i = 0; i < 0xF; i++)
+            for (word i = 0; i <= 0xF; i++)
             {
                 char c = (char)_emulator.Memory[addr + i];
                 AnsiConsole.Markup($"[green]{(char.IsControl(c) ? '.' : c)}[/]");
             }
             AnsiConsole.WriteLine();
         }
+        return (ushort)(startAddr + len);
     }
 
     /// <summary>
     /// View the disassembly of the program from the current PC
     /// </summary>
-    void ViewDisassembly()
+    /// <param name="startAddr">Address to start disassembly</param>
+    /// <param name="len">Number of instructions to disassemble</param>
+    word ViewDisassembly(word startAddr, word len = 12)
     {
-        word len = 0x1F;
-        word startAddr = _emulator.CPU.Registers.PC;
         word addr = startAddr;
-
-        while (addr < startAddr + len)
+        for (int count = 0; count < len; count++)
         {
             AnsiConsole.Markup($"[blue]{addr:X4}[/] ");
             try
@@ -172,5 +189,6 @@ internal class Monitor
             }
         }
         AnsiConsole.WriteLine();
+        return addr;
     }
 }
