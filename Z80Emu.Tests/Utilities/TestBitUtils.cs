@@ -138,4 +138,41 @@ public class TestBitUtils
         byte b = 0b_1111_1111;
         b.SetFlag(flag, false).Should().Be(expected);
     }
+
+    [TestCase(0b0000_0000, true)]
+    [TestCase(0b0000_0001, false)]
+    [TestCase(0b0000_0010, false)]
+    [TestCase(0b0000_0011, true)]
+    [TestCase(0b0000_0100, false)]
+    [TestCase(0b0000_0101, true)]
+    [TestCase(0b0110_0110, true)]
+    [TestCase(0b0110_0111, false)]
+    [TestCase(0b1111_1110, false)]
+    [TestCase(0b1111_1111, true)]
+    public void TestEvenParity(byte b, bool expected)
+    {
+        b.IsEvenParity().Should().Be(expected);
+    }
+
+    [TestCase(0b0000_0000, false)]
+    [TestCase(0b0111_1111, false)]
+    [TestCase(0b1000_0000, true)]
+    [TestCase(0b1111_1111, true)]
+    public void TestIsNegative(byte b, bool expected)
+    {
+        b.IsNegative().Should().Be(expected);
+    }
+
+    [TestCase(0b0000_0000_0000, false)]
+    [TestCase(0b0000_0111_1111, false)]
+    [TestCase(0b0000_1000_0000, true)]
+    [TestCase(0b0000_1111_1111, true)]
+    [TestCase(0b0001_0000_0000, false)]
+    [TestCase(0b0001_0111_1111, false)]
+    [TestCase(0b0001_1000_0000, true)]
+    [TestCase(0b0001_1111_1111, true)]
+    public void TestIsNegative(int b, bool expected)
+    {
+        b.IsNegative().Should().Be(expected);
+    }
 }

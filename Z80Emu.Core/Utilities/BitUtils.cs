@@ -92,4 +92,45 @@ public static class BitUtils
     /// <returns></returns>
     public static byte SetFlag(this byte value, Registers.Flag flag, bool set) =>
         set ? value.SetFlag(flag) : value.ResetFlag(flag);
+
+    // Parity lookup table
+    static byte[] ParityTable = {
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1 };
+
+    /// <summary>
+    /// Tests if a byte has even parity.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static bool IsEvenParity(this byte value) => ParityTable[value] == 1;
+
+    /// <summary>
+    /// Tests if a signed byte is negative.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static bool IsNegative(this byte value) => (value & 0x80) != 0;
+
+    /// <summary>
+    /// Tests if a signed byte is negative. This version takes an int for the
+    /// cases where we are working with the overflow results.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static bool IsNegative(this int value) => ((byte)value).IsNegative();
 }

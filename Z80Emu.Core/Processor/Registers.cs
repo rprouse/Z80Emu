@@ -16,41 +16,41 @@ public class Registers
 
     public word AF
     {
-        get => (word)(A << 8 | F);
+        get => BitUtils.ToWord(A, F);
         set
         {
-            A = (byte)(value >> 8);
-            F = (byte)(value & 0x00FF);
+            A = value.Msb();
+            F = value.Lsb();
         }
     }
 
     public word BC
     {
-        get => (word)(B << 8 | C);
+        get => BitUtils.ToWord(B, C);
         set
         {
-            B = (byte)(value >> 8);
-            C = (byte)(value & 0x00FF);
+            B = value.Msb();
+            C = value.Lsb();
         }
     }
 
     public word DE
     {
-        get => (word)(D << 8 | E);
+        get => BitUtils.ToWord(D, E);
         set
         {
-            D = (byte)(value >> 8);
-            E = (byte)(value & 0x00FF);
+            D = value.Msb();
+            E = value.Lsb();
         }
     }
 
     public word HL
     {
-        get => (word)(H << 8 | L);
+        get => BitUtils.ToWord(H, L);
         set
         {
-            H = (byte)(value >> 8);
-            L = (byte)(value & 0x00FF);
+            H = value.Msb();
+            L = value.Lsb();
         }
     }
 
@@ -75,41 +75,41 @@ public class Registers
 
     public word AF_
     {
-        get => (word)(A_ << 8 | F_);
+        get => BitUtils.ToWord(A_, F_);
         set
         {
-            A_ = (byte)(value >> 8);
-            F_ = (byte)(value & 0x00FF);
+            A_ = value.Msb();
+            F_ = value.Lsb();
         }
     }
 
     public word BC_
     {
-        get => (word)(B_ << 8 | C_);
+        get => BitUtils.ToWord(B_, C_);
         set
         {
-            B_ = (byte)(value >> 8);
-            C_ = (byte)(value & 0x00FF);
+            B_ = value.Msb();
+            C_ = value.Lsb();
         }
     }
 
     public word DE_
     {
-        get => (word)(D_ << 8 | E_);
+        get => BitUtils.ToWord(D_, E_);
         set
         {
-            D_ = (byte)(value >> 8);
-            E_ = (byte)(value & 0x00FF);
+            D_ = value.Msb();
+            E_ = value.Lsb();
         }
     }
 
     public word HL_
     {
-        get => (word)(H_ << 8 | L_);
+        get => BitUtils.ToWord(H_, L_);
         set
         {
-            H_ = (byte)(value >> 8);
-            L_ = (byte)(value & 0x00FF);
+            H_ = value.Msb();
+            L_ = value.Lsb();
         }
     }
 

@@ -49,27 +49,6 @@ public partial class OpcodeHandler
     /// <returns></returns>
     protected byte NextByte() => _mmu[_reg.PC++];
 
-    // Parity lookup table
-    static byte[] ParityTable = {
-        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1 };
-
-    static bool IsEvenParity(byte value) => ParityTable[value] == 1;
-
     private byte AddSubtractByte(byte value, bool withCarry, bool subtract)
     {
         ushort result;  // To detect carry and overflow
@@ -86,7 +65,7 @@ public partial class OpcodeHandler
             _reg.FlagH = (_reg.A & 0x0F) + (value & 0x0F) + (withCarry ? 1 : 0) > 0x0F;
             result = (ushort)(_reg.A + value + (withCarry ? 1 : 0));
         }
-        _reg.FlagS = (result & 0x80) != 0;
+        _reg.FlagS = ((byte)result).IsNegative();
         _reg.FlagC = (result & 0x100) != 0;
         _reg.FlagZ = (result & 0xFF) == 0;
 
@@ -138,12 +117,12 @@ public partial class OpcodeHandler
 
     private void SetLogicFlags(bool flagH)
     {
-        _reg.FlagS = (_reg.A & 0x80) != 0;
+        _reg.FlagS = _reg.A.IsNegative();
         _reg.FlagZ = _reg.A == 0;
         _reg.FlagH = flagH;
         _reg.FlagN = false;
         _reg.FlagC = false;
-        _reg.FlagPV = IsEvenParity(_reg.A);
+        _reg.FlagPV = _reg.A.IsEvenParity();
     }
 
     protected void ADC(byte value)
@@ -220,9 +199,9 @@ public partial class OpcodeHandler
             }
         }
         _reg.FlagH = ((a ^ _reg.A) & 0x10) != 0;
-        _reg.FlagS = (_reg.A & 0x80) != 0;
+        _reg.FlagS = _reg.A.IsNegative();
         _reg.FlagZ = _reg.A == 0;
-        _reg.FlagPV = IsEvenParity(_reg.A);
+        _reg.FlagPV = _reg.A.IsEvenParity();
     }
 
     protected byte DEC(byte value)
@@ -232,7 +211,7 @@ public partial class OpcodeHandler
         _reg.FlagZ = result == 0;
         _reg.FlagN = true;
         _reg.FlagH = (value & 0x0F) == 0x0F;
-        _reg.FlagS = (result & 0x80) != 0;
+        _reg.FlagS = result.IsNegative();
         return (byte)result;
     }
 
@@ -243,7 +222,7 @@ public partial class OpcodeHandler
         _reg.FlagZ = result == 0;
         _reg.FlagN = false;
         _reg.FlagH = (value & 0x0F) == 0x00;
-        _reg.FlagS = (result & 0x80) != 0;
+        _reg.FlagS = result.IsNegative();
         return (byte)result;
     }
 
@@ -264,8 +243,8 @@ public partial class OpcodeHandler
         _reg.FlagN = false;
         _reg.FlagH = false;
         _reg.FlagC = (value & 0x80) == 0x80;
-        _reg.FlagS = (result & 0x80) != 0;
-        _reg.FlagPV = IsEvenParity(result);
+        _reg.FlagS = result.IsNegative();
+        _reg.FlagPV = result.IsEvenParity();
         return result;
     }
 
@@ -276,8 +255,8 @@ public partial class OpcodeHandler
         _reg.FlagZ = result == 0;
         _reg.FlagN = false;
         _reg.FlagH = false;
-        _reg.FlagS = (result & 0x80) != 0;
-        _reg.FlagPV = IsEvenParity(result);
+        _reg.FlagS = result.IsNegative();
+        _reg.FlagPV = result.IsEvenParity();
         return result;
     }
 
@@ -288,8 +267,8 @@ public partial class OpcodeHandler
         _reg.FlagN = false;
         _reg.FlagH = false;
         _reg.FlagC = (value & 1) == 1;
-        _reg.FlagS = (result & 0x80) != 0;
-        _reg.FlagPV = IsEvenParity(result);
+        _reg.FlagS = result.IsNegative();
+        _reg.FlagPV = result.IsEvenParity();
         return result;
     }
 
@@ -300,8 +279,8 @@ public partial class OpcodeHandler
         _reg.FlagN = false;
         _reg.FlagH = false;
         _reg.FlagC = (value & 1) == 1;
-        _reg.FlagS = (result & 0x80) != 0;
-        _reg.FlagPV = IsEvenParity(result);
+        _reg.FlagS = result.IsNegative();
+        _reg.FlagPV = result.IsEvenParity();
         return result;
     }
 
@@ -336,8 +315,8 @@ public partial class OpcodeHandler
         _reg.FlagN = false;
         _reg.FlagH = false;
         _reg.FlagC = (value & 0x80) == 0x80;
-        _reg.FlagS = (result & 0x80) != 0;
-        _reg.FlagPV = IsEvenParity(result);
+        _reg.FlagS = result.IsNegative();
+        _reg.FlagPV = result.IsEvenParity();
         return result;
     }
 
@@ -350,8 +329,8 @@ public partial class OpcodeHandler
         _reg.FlagN = false;
         _reg.FlagH = false;
         _reg.FlagC = (value & 1) == 1;
-        _reg.FlagS = (result & 0x80) != 0;
-        _reg.FlagPV = IsEvenParity(result);
+        _reg.FlagS = result.IsNegative();
+        _reg.FlagPV = result.IsEvenParity();
         return result;
     }
 
@@ -364,8 +343,8 @@ public partial class OpcodeHandler
         _reg.FlagN = false;
         _reg.FlagH = false;
         _reg.FlagC = (value & 1) == 1;
-        _reg.FlagS = (result & 0x80) != 0;
-        _reg.FlagPV = IsEvenParity(result);
+        _reg.FlagS = result.IsNegative();
+        _reg.FlagPV = result.IsEvenParity();
         return result;
     }
 
