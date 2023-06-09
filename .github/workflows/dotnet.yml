@@ -15,14 +15,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v3
+
+    - name: 🔧 Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
-    - name: Restore dependencies
+        dotnet-version: 7.0.x
+
+    - name: 💉 Install dependencies
       run: dotnet restore
-    - name: Build
+
+    - name: 🛠️ Build
       run: dotnet build --no-restore
-    - name: Test
+
+    - name: ✅ Test
       run: dotnet test --no-build --verbosity normal

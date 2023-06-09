@@ -12,13 +12,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		roms\dmg_boot.asm = roms\dmg_boot.asm
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Z80Emu", "Z80Emu\Z80Emu.csproj", "{4CFBD1C3-A2C9-4D8D-BD84-5D1A0CD35C91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParseOpcodes", "ParseOpcodes\ParseOpcodes.csproj", "{F5F792B6-9654-4BB5-BB08-1C103A08FA86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParseOpcodes", "ParseOpcodes\ParseOpcodes.csproj", "{F5F792B6-9654-4BB5-BB08-1C103A08FA86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
