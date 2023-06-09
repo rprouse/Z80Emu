@@ -1,4 +1,5 @@
 using System.Text;
+using Z80Emu.Core.Utilities;
 
 namespace Z80Emu.Core.Processor;
 
@@ -126,14 +127,23 @@ public class Registers
     // Bit 2: Parity / Overflow Flag
     // Bit 1: Add / Subtract Flag
     // Bit 0: Carry Flag
+    public enum Flag : byte
+    {
+        Sign = 0b1000_0000,
+        Zero = 0b0100_0000,
+        HalfCarry = 0b0001_0000,
+        Parity = 0b0000_0100,
+        Subtract = 0b0000_0010,
+        Carry = 0b0000_0001
+    }
 
     /// <summary>
     /// Sign status (value of bit 7)
     /// </summary>
     public bool FlagS
     {
-        get => (F & 0b1000_0000) != 0;
-        set => F = (byte)(value ? F | 0b1000_0000 : F & 0b0111_1111);
+        get => F.GetFlag(Flag.Sign);
+        set => F = F.SetFlag(Flag.Sign, value);
     }
 
     /// <summary>
@@ -141,8 +151,8 @@ public class Registers
     /// </summary>
     public bool FlagZ
     {
-        get => (F & 0b0100_0000) != 0;
-        set => F = (byte)(value ? F | 0b0100_0000 : F & 0b1011_1111);
+        get => F.GetFlag(Flag.Zero);
+        set => F = F.SetFlag(Flag.Zero, value);
     }
 
     /// <summary>
@@ -150,8 +160,8 @@ public class Registers
     /// </summary>
     public bool FlagH
     {
-        get => (F & 0b0001_0000) != 0;
-        set => F = (byte)(value ? F | 0b0001_0000 : F & 0b1110_1111);
+        get => F.GetFlag(Flag.HalfCarry);
+        set => F = F.SetFlag(Flag.HalfCarry, value);
     }
 
     /// <summary>
@@ -160,8 +170,8 @@ public class Registers
     /// </summary>
     public bool FlagPV
     {
-        get => (F & 0b0000_0100) != 0;
-        set => F = (byte)(value ? F | 0b0000_0100 : F & 0b1111_1011);
+        get => F.GetFlag(Flag.Parity);
+        set => F = F.SetFlag(Flag.Parity, value);
     }
 
     /// <summary>
@@ -169,8 +179,8 @@ public class Registers
     /// </summary>
     public bool FlagN
     {
-        get => (F & 0b0000_0010) != 0;
-        set => F = (byte)(value ? F | 0b0000_0010 : F & 0b1111_1101);
+        get => F.GetFlag(Flag.Subtract);
+        set => F = F.SetFlag(Flag.Subtract, value);
     }
 
     /// <summary>
@@ -178,8 +188,8 @@ public class Registers
     /// </summary>
     public bool FlagC
     {
-        get => (F & 0b0000_0001) != 0;
-        set => F = (byte)(value ? F | 0b0000_0001 : F & 0b1111_1110);
+        get => F.GetFlag(Flag.Carry);
+        set => F = F.SetFlag(Flag.Carry, value);
     }
 
     public override string ToString()
