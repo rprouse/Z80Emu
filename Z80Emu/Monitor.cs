@@ -143,7 +143,8 @@ internal class Monitor
             AnsiConsole.Markup($"[blue]{addr:X4}[/] ");
             for (word i = 0; i <= 0xF; i++)
             {
-                AnsiConsole.Markup($"[aqua]{_emulator.Memory[addr + i]:X2}[/] ");
+                string color = _breakpoints.Contains((word)(addr + i)) ? "red" : "aqua";
+                AnsiConsole.Markup($"[{color}]{_emulator.Memory[addr + i]:X2}[/] ");
             }
             for (word i = 0; i <= 0xF; i++)
             {
@@ -165,10 +166,24 @@ internal class Monitor
         word addr = startAddr;
         for (int count = 0; count < len; count++)
         {
-            AnsiConsole.Markup($"[blue]{addr:X4}[/] ");
+            AnsiConsole.Markup($"[blue]{addr:X4}[/]");
             try
             {
                 Opcode opcode = _emulator.Disassemble(addr);
+
+                bool breakpoint = false;
+                for (int i = 0; i < opcode.Length; i++)
+                {
+                    if (_breakpoints.Contains((word)(addr + i)))
+                    {
+                        breakpoint = true;
+                        break;
+                    }
+                }
+                if (breakpoint)
+                    AnsiConsole.Markup($"[red]*[/]");
+                else
+                    AnsiConsole.Markup($" ");
 
                 for (int i = 0; i < 4; i++)
                 {
@@ -191,7 +206,7 @@ internal class Monitor
             }
             catch (Exception)
             {
-                AnsiConsole.MarkupLine($"[aqua]{_emulator.Memory[addr]:X2}[/]");
+                AnsiConsole.MarkupLine($" [aqua]{_emulator.Memory[addr]:X2}[/]");
                 addr++;
             }
         }
