@@ -21,8 +21,9 @@ internal class Monitor
                     .PromptStyle("white")
                     .AddChoice("h")
                     .AddChoice("s")
-                    .AddChoice("m")
                     .AddChoice("r")
+                    .AddChoice("m")
+                    .AddChoice("reg")
                     .AddChoice("d")
                     .AddChoice("b")
                     .AddChoice("q");
@@ -44,37 +45,42 @@ internal class Monitor
         {
             command = AnsiConsole.Prompt(_prompt.DefaultValue(command));
 
-            switch (command.FirstOrDefault())
+            switch (command)
             {
-                case 's':   // Step
+                case "s":   // Step
                     Step();
                     _lastMemAddr = null;
                     _lastDisAddr = null;
                     break;
-                case 'm':   // Memory
+                case "r":   // Run to Breakpoint
+                    Run();
+                    _lastMemAddr = null;
+                    _lastDisAddr = null;
+                    break;
+                case "m":   // Memory
                     _lastMemAddr = ViewMemory(_lastMemAddr ?? 0x100);
                     _lastDisAddr = null;
                     break;
-                case 'r':   // Registers
+                case "reg": // Registers
                     ViewRegisters();
                     _lastMemAddr = null;
                     _lastDisAddr = null;
                     break;
-                case 'd':   // Disassemble
+                case "d":   // Disassemble
                     _lastMemAddr = null;
                     _lastDisAddr = ViewDisassembly(_lastDisAddr ?? _emulator.CPU.Registers.PC);
                     break;
-                case 'b':   // Breakpoints
+                case "b":   // Breakpoints
                     ManageBreakpoints();
                     _lastMemAddr = null;
                     _lastDisAddr = null;
                     break;
-                case 'h':   // Help
+                case "h":   // Help
                     ViewHelp();
                     _lastMemAddr = null;
                     _lastDisAddr = null;
                     break;
-                case 'q':   // Quit
+                case "q":   // Quit
                     return 0;
                 default:
                     AnsiConsole.MarkupLine("[red]Unknown command[/]");
@@ -106,12 +112,31 @@ internal class Monitor
         ViewRegisters();
     }
 
+    void Run()
+    {
+        Opcode? opcode = null;
+        do
+        {
+            opcode = _emulator.Tick();
+        } 
+        while (opcode != null && !IsBreakpointSet(_emulator.CPU.Registers.PC, opcode));
+
+        if (opcode != null)
+        {
+            AnsiConsole.Markup($"[silver]{opcode.Mnemonic}[/]");
+            AnsiConsole.MarkupLine($"\t[green]; {opcode.Description}[/]");
+            AnsiConsole.WriteLine();
+        }
+        ViewRegisters();
+    }
+
     static void ViewHelp()
     {
         AnsiConsole.MarkupLine("[blue]h[/][silver]elp[/]");
         AnsiConsole.MarkupLine("[blue]s[/][silver]tep[/]");
+        AnsiConsole.MarkupLine("[blue]r[/][silver]un[/]");
         AnsiConsole.MarkupLine("[blue]m[/][silver]emory[/]");
-        AnsiConsole.MarkupLine("[blue]r[/][silver]egisters[/]");
+        AnsiConsole.MarkupLine("[blue]reg[/][silver]isters[/]");
         AnsiConsole.MarkupLine("[blue]d[/][silver]isassemble[/]");
         AnsiConsole.MarkupLine("[blue]b[/][silver]reakpoints[/]");
         AnsiConsole.MarkupLine("[blue]q[/][silver]uit[/]");
@@ -171,16 +196,7 @@ internal class Monitor
             {
                 Opcode opcode = _emulator.Disassemble(addr);
 
-                bool breakpoint = false;
-                for (int i = 0; i < opcode.Length; i++)
-                {
-                    if (_breakpoints.Contains((word)(addr + i)))
-                    {
-                        breakpoint = true;
-                        break;
-                    }
-                }
-                if (breakpoint)
+                if (IsBreakpointSet(addr, opcode))
                     AnsiConsole.Markup($"[red]*[/]");
                 else
                     AnsiConsole.Markup($" ");
@@ -212,6 +228,21 @@ internal class Monitor
         }
         AnsiConsole.WriteLine();
         return addr;
+    }
+
+    bool IsBreakpointSet(ushort addr, Opcode opcode)
+    {
+        bool breakpoint = false;
+        for (int i = 0; i < opcode.Length; i++)
+        {
+            if (_breakpoints.Contains((word)(addr + i)))
+            {
+                breakpoint = true;
+                break;
+            }
+        }
+
+        return breakpoint;
     }
 
     void ManageBreakpoints()
