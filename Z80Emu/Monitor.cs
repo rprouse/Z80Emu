@@ -1,3 +1,4 @@
+using System.Linq;
 using Z80Emu.Core.Processor.Opcodes;
 
 namespace Z80Emu;
@@ -6,6 +7,7 @@ internal class Monitor
 {
     readonly Emulator _emulator;
     readonly TextPrompt<string> _prompt;
+    readonly SortedSet<word> _breakpoints = new SortedSet<word>();
 
     word? _lastMemAddr;
     word? _lastDisAddr;
@@ -22,6 +24,7 @@ internal class Monitor
                     .AddChoice("m")
                     .AddChoice("r")
                     .AddChoice("d")
+                    .AddChoice("b")
                     .AddChoice("q");
     }
 
@@ -60,6 +63,11 @@ internal class Monitor
                 case 'd':   // Disassemble
                     _lastMemAddr = null;
                     _lastDisAddr = ViewDisassembly(_lastDisAddr ?? _emulator.CPU.Registers.PC);
+                    break;
+                case 'b':   // Breakpoints
+                    ManageBreakpoints();
+                    _lastMemAddr = null;
+                    _lastDisAddr = null;
                     break;
                 case 'h':   // Help
                     ViewHelp();
@@ -105,6 +113,7 @@ internal class Monitor
         AnsiConsole.MarkupLine("[blue]m[/][silver]emory[/]");
         AnsiConsole.MarkupLine("[blue]r[/][silver]egisters[/]");
         AnsiConsole.MarkupLine("[blue]d[/][silver]isassemble[/]");
+        AnsiConsole.MarkupLine("[blue]b[/][silver]reakpoints[/]");
         AnsiConsole.MarkupLine("[blue]q[/][silver]uit[/]");
         AnsiConsole.WriteLine();
     }
@@ -188,5 +197,77 @@ internal class Monitor
         }
         AnsiConsole.WriteLine();
         return addr;
+    }
+
+    void ManageBreakpoints()
+    {
+        while (true)
+        {
+            string command = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[blue]Manage breakpoints[/]")
+                    .AddChoices(new[] { "add", "delete", "clear", "list", "quit" }));
+
+            switch (command)
+            {
+                case "add":
+                    AddBreakpoint();
+                    break;
+                case "delete":
+                    DeleteBreakpoint();
+                    break;
+                case "clear":
+                    ClearBreakpoints();
+                    break;
+                case "list":
+                    ListBreakpoints();
+                    break;
+                case "quit":
+                    return;
+            }
+        }
+    }
+
+    private void AddBreakpoint()
+    {
+        string addr = AnsiConsole.Ask<string>("Address to break on (in HEX): ");
+        if (word.TryParse(addr, System.Globalization.NumberStyles.HexNumber, null, out ushort breakpoint))
+        {
+            _breakpoints.Add(breakpoint);
+        }
+        else
+        {
+            AnsiConsole.MarkupLine("[red]Invalid address[/]");
+        }
+    }
+
+    private void DeleteBreakpoint()
+    {
+        var delete = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .PageSize(10)
+                .Title("[blue]Select breakpoint to delete[/]")
+                .AddChoices(_breakpoints.Select(b => $"0x{b:X4}")));
+
+        if (word.TryParse(delete, System.Globalization.NumberStyles.HexNumber, null, out ushort breakpoint))
+        {
+            _breakpoints.Remove(breakpoint);
+        }
+    }
+
+    private void ClearBreakpoints()
+    {
+        _breakpoints.Clear();
+    }
+
+    private void ListBreakpoints()
+    {
+        if (_breakpoints.Count == 0)
+        {
+            AnsiConsole.MarkupLine("[yellow]No breakpoints set[/]");
+            return;
+        }
+        string breakpointList = string.Join(", ", _breakpoints.Select(b => $"0x{b:X4}"));
+        AnsiConsole.MarkupLine($"[aqua]{breakpointList}[/]");
     }
 }
