@@ -88,7 +88,8 @@ internal class Monitor
             new FigletText(font, "Zilog Z80")
                 .LeftJustified()
                 .Color(Color.Blue));
-        AnsiConsole.MarkupLine("[Yellow]8-Bit Retro Emulator by Rob Prouse[/]");
+        AnsiConsole.MarkupLine("[yellow]8-Bit Retro Z80 Emulator by Rob Prouse[/]");
+        AnsiConsole.MarkupLine($"[blue]Running {_emulator.OperatingSystem.Name}[/]");
     }
 
     void Step()

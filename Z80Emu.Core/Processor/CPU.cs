@@ -1,4 +1,5 @@
 using Z80Emu.Core.Memory;
+using Z80Emu.Core.OS;
 using Z80Emu.Core.Processor.Opcodes;
 
 namespace Z80Emu.Core.Processor;
@@ -42,6 +43,11 @@ public class CPU
 
     public Opcode Disassemble(word addr) =>
         _opcodeHandler.Disassemble(addr);
+
+    /// <summary>
+    /// Return from a system call
+    /// </summary>
+    public void Return() => _opcodeHandler.RET();
 
     public override string ToString() => 
         _reg.ToString();

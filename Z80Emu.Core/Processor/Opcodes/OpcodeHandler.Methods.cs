@@ -834,51 +834,16 @@ public partial class OpcodeHandler
         _opcodes["CB RES 5,A"].Execute = () => { _reg.A = RES(5, _reg.A); };
         _opcodes["CB RES 6,A"].Execute = () => { _reg.A = RES(6, _reg.A); };
         _opcodes["CB RES 7,A"].Execute = () => { _reg.A = RES(7, _reg.A); };
-        _opcodes["C9 RET"].Execute = () =>
-        {
-            _lsb = _mmu[_reg.SP++];
-            _msb = _mmu[_reg.SP++];
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
-        };
-        _opcodes["D8 RET C"].Execute = () =>
-        {
-            if (!_reg.FlagC) return;
-            _lsb = _mmu[_reg.SP++];
-            _msb = _mmu[_reg.SP++];
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
-        };
+        _opcodes["C9 RET"].Execute = () => RET();
+        _opcodes["D8 RET C"].Execute = () => { if (_reg.FlagC) RET(); };
         _opcodes["F8 RET M"].Execute = () => { };
-        _opcodes["D0 RET NC"].Execute = () =>
-        {
-            if (_reg.FlagC) return;
-            _lsb = _mmu[_reg.SP++];
-            _msb = _mmu[_reg.SP++];
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
-        };
-        _opcodes["C0 RET NZ"].Execute = () =>
-        {
-            if (_reg.FlagZ) return;
-            _lsb = _mmu[_reg.SP++];
-            _msb = _mmu[_reg.SP++];
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
-        };
+        _opcodes["D0 RET NC"].Execute = () => { if (!_reg.FlagC) RET(); };
+        _opcodes["C0 RET NZ"].Execute = () => { if (!_reg.FlagZ) RET(); };
         _opcodes["F0 RET P"].Execute = () => { };
         _opcodes["E8 RET PE"].Execute = () => { };
         _opcodes["E0 RET PO"].Execute = () => { };
-        _opcodes["C8 RET Z"].Execute = () =>
-        {
-            if (!_reg.FlagZ) return;
-            _lsb = _mmu[_reg.SP++];
-            _msb = _mmu[_reg.SP++];
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
-        };
-        _opcodes["ED RETI"].Execute = () =>
-        {
-            _lsb = _mmu[_reg.SP++];
-            _msb = _mmu[_reg.SP++];
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
-            _int.Enable();
-        };
+        _opcodes["C8 RET Z"].Execute = () => { if (_reg.FlagZ) RET(); };
+        _opcodes["ED RETI"].Execute = () => { RET(); _int.Enable(); };
         _opcodes["ED RETN"].Execute = () => { };
         _opcodes["CB RL (HL)"].Execute = () => { _mmu[_reg.HL] = RL(_mmu[_reg.HL]); };
         _opcodes["DD RL (IX+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IX + d] = RL(_mmu[_reg.IX + d]); };
