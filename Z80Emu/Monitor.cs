@@ -1,12 +1,17 @@
+using System.ComponentModel;
 using System.Linq;
 using Z80Emu.Core.Processor.Opcodes;
 
 namespace Z80Emu;
 
+using System;
+using System.ComponentModel;
+using System.Globalization;
+using Spectre.Console.Cli;
+
 internal class Monitor
 {
     readonly Emulator _emulator;
-    readonly TextPrompt<string> _prompt;
     readonly SortedSet<word> _breakpoints = new SortedSet<word>();
 
     word? _lastMemAddr;
@@ -15,18 +20,6 @@ internal class Monitor
     public Monitor(Emulator emulator)
     {
         _emulator = emulator;
-        _prompt = new TextPrompt<string>(">")
-                    .HideChoices()
-                    .HideDefaultValue()
-                    .PromptStyle("white")
-                    .AddChoice("h")
-                    .AddChoice("s")
-                    .AddChoice("r")
-                    .AddChoice("m")
-                    .AddChoice("reg")
-                    .AddChoice("d")
-                    .AddChoice("b")
-                    .AddChoice("q");
     }
 
     public int Run(string filename)
@@ -39,46 +32,44 @@ internal class Monitor
             return -1;
         }
 
-        string command = "s";
+        string lastCommand = "s";
 
         while (true)
         {
-            command = AnsiConsole.Prompt(_prompt.DefaultValue(command));
+            AnsiConsole.Markup("> ");
+            string? command = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(command)) command = lastCommand;
+            string[] parts = command.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            lastCommand = parts[0];
 
-            switch (command)
+            switch (parts[0])
             {
                 case "s":   // Step
                     Step();
-                    _lastMemAddr = null;
-                    _lastDisAddr = null;
                     break;
                 case "r":   // Run to Breakpoint
                     Run();
-                    _lastMemAddr = null;
-                    _lastDisAddr = null;
                     break;
                 case "m":   // Memory
-                    _lastMemAddr = ViewMemory(_lastMemAddr ?? 0x100);
-                    _lastDisAddr = null;
+                    if (parts.Length == 2 && word.TryParse(parts[1], NumberStyles.HexNumber, null, out word memAddr))
+                        _lastMemAddr = memAddr;
+
+                    ViewMemory(_lastMemAddr ?? 0x100);
                     break;
                 case "reg": // Registers
                     ViewRegisters();
-                    _lastMemAddr = null;
-                    _lastDisAddr = null;
                     break;
                 case "d":   // Disassemble
-                    _lastMemAddr = null;
-                    _lastDisAddr = ViewDisassembly(_lastDisAddr ?? _emulator.CPU.Registers.PC);
+                    if (parts.Length == 2 && word.TryParse(parts[1], NumberStyles.HexNumber, null, out word disAddr))
+                        _lastDisAddr = disAddr;
+
+                    ViewDisassembly(_lastDisAddr ?? _emulator.CPU.Registers.PC);
                     break;
                 case "b":   // Breakpoints
                     ManageBreakpoints();
-                    _lastMemAddr = null;
-                    _lastDisAddr = null;
                     break;
                 case "h":   // Help
                     ViewHelp();
-                    _lastMemAddr = null;
-                    _lastDisAddr = null;
                     break;
                 case "q":   // Quit
                     return 0;
@@ -102,6 +93,8 @@ internal class Monitor
 
     void Step()
     {
+        _lastMemAddr = null;
+        _lastDisAddr = null;
         Opcode? opcode = _emulator.Tick();
         if (opcode != null)
         {
@@ -114,6 +107,8 @@ internal class Monitor
 
     void Run()
     {
+        _lastMemAddr = null;
+        _lastDisAddr = null;
         Opcode? opcode = null;
         do
         {
@@ -145,6 +140,8 @@ internal class Monitor
 
     void ViewRegisters()
     {
+        _lastMemAddr = null;
+        _lastDisAddr = null;
         var r = _emulator.CPU.Registers;
         AnsiConsole.Markup($"[blue]AF [/][aqua]{r.AF:X4}[/] [blue]BC [/][aqua]{r.BC:X4}[/] [blue]DE [/][aqua]{r.DE:X4}[/] [blue]HL [/][aqua]{r.HL:X4}[/] [blue]IX [/][aqua]{r.IX:X4}[/]");
         AnsiConsole.Markup($"   [blue]SP [/][aqua]{r.SP:X4}[/] [blue]PC [/][aqua]{r.PC:X4}[/]");
@@ -160,7 +157,7 @@ internal class Monitor
     /// <param name="startAddr">Address to start viewing</param>
     /// <param name="len">The length in bytes to view</param>
     /// <returns></returns>
-    word ViewMemory(word startAddr = 0x0100, word len = 0x60)
+    void ViewMemory(word startAddr = 0x0100, word len = 0x60)
     {
         startAddr = (word)(startAddr / 0x10 * 0x10);
         for (word addr = startAddr; addr < startAddr + len; addr += 0x10)
@@ -178,7 +175,8 @@ internal class Monitor
             }
             AnsiConsole.WriteLine();
         }
-        return (ushort)(startAddr + len);
+        _lastMemAddr = (ushort)(startAddr + len);
+        _lastDisAddr = null;
     }
 
     /// <summary>
@@ -186,7 +184,7 @@ internal class Monitor
     /// </summary>
     /// <param name="startAddr">Address to start disassembly</param>
     /// <param name="len">Number of instructions to disassemble</param>
-    word ViewDisassembly(word startAddr, word len = 12)
+    void ViewDisassembly(word startAddr, word len = 12)
     {
         word addr = startAddr;
         for (int count = 0; count < len; count++)
@@ -227,7 +225,9 @@ internal class Monitor
             }
         }
         AnsiConsole.WriteLine();
-        return addr;
+
+        _lastMemAddr = null;
+        _lastDisAddr = addr;
     }
 
     bool IsBreakpointSet(ushort addr, Opcode opcode)
@@ -247,6 +247,8 @@ internal class Monitor
 
     void ManageBreakpoints()
     {
+        _lastMemAddr = null;
+        _lastDisAddr = null;
         while (true)
         {
             string command = AnsiConsole.Prompt(
@@ -277,7 +279,7 @@ internal class Monitor
     private void AddBreakpoint()
     {
         string addr = AnsiConsole.Ask<string>("Address to break on (in HEX): ");
-        if (word.TryParse(addr, System.Globalization.NumberStyles.HexNumber, null, out ushort breakpoint))
+        if (word.TryParse(addr, NumberStyles.HexNumber, null, out ushort breakpoint))
         {
             _breakpoints.Add(breakpoint);
         }
@@ -295,7 +297,7 @@ internal class Monitor
                 .Title("[blue]Select breakpoint to delete[/]")
                 .AddChoices(_breakpoints.Select(b => $"0x{b:X4}")));
 
-        if (word.TryParse(delete, System.Globalization.NumberStyles.HexNumber, null, out ushort breakpoint))
+        if (word.TryParse(delete, NumberStyles.HexNumber, null, out ushort breakpoint))
         {
             _breakpoints.Remove(breakpoint);
         }
