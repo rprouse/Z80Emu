@@ -47,7 +47,7 @@ public partial class OpcodeHandler
     /// Reads the next byte from memory and increments PC
     /// </summary>
     /// <returns></returns>
-    protected byte NextByte() => _mmu[_reg.PC++];
+    byte NextByte() => _mmu[_reg.PC++];
 
     private byte AddSubtractByte(byte value, bool withCarry, bool subtract)
     {
@@ -125,43 +125,43 @@ public partial class OpcodeHandler
         _reg.FlagPV = _reg.A.IsEvenParity();
     }
 
-    protected void ADC(byte value)
+    void ADC(byte value)
     {        
         _reg.A = AddSubtractByte(value, true, false);
     }
 
-    protected void ADCHL(word value)
+    void ADCHL(word value)
     {
         _reg.HL = AddSubtractWord(_reg.HL, value, true, false);
     }
 
-    protected void ADD(byte value)
+    void ADD(byte value)
     {
         _reg.A = AddSubtractByte(value, false, false);
     }
 
-    protected void ADDHL(word value)
+    void ADDHL(word value)
     {
         _reg.HL = AddSubtractWord(_reg.HL, value, false, false);
     }
 
-    protected void ADDIX(word value)
+    void ADDIX(word value)
     {
         _reg.IX = AddSubtractWord(_reg.IX, value, false, false);
     }
 
-    protected void ADDIY(word value)
+    void ADDIY(word value)
     {
         _reg.IY = AddSubtractWord(_reg.IY, value, false, false);
     }
 
-    protected void AND(byte value)
+    void AND(byte value)
     {
         _reg.A &= value;
         SetLogicFlags(true);
     }
 
-    protected void BIT(int bit, byte value)
+    void BIT(int bit, byte value)
     {
         _reg.FlagZ = (value & 1 << bit) == 0;
         _reg.FlagPV = _reg.FlagZ;
@@ -172,12 +172,12 @@ public partial class OpcodeHandler
             _reg.FlagS = true;
     }
 
-    protected void CP(byte value)
+    void CP(byte value)
     {
         AddSubtractByte(value, false, true);
     }
 
-    protected void DAA()
+    void DAA()
     {
         var a = _reg.A;
         if (_reg.FlagN)
@@ -204,7 +204,7 @@ public partial class OpcodeHandler
         _reg.FlagPV = _reg.A.IsEvenParity();
     }
 
-    protected byte DEC(byte value)
+    byte DEC(byte value)
     {
         _reg.FlagPV = (value & 0x80) == 0 && ((value - 1) & 0x80) != 0;
         int result = value - 1;
@@ -215,7 +215,7 @@ public partial class OpcodeHandler
         return (byte)result;
     }
 
-    protected byte INC(byte value)
+    byte INC(byte value)
     {
         _reg.FlagPV = (value & 0x80) != 0 && ((value + 1) & 0x80) == 0;
         int result = value + 1;
@@ -226,17 +226,25 @@ public partial class OpcodeHandler
         return (byte)result;
     }
 
-    protected void OR(byte value)
+    void OR(byte value)
     {
         _reg.A = (byte)(_reg.A | value);
         SetLogicFlags(false);
     }
 
     // Reset bit in value
-    protected byte RES(int bit, byte value) =>
+    byte RES(int bit, byte value) =>
         (byte)(value & ~(1 << bit));
 
-    protected byte RL(byte value)
+    // This is public so OS calls can return
+    public void RET()
+    {
+        _lsb = _mmu[_reg.SP++];
+        _msb = _mmu[_reg.SP++];
+        _reg.PC = BitUtils.ToWord(_msb, _lsb);
+    }
+
+    byte RL(byte value)
     {
         byte result = (byte)((value << 1) | (_reg.FlagC ? 1 : 0));
         _reg.FlagZ = result == 0;
@@ -248,7 +256,7 @@ public partial class OpcodeHandler
         return result;
     }
 
-    protected byte RLC(byte value)
+    byte RLC(byte value)
     {
         _reg.FlagC = (value & 0x80) == 0x80;
         byte result = (byte)((value << 1) | (_reg.FlagC ? 1 : 0));
@@ -260,7 +268,7 @@ public partial class OpcodeHandler
         return result;
     }
 
-    protected byte RR(byte value)
+    byte RR(byte value)
     {
         byte result = (byte)((value >> 1) | (_reg.FlagC ? 0x80 : 0));
         _reg.FlagZ = result == 0;
@@ -272,7 +280,7 @@ public partial class OpcodeHandler
         return result;
     }
 
-    protected byte RRC(byte value)
+    byte RRC(byte value)
     {
         byte result = (byte)((value >> 1) | (value << 7));
         _reg.FlagZ = result == 0;
@@ -284,7 +292,7 @@ public partial class OpcodeHandler
         return result;
     }
 
-    protected Action RST(word address) =>
+    Action RST(word address) =>
         () =>
         {
             _mmu[--_reg.SP] = _reg.PC.Msb();
@@ -292,23 +300,23 @@ public partial class OpcodeHandler
             _reg.PC = address;
         };
 
-    protected void SBC(byte value)
+    void SBC(byte value)
     {
         _reg.A = AddSubtractByte(value, true, true);
     }
 
-    protected void SBCHL(word value)
+    void SBCHL(word value)
     {
         _reg.HL = AddSubtractWord(_reg.HL, value, true, true);
     }
 
     // Set bit in value
-    protected byte SET(int bit, byte value) =>
+    byte SET(int bit, byte value) =>
         (byte)(value | (1 << bit));
 
     // Shift Left Arithmetically register r8
     // C<- [7 < -0] <- 0
-    protected byte SLA(byte value)
+    byte SLA(byte value)
     {
         byte result = (byte)(value << 1);
         _reg.FlagZ = result == 0;
@@ -322,7 +330,7 @@ public partial class OpcodeHandler
 
     // Shift Right Arithmetically register r8
     // [7] -> [7 -> 0] -> C
-    protected byte SRA(byte value)
+    byte SRA(byte value)
     {
         byte result = (byte)((value >> 1) | value & 0x80);
         _reg.FlagZ = result == 0;
@@ -336,7 +344,7 @@ public partial class OpcodeHandler
 
     // Shift Right Logically register r8.
     // 0 -> [7 -> 0] -> C
-    protected byte SRL(byte value)
+    byte SRL(byte value)
     {
         byte result = (byte)(value >> 1);
         _reg.FlagZ = result == 0;
@@ -348,12 +356,12 @@ public partial class OpcodeHandler
         return result;
     }
 
-    protected void SUB(byte value)
+    void SUB(byte value)
     {
         _reg.A = AddSubtractByte(value, false, true);
     }
 
-    protected void XOR(byte value)
+    void XOR(byte value)
     {
         _reg.A = (byte)(_reg.A ^ value);
         SetLogicFlags(false);
