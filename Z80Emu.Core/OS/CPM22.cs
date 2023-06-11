@@ -71,6 +71,7 @@ public class CPM22 : IDos
         {
             case SystemCalls.C_READ:
                 emulator.CPU.Registers.A = (byte)Console.Read();
+                emulator.CPU.Registers.L = emulator.CPU.Registers.A;
                 break;
             case SystemCalls.C_WRITE:
                 Console.Write((char)emulator.CPU.Registers.E);
@@ -110,9 +111,11 @@ public class CPM22 : IDos
             sb.Append(c.KeyChar);
         }
         var str = sb.ToString();
-        emulator.Memory[addr++] = (byte)str.Length;
-        foreach (var c in str)
-            emulator.Memory[addr++] = (byte)c;
+        byte maxLen = emulator.Memory[addr];
+        emulator.Memory[addr++] = (byte)Math.Min(str.Length, maxLen);
+        emulator.Memory[addr++] = (byte)'$';
+        for (var i = 0; i < maxLen && i < str.Length; i++)
+            emulator.Memory[addr++] = (byte)str[i];
     }
 
     private static void WriteString(Emulator emulator)
