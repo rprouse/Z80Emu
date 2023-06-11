@@ -130,9 +130,9 @@ internal class Monitor
         AnsiConsole.MarkupLine("[blue]h[/][silver]elp[/]");
         AnsiConsole.MarkupLine("[blue]s[/][silver]tep[/]");
         AnsiConsole.MarkupLine("[blue]r[/][silver]un[/]");
-        AnsiConsole.MarkupLine("[blue]m[/][silver]emory[/]");
+        AnsiConsole.MarkupLine("[blue]m[/][silver]emory[/] [yellow][[address]][/]");
         AnsiConsole.MarkupLine("[blue]reg[/][silver]isters[/]");
-        AnsiConsole.MarkupLine("[blue]d[/][silver]isassemble[/]");
+        AnsiConsole.MarkupLine("[blue]d[/][silver]isassemble[/] [yellow][[address]][/]");
         AnsiConsole.MarkupLine("[blue]b[/][silver]reakpoints[/]");
         AnsiConsole.MarkupLine("[blue]q[/][silver]uit[/]");
         AnsiConsole.WriteLine();
