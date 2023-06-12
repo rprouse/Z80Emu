@@ -7,23 +7,38 @@ namespace Z80Emu.Core;
 
 public class Emulator
 {
+    string? _filename;
+
     public IDos OperatingSystem { get; }
 
-    public CPU CPU { get; }
+    public CPU CPU { get; private set; }
 
-    public MMU Memory { get; }
+    public MMU Memory { get; private set; }
     
-    public Interupts Interupts { get; }
+    public Interupts Interupts { get; private set; }
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public Emulator(IDos os)
+    {
+        OperatingSystem = os;
+        Reset();
+    }
+#pragma warning restore CS8618
+
+    public bool LoadProgram(string filename)
+    {
+        _filename = filename;
+        return Memory.LoadProgram(filename);
+    }
+
+    public void Reset()
     {
         Memory = new MMU();
         Interupts = new Interupts(Memory);
         CPU = new CPU(Interupts, Memory);
-        OperatingSystem = os;
+        if (_filename != null )
+            Memory.LoadProgram(_filename);
     }
-
-    public bool LoadProgram(string filename) => Memory.LoadProgram(filename);
 
     public Opcode Tick()
     {

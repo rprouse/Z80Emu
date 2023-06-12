@@ -70,6 +70,9 @@ internal class Monitor
                 case "b":   // Breakpoints
                     ManageBreakpoints();
                     break;
+                case "reset":   // Reset
+                    _emulator.Reset();
+                    break;
                 case "h":   // Help
                     ViewHelp();
                     break;
@@ -178,6 +181,7 @@ internal class Monitor
         AnsiConsole.MarkupLine("[blue]m[/][silver]emory[/] [yellow][[address]][/]");
         AnsiConsole.MarkupLine("[blue]d[/][silver]isassemble[/] [yellow][[address]][/]");
         AnsiConsole.MarkupLine("[blue]b[/][silver]reakpoints[/]");
+        AnsiConsole.MarkupLine("[blue]reset[/]");
         AnsiConsole.MarkupLine("[blue]q[/][silver]uit[/]");
         AnsiConsole.WriteLine();
     }
