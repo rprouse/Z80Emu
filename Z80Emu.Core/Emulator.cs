@@ -8,6 +8,7 @@ namespace Z80Emu.Core;
 public class Emulator
 {
     string? _filename;
+    word? _baseAddress;
 
     public IDos OperatingSystem { get; }
 
@@ -25,10 +26,11 @@ public class Emulator
     }
 #pragma warning restore CS8618
 
-    public bool LoadProgram(string filename)
+    public bool LoadProgram(string filename, word baseAddress = 0x0100)
     {
         _filename = filename;
-        return Memory.LoadProgram(filename);
+        _baseAddress = baseAddress;
+        return Memory.LoadProgram(filename, baseAddress);
     }
 
     public void Reset()
@@ -36,8 +38,8 @@ public class Emulator
         Memory = new MMU();
         Interupts = new Interupts(Memory);
         CPU = new CPU(Interupts, Memory);
-        if (_filename != null )
-            Memory.LoadProgram(_filename);
+        if (_filename != null && _baseAddress.HasValue)
+            Memory.LoadProgram(_filename, _baseAddress.Value);
     }
 
     public Opcode Tick()

@@ -28,11 +28,11 @@ public class MMU
     /// </summary>
     /// <param name="filename"></param>
     /// <returns></returns>
-    public bool LoadProgram(string filename, int location = 0x0100)
+    public bool LoadProgram(string filename, word baseAddress = 0x0100)
     {
         if (!File.Exists(filename)) return false;
         byte[] data = File.ReadAllBytes(filename);
-        _ram.Copy(data, location);
+        _ram.Copy(data, baseAddress);
         return true;
     }
 

@@ -1,13 +1,9 @@
-using System.ComponentModel;
-using System.Linq;
 using Z80Emu.Core.Processor.Opcodes;
 
 namespace Z80Emu;
 
 using System;
-using System.ComponentModel;
 using System.Globalization;
-using Spectre.Console.Cli;
 
 internal class Monitor
 {
@@ -22,11 +18,11 @@ internal class Monitor
         _emulator = emulator;
     }
 
-    public int Run(string filename)
+    public int Run(string filename, word baseAddress = 0x0100)
     {
         AnsiConsole.MarkupLine($"[Blue]Loading {filename}[/]");
 
-        if (!_emulator.LoadProgram(filename))
+        if (!_emulator.LoadProgram(filename, baseAddress))
         {
             AnsiConsole.MarkupLine("[Red]File not found[/]");
             return -1;
