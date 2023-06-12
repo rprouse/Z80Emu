@@ -144,7 +144,14 @@ public partial class OpcodeHandler
             _reg.SP--; _mmu[_reg.SP] = _reg.PC.Lsb();
             _reg.PC = _address;
         };
-        _opcodes["FC CALL M,nn"].Execute = () => { };
+        _opcodes["FC CALL M,nn"].Execute = () =>
+        {
+            _address = NextWord();
+            if (!_reg.FlagS) return;
+            _reg.SP--; _mmu[_reg.SP] = _reg.PC.Msb();
+            _reg.SP--; _mmu[_reg.SP] = _reg.PC.Lsb();
+            _reg.PC = _address;
+        };
         _opcodes["D4 CALL NC,nn"].Execute = () =>
         {
             _address = NextWord();
@@ -161,9 +168,30 @@ public partial class OpcodeHandler
             _reg.SP--; _mmu[_reg.SP] = _reg.PC.Lsb();
             _reg.PC = _address;
         };
-        _opcodes["F4 CALL P,nn"].Execute = () => { };
-        _opcodes["EC CALL PE,nn"].Execute = () => { };
-        _opcodes["E4 CALL PO,nn"].Execute = () => { };
+        _opcodes["F4 CALL P,nn"].Execute = () =>
+        {
+            _address = NextWord();
+            if (_reg.FlagS) return;
+            _reg.SP--; _mmu[_reg.SP] = _reg.PC.Msb();
+            _reg.SP--; _mmu[_reg.SP] = _reg.PC.Lsb();
+            _reg.PC = _address;
+        };
+        _opcodes["EC CALL PE,nn"].Execute = () =>
+        {
+            _address = NextWord();
+            if (!_reg.FlagPV) return;
+            _reg.SP--; _mmu[_reg.SP] = _reg.PC.Msb();
+            _reg.SP--; _mmu[_reg.SP] = _reg.PC.Lsb();
+            _reg.PC = _address;
+        };
+        _opcodes["E4 CALL PO,nn"].Execute = () =>
+        {
+            _address = NextWord();
+            if (!_reg.FlagPV) return;
+            _reg.SP--; _mmu[_reg.SP] = _reg.PC.Msb();
+            _reg.SP--; _mmu[_reg.SP] = _reg.PC.Lsb();
+            _reg.PC = _address;
+        };
         _opcodes["CC CALL Z,nn"].Execute = () =>
         {
             _address = NextWord();
@@ -339,7 +367,12 @@ public partial class OpcodeHandler
             if (!_reg.FlagC) return;
             _reg.PC = _address;
         };
-        _opcodes["FA JP M,nn"].Execute = () => { };
+        _opcodes["FA JP M,nn"].Execute = () =>
+        {
+            _address = NextWord();
+            if (!_reg.FlagS) return;
+            _reg.PC = _address;
+        };
         _opcodes["D2 JP NC,nn"].Execute = () =>
         {
             _address = NextWord();
@@ -352,9 +385,24 @@ public partial class OpcodeHandler
             if (_reg.FlagZ) return;
             _reg.PC = _address;
         };
-        _opcodes["F2 JP P,nn"].Execute = () => { };
-        _opcodes["EA JP PE,nn"].Execute = () => { };
-        _opcodes["E2 JP PO,nn"].Execute = () => { };
+        _opcodes["F2 JP P,nn"].Execute = () =>
+        {
+            _address = NextWord();
+            if (_reg.FlagS) return;
+            _reg.PC = _address;
+        };
+        _opcodes["EA JP PE,nn"].Execute = () =>
+        {
+            _address = NextWord();
+            if (!_reg.FlagPV) return;
+            _reg.PC = _address;
+        };
+        _opcodes["E2 JP PO,nn"].Execute = () =>
+        {
+            _address = NextWord();
+            if (_reg.FlagPV) return;
+            _reg.PC = _address;
+        };
         _opcodes["CA JP Z,nn"].Execute = () =>
         {
             _address = NextWord();
@@ -758,12 +806,12 @@ public partial class OpcodeHandler
         _opcodes["CB RES 7,A"].Execute = () => { _reg.A = RES(7, _reg.A); };
         _opcodes["C9 RET"].Execute = () => RET();
         _opcodes["D8 RET C"].Execute = () => { if (_reg.FlagC) RET(); };
-        _opcodes["F8 RET M"].Execute = () => { };
+        _opcodes["F8 RET M"].Execute = () => { if (_reg.FlagS) RET(); };
         _opcodes["D0 RET NC"].Execute = () => { if (!_reg.FlagC) RET(); };
         _opcodes["C0 RET NZ"].Execute = () => { if (!_reg.FlagZ) RET(); };
-        _opcodes["F0 RET P"].Execute = () => { };
-        _opcodes["E8 RET PE"].Execute = () => { };
-        _opcodes["E0 RET PO"].Execute = () => { };
+        _opcodes["F0 RET P"].Execute = () => { if (!_reg.FlagS) RET(); };
+        _opcodes["E8 RET PE"].Execute = () => { if (_reg.FlagPV) RET(); };
+        _opcodes["E0 RET PO"].Execute = () => { if (!_reg.FlagPV) RET(); };
         _opcodes["C8 RET Z"].Execute = () => { if (_reg.FlagZ) RET(); };
         _opcodes["ED RETI"].Execute = () => { RET(); _int.Enable(); };
         _opcodes["ED RETN"].Execute = () => { };
