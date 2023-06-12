@@ -23,7 +23,7 @@ jobs:
       run: dotnet restore
 
     - name: 🛠️ Build
-      run: dotnet build --no-restore
+      run: dotnet build -c Release --no-restore
             
     - name: ⬆️ Release
       uses: ncipollo/release-action@v1
