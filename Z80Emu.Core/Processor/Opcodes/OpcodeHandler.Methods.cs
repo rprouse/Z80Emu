@@ -655,7 +655,13 @@ public partial class OpcodeHandler
         _opcodes["ED LDDR"].Execute = () => { };
         _opcodes["ED LDI"].Execute = () => { };
         _opcodes["ED LDIR"].Execute = () => { };
-        _opcodes["ED NEG"].Execute = () => { };
+        _opcodes["ED NEG"].Execute = () => 
+        {
+            byte temp = _reg.A;
+            _reg.A = 0;
+            _reg.A = AddSubtractByte(temp, false, true);
+            _reg.FlagN = true;
+        };
         _opcodes["00 NOP"].Execute = () => { };
         _opcodes["B6 OR (HL)"].Execute = () => { OR(_mmu[_reg.HL]); };
         _opcodes["DD OR (IX+d)"].Execute = () => { OR(_mmu[_reg.IX + (sbyte)NextByte()]); };
