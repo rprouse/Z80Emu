@@ -349,6 +349,20 @@ public partial class OpcodeHandler
         return result;
     }
 
+    void RLD()
+    {
+        byte ah = (byte)(_reg.A & 0xF0);
+        byte hl = _mmu[_reg.HL];
+        _mmu[_reg.HL] = (byte)((_reg.A << 4) | (hl & 0x0F));
+        _reg.A = (byte)((_reg.A & 0xF0) | (hl >> 4));
+        _reg.HL = (byte)((hl << 4) | ah);
+        _reg.FlagZ = _reg.A == 0;
+        _reg.FlagS = _reg.A.IsNegative();
+        _reg.FlagPV = _reg.A.IsEvenParity();
+        _reg.FlagH = false;
+        _reg.FlagN = false;
+    }
+
     byte RR(byte value)
     {
         byte result = (byte)((value >> 1) | (_reg.FlagC ? 0x80 : 0));
@@ -371,6 +385,20 @@ public partial class OpcodeHandler
         _reg.FlagS = result.IsNegative();
         _reg.FlagPV = result.IsEvenParity();
         return result;
+    }
+
+    void RRD()
+    {
+        byte ah = (byte)(_reg.A & 0x0F);
+        byte hl = _mmu[_reg.HL];
+        _reg.A = (byte)((_reg.A & 0xF0) | (hl & 0x0F));
+        _mmu[_reg.HL] = (byte)((_reg.A << 4) | (hl & 0x0F));
+        _reg.HL = (byte)((hl >> 4) | (ah << 4));
+        _reg.FlagZ = _reg.A == 0;
+        _reg.FlagS = _reg.A.IsNegative();
+        _reg.FlagPV = _reg.A.IsEvenParity();
+        _reg.FlagH = false;
+        _reg.FlagN = false;
     }
 
     Action RST(word address) =>

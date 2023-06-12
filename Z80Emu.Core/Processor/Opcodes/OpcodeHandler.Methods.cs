@@ -837,7 +837,7 @@ public partial class OpcodeHandler
             _reg.A = RLC(_reg.A);
             _reg.FlagZ = false;
         };
-        _opcodes["ED RLD"].Execute = () => { };
+        _opcodes["ED RLD"].Execute = () => RLD();
         _opcodes["CB RR (HL)"].Execute = () => { _mmu[_reg.HL] = RR(_mmu[_reg.HL]); };
         _opcodes["DD RR (IX+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IX + d] = RR(_mmu[_reg.IX + d]); };
         _opcodes["FD RR (IY+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IY + d] = RR(_mmu[_reg.IY + d]); };
@@ -868,7 +868,7 @@ public partial class OpcodeHandler
             _reg.A = RRC(_reg.A);
             _reg.FlagZ = false;
         };
-        _opcodes["ED RRD"].Execute = () => { };
+        _opcodes["ED RRD"].Execute = () => RRD();
         _opcodes["C7 RST 0"].Execute = () => RST(0x00);
         _opcodes["CF RST 8"].Execute = () => RST(0x08);
         _opcodes["D7 RST 16"].Execute = () => RST(0x10);
