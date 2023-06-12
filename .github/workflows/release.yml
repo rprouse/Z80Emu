@@ -26,7 +26,8 @@ jobs:
       run: dotnet build -c Release --no-restore
             
     - name: ⬆️ Release
-      uses: ncipollo/release-action@v1
+      uses: softprops/action-gh-release@v1
       with:
-        artifacts: "Z80Emu/bin/Release/net7.0/**"
+        files: "Z80Emu/bin/Release/net7.0/**"
         body: "CI/CD release"
+        token: ${{ github.token }}
