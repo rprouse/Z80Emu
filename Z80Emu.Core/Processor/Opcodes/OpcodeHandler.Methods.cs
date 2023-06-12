@@ -224,10 +224,10 @@ public partial class OpcodeHandler
         _opcodes["BC CP H"].Execute = () => CP(_reg.H);
         _opcodes["BD CP L"].Execute = () => CP(_reg.L);
         _opcodes["BF CP A"].Execute = () => CP(_reg.A);
-        _opcodes["ED CPD"].Execute = () => { };
-        _opcodes["ED CPDR"].Execute = () => { };
-        _opcodes["ED CPI"].Execute = () => { };
-        _opcodes["ED CPIR"].Execute = () => { };
+        _opcodes["ED CPD"].Execute = () => CPD();
+        _opcodes["ED CPDR"].Execute = () => CPDR();
+        _opcodes["ED CPI"].Execute = () => CPI();
+        _opcodes["ED CPIR"].Execute = () => CPIR();
         _opcodes["2F CPL"].Execute = () =>
         {
             _reg.A = (byte)~_reg.A;

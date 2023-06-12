@@ -183,9 +183,41 @@ public partial class OpcodeHandler
             _reg.FlagS = true;
     }
 
-    void CP(byte value)
-    {
+    byte CP(byte value) =>
         AddSubtractByte(value, false, true);
+
+    void CPD()
+    {
+        bool carry = _reg.FlagC;
+        CP(_mmu[_reg.HL]);
+        _reg.HL--;
+        _reg.BC--;
+        _reg.FlagPV = _reg.BC != 0;
+        _reg.FlagC = carry;
+    }
+
+    void CPDR()
+    {
+        CPD();
+        if (_reg.BC != 0 && !_reg.FlagZ)
+            _reg.PC -= 2;
+    }
+
+    void CPI()
+    {
+        bool carry = _reg.FlagC;
+        CP(_mmu[_reg.HL]);
+        _reg.HL++;
+        _reg.BC--;
+        _reg.FlagPV = _reg.BC != 0;
+        _reg.FlagC = carry;
+    }
+
+    void CPIR()
+    {
+        CPI();
+        if (_reg.BC != 0 && !_reg.FlagZ)
+            _reg.PC -= 2;
     }
 
     void DAA()
