@@ -24,10 +24,13 @@ jobs:
 
     - name: 🛠️ Build
       run: dotnet build -c Release --no-restore
+
+    - name: 📦 Create ZIP File
+      run: zip -r Z80Emu/bin/Z80Emu.zip Z80Emu/bin/Release/net7.0/
             
-    - name: ⬆️ Release
+    - name: ⚡ Release
       uses: softprops/action-gh-release@v1
       with:
-        files: "Z80Emu/bin/Release/net7.0/**"
+        files: Z80Emu/bin/Z80Emu.zip
         body: "CI/CD release"
         token: ${{ github.token }}
