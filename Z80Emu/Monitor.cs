@@ -42,10 +42,11 @@ internal class Monitor
             {
                 case "s":   // Step
                     if (Step()) 
-                        return 0;
+                        lastCommand = "q";
                     break;
                 case "r":   // Run to Breakpoint
-                    Run();
+                    if (Run())
+                        lastCommand = "q";
                     break;
                 case "m":   // Memory
                     if (parts.Length == 2 && word.TryParse(parts[1], NumberStyles.HexNumber, null, out word memAddr))
@@ -146,7 +147,7 @@ internal class Monitor
         return IsTopLevelReturn(opcode);
     }
 
-    void Run()
+    bool Run()
     {
         _lastMemAddr = null;
         _lastDisAddr = null;
@@ -164,6 +165,7 @@ internal class Monitor
         ViewOpcode(_emulator.CPU.Registers.PC, opcode); // View the next opcode
         AnsiConsole.WriteLine();
         ViewRegisters();
+        return IsTopLevelReturn(opcode);
     }
 
     static void ViewHelp()
