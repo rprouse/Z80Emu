@@ -41,8 +41,8 @@ public class CPU
         return opcode;
     }
 
-    public Opcode Disassemble(word addr) =>
-        _opcodeHandler.Disassemble(addr);
+    public Opcode PeekInstruction(word addr) =>
+        _opcodeHandler.PeekInstruction(addr);
 
     /// <summary>
     /// Return from a system call

@@ -36,5 +36,7 @@ public class Emulator
         return opcode;
     }
 
-    public Opcode Disassemble(word addr) => CPU.Disassemble(addr);
+    public Opcode PeekInstruction() => CPU.PeekInstruction(CPU.Registers.PC);
+
+    public Opcode Disassemble(word addr) => CPU.PeekInstruction(addr);
 }

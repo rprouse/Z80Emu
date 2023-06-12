@@ -45,10 +45,12 @@ internal class Monitor
             switch (parts[0])
             {
                 case "s":   // Step
-                    Step();
+                    if (Step()) 
+                        return 0;
                     break;
                 case "r":   // Run to Breakpoint
-                    Run();
+                    if (Run()) 
+                        return 0;
                     break;
                 case "m":   // Memory
                     if (parts.Length == 2 && word.TryParse(parts[1], NumberStyles.HexNumber, null, out word memAddr))
@@ -92,38 +94,79 @@ internal class Monitor
         AnsiConsole.MarkupLine($"[blue]Running {_emulator.OperatingSystem.Name}[/]");
     }
 
-    void Step()
+    bool IsTopLevelReturn(Opcode? opcode) =>
+        opcode?.Mnemonic == "RET" && _emulator.CPU.Registers.SP == 0xFFFE;
+
+    void ViewOpcode(word addr, Opcode? opcode)
+    {
+        AnsiConsole.Markup($"[blue]{addr:X4}[/]");
+
+        if (opcode == null)
+        {
+            AnsiConsole.MarkupLine($" [aqua]{_emulator.Memory[addr]:X2}[/]");
+            return;
+        }
+
+        if (addr == _emulator.CPU.Registers.PC && IsBreakpointSet(addr, opcode))
+            AnsiConsole.Markup($"[red]*< [/]");
+        else if (addr == _emulator.CPU.Registers.PC)
+            AnsiConsole.Markup($"[red]<  [/]");
+        else if (IsBreakpointSet(addr, opcode))
+            AnsiConsole.Markup($"[red]*  [/]");
+        else
+            AnsiConsole.Markup($"   ");
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (i < opcode.Length)
+                AnsiConsole.Markup($"[aqua]{_emulator.Memory[addr + i]:X2}[/] ");
+            else
+                AnsiConsole.Markup($"   ");
+        }
+
+        // Longest opcode without substitution is 12 characters
+        AnsiConsole.Markup($"[silver]{opcode.Mnemonic.PadRight(12)}[/]");
+
+        if (opcode.Mnemonic != "NOP")
+            AnsiConsole.MarkupLine($"\t[green]; {opcode.Description}[/]");
+        else
+            AnsiConsole.WriteLine();
+    }
+
+    bool Step()
     {
         _lastMemAddr = null;
         _lastDisAddr = null;
+        word addr = _emulator.CPU.Registers.PC;
         Opcode? opcode = _emulator.Tick();
-        if (opcode != null)
-        {
-            AnsiConsole.Markup($"[silver]{opcode.Mnemonic}[/]");
-            AnsiConsole.MarkupLine($"\t[green]; {opcode.Description}[/]");
-            AnsiConsole.WriteLine();
-        }
+
+        ViewOpcode(addr, opcode); // View the opcode we just executed
+        opcode = _emulator.PeekInstruction();
+        ViewOpcode(_emulator.CPU.Registers.PC, opcode); // View the next opcode
+        AnsiConsole.WriteLine();
         ViewRegisters();
+        return IsTopLevelReturn(opcode);
     }
 
-    void Run()
+    bool Run()
     {
         _lastMemAddr = null;
         _lastDisAddr = null;
         Opcode? opcode = null;
+        word addr;
         do
         {
+            addr = _emulator.CPU.Registers.PC;
             opcode = _emulator.Tick();
         }
-        while (opcode != null && !IsBreakpointSet(_emulator.CPU.Registers.PC, opcode));
+        while (opcode != null && !IsBreakpointSet(_emulator.CPU.Registers.PC, opcode) && !IsTopLevelReturn(_emulator.PeekInstruction()));
 
-        if (opcode != null)
-        {
-            AnsiConsole.Markup($"[silver]{opcode.Mnemonic}[/]");
-            AnsiConsole.MarkupLine($"\t[green]; {opcode.Description}[/]");
-            AnsiConsole.WriteLine();
-        }
+        ViewOpcode(addr, opcode); // View the opcode we just executed
+        opcode = _emulator.PeekInstruction();
+        ViewOpcode(_emulator.CPU.Registers.PC, opcode); // View the next opcode
+        AnsiConsole.WriteLine();
         ViewRegisters();
+        return IsTopLevelReturn(opcode);
     }
 
     static void ViewHelp()
@@ -194,38 +237,16 @@ internal class Monitor
         word addr = startAddr;
         for (int count = 0; count < len; count++)
         {
-            AnsiConsole.Markup($"[blue]{addr:X4}[/]");
             try
             {
                 Opcode opcode = _emulator.Disassemble(addr);
-
-                if (IsBreakpointSet(addr, opcode))
-                    AnsiConsole.Markup($"[red]*[/]");
-                else
-                    AnsiConsole.Markup($" ");
-
-                for (int i = 0; i < 4; i++)
-                {
-                    if (i < opcode.Length)
-                        AnsiConsole.Markup($"[aqua]{_emulator.Memory[addr + i]:X2}[/] ");
-                    else
-                        AnsiConsole.Markup($"   ");
-                }
-
-                // Longest opcode without substitution is 12 characters
-                AnsiConsole.Markup($"[silver]{opcode.Mnemonic.PadRight(12)}[/]");
-
-                if (opcode.Mnemonic != "NOP")
-                    AnsiConsole.MarkupLine($"\t[green]; {opcode.Description}[/]");
-                else
-                    AnsiConsole.WriteLine();
-
+                ViewOpcode(addr, opcode);
                 addr += opcode.Length;
 
             }
             catch (Exception)
             {
-                AnsiConsole.MarkupLine($" [aqua]{_emulator.Memory[addr]:X2}[/]");
+                ViewOpcode(addr, null);
                 addr++;
             }
         }

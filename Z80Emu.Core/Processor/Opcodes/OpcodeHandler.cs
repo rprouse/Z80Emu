@@ -28,7 +28,7 @@ public partial class OpcodeHandler
 
     public Opcode FetchInstruction()
     {
-        Opcode opcode = Disassemble(_reg.PC);
+        Opcode opcode = PeekInstruction(_reg.PC);
 
         // Consume the initial opcode bytes. Operands are consumed by the opcode execution.
         _reg.PC += opcode.OpcodeLength;
@@ -36,7 +36,7 @@ public partial class OpcodeHandler
         return opcode;
     }
 
-    public Opcode Disassemble(word addr)
+    public Opcode PeekInstruction(word addr)
     {
         Opcode? opcode = _opcodes.Values.FirstOrDefault(o => o.Match(_mmu, addr));
         if (opcode == null) throw new NotImplementedException($"Opcode 0x{_mmu[addr]:X2} does not exist");
