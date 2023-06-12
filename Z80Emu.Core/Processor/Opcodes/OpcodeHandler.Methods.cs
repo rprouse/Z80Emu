@@ -805,8 +805,16 @@ public partial class OpcodeHandler
         _opcodes["E8 RET PE"].Execute = () => { if (_reg.FlagPV) RET(); };
         _opcodes["E0 RET PO"].Execute = () => { if (!_reg.FlagPV) RET(); };
         _opcodes["C8 RET Z"].Execute = () => { if (_reg.FlagZ) RET(); };
-        _opcodes["ED RETI"].Execute = () => { RET(); _int.Enable(); };
-        _opcodes["ED RETN"].Execute = () => { };
+        _opcodes["ED RETI"].Execute = () => 
+        {
+            _int.IFF1 = _int.IFF2;
+            RET();
+        };
+        _opcodes["ED RETN"].Execute = () =>
+        {
+            _int.IFF1 = _int.IFF2;
+            RET();
+        };
         _opcodes["CB RL (HL)"].Execute = () => { _mmu[_reg.HL] = RL(_mmu[_reg.HL]); };
         _opcodes["DD RL (IX+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IX + d] = RL(_mmu[_reg.IX + d]); };
         _opcodes["FD RL (IY+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IY + d] = RL(_mmu[_reg.IY + d]); };
