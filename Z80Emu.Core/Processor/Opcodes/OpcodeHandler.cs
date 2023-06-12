@@ -137,7 +137,7 @@ public partial class OpcodeHandler
     }
 
     void ADC(byte value)
-    {        
+    {
         _reg.A = AddSubtractByte(value, true, false);
     }
 
@@ -235,6 +235,44 @@ public partial class OpcodeHandler
         _reg.FlagH = (value & 0x0F) == 0x00;
         _reg.FlagS = result.IsNegative();
         return (byte)result;
+    }
+
+    void LDD()
+    {
+        _mmu[_reg.DE--] = _mmu[_reg.HL--];
+        _reg.BC--;
+        _reg.FlagH = false;
+        _reg.FlagN = false;
+        _reg.FlagPV = _reg.BC != 0;
+    }
+
+    void LDDR()
+    {
+        LDD();
+        if (_reg.BC != 0) _reg.PC -= 2;
+    }
+
+    void LDI()
+    {
+        _mmu[_reg.DE++] = _mmu[_reg.HL++];
+        _reg.BC--;
+        _reg.FlagH = false;
+        _reg.FlagN = false;
+        _reg.FlagPV = _reg.BC != 0;
+    }
+
+    void LDIR()
+    {
+        LDI();
+        if (_reg.BC != 0) _reg.PC -= 2;
+    }
+
+    void NEG()
+    {
+        byte temp = _reg.A;
+        _reg.A = 0;
+        _reg.A = AddSubtractByte(temp, false, true);
+        _reg.FlagN = true;
     }
 
     void OR(byte value)
