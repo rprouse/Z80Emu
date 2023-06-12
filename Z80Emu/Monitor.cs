@@ -122,8 +122,8 @@ internal class Monitor
                 AnsiConsole.Markup($"   ");
         }
 
-        // Longest opcode without substitution is 12 characters
-        AnsiConsole.Markup($"[silver]{opcode.Mnemonic.PadRight(12)}[/]");
+        // Longest opcode with substitution is 15 characters
+        AnsiConsole.Markup($"[silver]{opcode.Mnemonic.PadRight(15)}[/]");
 
         if (opcode.Mnemonic != "NOP")
             AnsiConsole.MarkupLine($"\t[green]; {opcode.Description}[/]");

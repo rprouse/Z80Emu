@@ -40,6 +40,7 @@ public partial class OpcodeHandler
     {
         Opcode? opcode = _opcodes.Values.FirstOrDefault(o => o.Match(_mmu, addr));
         if (opcode == null) throw new NotImplementedException($"Opcode 0x{_mmu[addr]:X2} does not exist");
+        opcode.SetSubstitutions(_mmu, addr);
         return opcode;
     }
 
