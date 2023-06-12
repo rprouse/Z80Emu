@@ -114,7 +114,7 @@ internal class Monitor
         do
         {
             opcode = _emulator.Tick();
-        } 
+        }
         while (opcode != null && !IsBreakpointSet(_emulator.CPU.Registers.PC, opcode));
 
         if (opcode != null)
@@ -172,7 +172,11 @@ internal class Monitor
             for (word i = 0; i <= 0xF; i++)
             {
                 char c = (char)_emulator.Memory[addr + i];
-                AnsiConsole.Markup($"[green]{(char.IsControl(c) ? '.' : c)}[/]");
+                c = char.IsControl(c) ? '.' : c;
+                string s = c.ToString();
+                if (s == "[") s = "[[";
+                else if (s == "]") s = "]]";
+                AnsiConsole.Markup($"[green]{s}[/]");
             }
             AnsiConsole.WriteLine();
         }
