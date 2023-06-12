@@ -138,51 +138,46 @@ public partial class OpcodeHandler
         _opcodes["CB BIT 7,A"].Execute = () => BIT(7, _reg.A);
         _opcodes["DC CALL C,nn"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
+            _address = NextWord();
             if (!_reg.FlagC) return;
             _reg.SP--; _mmu[_reg.SP] = _reg.PC.Msb();
             _reg.SP--; _mmu[_reg.SP] = _reg.PC.Lsb();
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
+            _reg.PC = _address;
         };
         _opcodes["FC CALL M,nn"].Execute = () => { };
         _opcodes["D4 CALL NC,nn"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
+            _address = NextWord();
             if (_reg.FlagC) return;
             _reg.SP--; _mmu[_reg.SP] = _reg.PC.Msb();
             _reg.SP--; _mmu[_reg.SP] = _reg.PC.Lsb();
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
+            _reg.PC = _address;
         };
         _opcodes["C4 CALL NZ,nn"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
+            _address = NextWord();
             if (_reg.FlagZ) return;
             _reg.SP--; _mmu[_reg.SP] = _reg.PC.Msb();
             _reg.SP--; _mmu[_reg.SP] = _reg.PC.Lsb();
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
+            _reg.PC = _address;
         };
         _opcodes["F4 CALL P,nn"].Execute = () => { };
         _opcodes["EC CALL PE,nn"].Execute = () => { };
         _opcodes["E4 CALL PO,nn"].Execute = () => { };
         _opcodes["CC CALL Z,nn"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
+            _address = NextWord();
             if (!_reg.FlagZ) return;
             _reg.SP--; _mmu[_reg.SP] = _reg.PC.Msb();
             _reg.SP--; _mmu[_reg.SP] = _reg.PC.Lsb();
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
+            _reg.PC = _address;
         };
         _opcodes["CD CALL nn"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
+            _address = NextWord();
             _reg.SP--; _mmu[_reg.SP] = _reg.PC.Msb();
             _reg.SP--; _mmu[_reg.SP] = _reg.PC.Lsb();
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
+            _reg.PC = _address;
         };
         _opcodes["3F CCF"].Execute = () =>
         {
@@ -247,9 +242,7 @@ public partial class OpcodeHandler
         _opcodes["FB EI"].Execute = () => { _int.Enable(); };
         _opcodes["E3 EX (SP),HL"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _address = BitUtils.ToWord(_msb, _lsb);
+            _address = NextWord();
             word temp = _reg.HL;
             _reg.HL = _mmu[_address];
             _mmu[_address] = temp.Lsb();
@@ -257,9 +250,7 @@ public partial class OpcodeHandler
         };
         _opcodes["DD EX (SP),IX"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _address = BitUtils.ToWord(_msb, _lsb);
+            _address = NextWord();
             word temp = _reg.IX;
             _reg.IX = _mmu[_address];
             _mmu[_address] = temp.Lsb();
@@ -267,9 +258,7 @@ public partial class OpcodeHandler
         };
         _opcodes["FD EX (SP),IY"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _address = BitUtils.ToWord(_msb, _lsb);
+            _address = NextWord();
             word temp = _reg.IY;
             _reg.IY = _mmu[_address];
             _mmu[_address] = temp.Lsb();
@@ -346,42 +335,33 @@ public partial class OpcodeHandler
         _opcodes["FD JP (IY)"].Execute = () => { _reg.PC = _mmu[_reg.IY]; };
         _opcodes["DA JP C,nn"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
+            _address = NextWord();
             if (!_reg.FlagC) return;
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
+            _reg.PC = _address;
         };
         _opcodes["FA JP M,nn"].Execute = () => { };
         _opcodes["D2 JP NC,nn"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
+            _address = NextWord();
             if (_reg.FlagC) return;
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
+            _reg.PC = _address;
         };
         _opcodes["C2 JP NZ,nn"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
+            _address = NextWord();
             if (_reg.FlagZ) return;
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
+            _reg.PC = _address;
         };
         _opcodes["F2 JP P,nn"].Execute = () => { };
         _opcodes["EA JP PE,nn"].Execute = () => { };
         _opcodes["E2 JP PO,nn"].Execute = () => { };
         _opcodes["CA JP Z,nn"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
+            _address = NextWord();
             if (!_reg.FlagZ) return;
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
+            _reg.PC = _address;
         };
-        _opcodes["C3 JP nn"].Execute = () =>
-        {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _reg.PC = BitUtils.ToWord(_msb, _lsb);
-        };
+        _opcodes["C3 JP nn"].Execute = () => { _reg.PC = NextWord(); };
         _opcodes["38 JR C,d"].Execute = () =>
         {
             _operand = NextByte();
@@ -441,68 +421,46 @@ public partial class OpcodeHandler
         _opcodes["FD LD (IY+d),H"].Execute = () => { _mmu[_reg.IY + (sbyte)NextByte()] = _reg.H; };
         _opcodes["FD LD (IY+d),L"].Execute = () => { _mmu[_reg.IY + (sbyte)NextByte()] = _reg.L; };
         _opcodes["FD LD (IY+d),A"].Execute = () => { _mmu[_reg.IY + (sbyte)NextByte()] = _reg.A; };
-        _opcodes["32 LD (nn),A"].Execute = () =>
-        {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _mmu[BitUtils.ToWord(_msb, _lsb)] = _reg.A;
-        };
+        _opcodes["32 LD (nn),A"].Execute = () => { _mmu[NextWord()] = _reg.A; };
         _opcodes["ED LD (nn),BC"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _address = BitUtils.ToWord(_msb, _lsb);
+            _address = NextWord();
             _mmu[_address] = _reg.H;
             _mmu[_address + 1] = _reg.L;
         };
         _opcodes["ED LD (nn),DE"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _address = BitUtils.ToWord(_msb, _lsb);
+            _address = NextWord();
             _mmu[_address] = _reg.H;
             _mmu[_address + 1] = _reg.L;
         };
         _opcodes["22 LD (nn),HL"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _address = BitUtils.ToWord(_msb, _lsb);
+            _address = NextWord();
             _mmu[_address] = _reg.H;
             _mmu[_address + 1] = _reg.L;
         };
         _opcodes["DD LD (nn),IX"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _address = BitUtils.ToWord(_msb, _lsb);
+            _address = NextWord();
             _mmu[_address] = _reg.H;
             _mmu[_address + 1] = _reg.L;
         };
         _opcodes["FD LD (nn),IY"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _address = BitUtils.ToWord(_msb, _lsb);
+            _address = NextWord();
             _mmu[_address] = _reg.H;
             _mmu[_address + 1] = _reg.L;
         };
         _opcodes["ED LD (nn),SP"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _address = BitUtils.ToWord(_msb, _lsb);
+            _address = NextWord();
             _mmu[_address] = _reg.SP.Lsb();
             _mmu[_address + 1] = _reg.SP.Msb();
         };
         _opcodes["0A LD A,(BC)"].Execute = () => { _reg.A = _mmu[_reg.BC]; };
         _opcodes["1A LD A,(DE)"].Execute = () => { _reg.A = _mmu[_reg.DE]; };
-        _opcodes["3A LD A,(nn)"].Execute = () =>
-        {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _reg.A = _mmu[BitUtils.ToWord(_msb, _lsb)];
-        };
+        _opcodes["3A LD A,(nn)"].Execute = () => { _reg.A = _mmu[NextWord()]; };
         _opcodes["ED LD A,I"].Execute = () =>
         {
             _reg.A = _reg.I;
@@ -523,25 +481,19 @@ public partial class OpcodeHandler
         };
         _opcodes["ED LD BC,(nn)"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _address = BitUtils.ToWord(_msb, _lsb);
+            _address = NextWord();
             _reg.B = _mmu[_address];
             _reg.C = _mmu[_address + 1];
         };
         _opcodes["ED LD DE,(nn)"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _address = BitUtils.ToWord(_msb, _lsb);
+            _address = NextWord();
             _reg.D = _mmu[_address];
             _reg.E = _mmu[_address + 1];
         };
         _opcodes["2A LD HL,(nn)"].Execute = () =>
         {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _address = BitUtils.ToWord(_msb, _lsb);
+            _address = NextWord();
             _reg.H = _mmu[_address];
             _reg.L = _mmu[_address + 1];
         };
@@ -552,24 +504,14 @@ public partial class OpcodeHandler
             _msb = NextByte();
             _reg.IX = BitUtils.ToWord(_mmu[_msb], _mmu[_lsb]);
         };
-        _opcodes["DD LD IX,nn"].Execute = () =>
-        {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _reg.IX = BitUtils.ToWord(_msb, _lsb);
-        };
+        _opcodes["DD LD IX,nn"].Execute = () => { _reg.IX = NextWord(); };
         _opcodes["FD LD IY,(nn)"].Execute = () =>
         {
             _lsb = NextByte();
             _msb = NextByte();
             _reg.IY = BitUtils.ToWord(_mmu[_msb], _mmu[_lsb]);
         };
-        _opcodes["FD LD IY,nn"].Execute = () =>
-        {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _reg.IY = BitUtils.ToWord(_msb, _lsb);
-        };
+        _opcodes["FD LD IY,nn"].Execute = () => { _reg.IY = NextWord(); };
         _opcodes["ED LD R,A"].Execute = () => { _reg.R = _reg.A; };
         _opcodes["ED LD SP,(nn)"].Execute = () =>
         {
@@ -580,30 +522,10 @@ public partial class OpcodeHandler
         _opcodes["F9 LD SP,HL"].Execute = () => { _reg.SP = _reg.HL; };
         _opcodes["DD LD SP,IX"].Execute = () => { _reg.SP = _reg.IY; };
         _opcodes["FD LD SP,IY"].Execute = () => { _reg.SP = _reg.IY; };
-        _opcodes["01 LD BC,nn"].Execute = () =>
-        {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _reg.BC = BitUtils.ToWord(_msb, _lsb);
-        };
-        _opcodes["11 LD DE,nn"].Execute = () =>
-        {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _reg.DE = BitUtils.ToWord(_msb, _lsb);
-        };
-        _opcodes["21 LD HL,nn"].Execute = () =>
-        {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _reg.HL = BitUtils.ToWord(_msb, _lsb);
-        };
-        _opcodes["31 LD SP,nn"].Execute = () =>
-        {
-            _lsb = NextByte();
-            _msb = NextByte();
-            _reg.SP = BitUtils.ToWord(_msb, _lsb);
-        };
+        _opcodes["01 LD BC,nn"].Execute = () => { _reg.BC = NextWord(); };
+        _opcodes["11 LD DE,nn"].Execute = () => { _reg.DE = NextWord(); };
+        _opcodes["21 LD HL,nn"].Execute = () => { _reg.HL = NextWord(); };
+        _opcodes["31 LD SP,nn"].Execute = () => { _reg.SP = NextWord(); };
         _opcodes["46 LD B,(HL)"].Execute = () => { _reg.B = _mmu[_reg.HL]; };
         _opcodes["4E LD C,(HL)"].Execute = () => { _reg.C = _mmu[_reg.HL]; };
         _opcodes["56 LD D,(HL)"].Execute = () => { _reg.D = _mmu[_reg.HL]; };

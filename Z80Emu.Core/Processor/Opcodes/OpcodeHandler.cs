@@ -49,7 +49,18 @@ public partial class OpcodeHandler
     /// <returns></returns>
     byte NextByte() => _mmu[_reg.PC++];
 
-    private byte AddSubtractByte(byte value, bool withCarry, bool subtract)
+    /// <summary>
+    /// Reads the next word from memory and increments PC
+    /// </summary>
+    /// <returns></returns>
+    word NextWord()
+    {
+        _lsb = NextByte();
+        _msb = NextByte();
+        return BitUtils.ToWord(_msb, _lsb);
+    }
+
+    byte AddSubtractByte(byte value, bool withCarry, bool subtract)
     {
         ushort result;  // To detect carry and overflow
 
@@ -81,7 +92,7 @@ public partial class OpcodeHandler
         return (byte)result;
     }
 
-    private word AddSubtractWord(word value1, word value2, bool withCarry, bool subtract)
+    word AddSubtractWord(word value1, word value2, bool withCarry, bool subtract)
     {
         if (withCarry && _reg.FlagC)
             value2++;
@@ -115,7 +126,7 @@ public partial class OpcodeHandler
         return (word)sum;
     }
 
-    private void SetLogicFlags(bool flagH)
+    void SetLogicFlags(bool flagH)
     {
         _reg.FlagS = _reg.A.IsNegative();
         _reg.FlagZ = _reg.A == 0;
