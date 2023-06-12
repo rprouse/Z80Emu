@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v3
+
+    - name: 🔧 Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+
+    - name: 💉 Install dependencies
+      run: dotnet restore
+
+    - name: 🛠️ Build
+      run: dotnet build --no-restore
+            
+    - name: ⬆️ Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "Z80Emu/bin/Release/net7.0/**"
+        body: "CI/CD release"
