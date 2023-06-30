@@ -42,6 +42,9 @@ public class Emulator
         CPU = new CPU(Interupts, Memory);
         if (_filename != null && _baseAddress.HasValue)
             Memory.LoadProgram(_filename, _baseAddress.Value);
+
+        if (OperatingSystem != null)
+            OperatingSystem.Initialize(this);
     }
 
     public Opcode Tick()

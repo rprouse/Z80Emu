@@ -2,7 +2,7 @@
   "profiles": {
     "Z80Emu": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\src\\retro\\Z80\\RC2014\\asm\\learning\\chap4\\bin\\8BitAdd.com\" 0x0100"
+      "commandLineArgs": "\"C:\\src\\retro\\Z80\\RC2014\\asm\\learning\\cpm\\bin\\cmdline.com\" 0x0100"
     }
   }
 }
