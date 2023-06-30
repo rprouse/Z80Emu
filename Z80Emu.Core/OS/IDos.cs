@@ -1,3 +1,5 @@
+using Z80Emu.Core.Processor.Opcodes;
+
 namespace Z80Emu.Core.OS;
 
 public interface IDos

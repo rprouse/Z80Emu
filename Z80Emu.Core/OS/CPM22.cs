@@ -1,4 +1,5 @@
 using System.Text;
+using Z80Emu.Core.Processor.Opcodes;
 
 namespace Z80Emu.Core.OS;
 
@@ -11,7 +12,7 @@ namespace Z80Emu.Core.OS;
 /// </remarks>
 public class CPM22 : IDos
 {
-    static readonly IEnumerable<word> _callVectors = new word[] { 0x0005 };
+    static readonly IEnumerable<word> _callVectors = new word[] { 0x0000, 0x0005 };
 
     public enum SystemCalls
     {
@@ -62,9 +63,22 @@ public class CPM22 : IDos
 
     public void Execute(Emulator emulator)
     {
-        if (!CallVectors.Contains(emulator.CPU.Registers.PC))
-            throw new InvalidOperationException("Invalid BDOS call");
+        switch (emulator.CPU.Registers.PC)
+        {
+            case 0x0000:    // Warm Boot
+                emulator.WarmBoot = true;
+                emulator.CPU.Return();
+                break;
+            case 0x0005:    // BDOS Call
+                ExecuteBdosCall(emulator);
+                break;
+            default:
+                throw new InvalidOperationException("Invalid CP/M Call");
+        }
+    }
 
+    private static void ExecuteBdosCall(Emulator emulator)
+    { 
         var call = (SystemCalls)emulator.CPU.Registers.C;
 
         switch (call)
@@ -86,7 +100,6 @@ public class CPM22 : IDos
                 Console.WriteLine($"BDOS call {call} not implemented");
                 break;
         }
-
         emulator.CPU.Return();
     }
 
