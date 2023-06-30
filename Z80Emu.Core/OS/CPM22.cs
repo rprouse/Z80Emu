@@ -1,4 +1,5 @@
 using System.Text;
+using Z80Emu.Core.Processor.Opcodes;
 
 namespace Z80Emu.Core.OS;
 
@@ -11,7 +12,7 @@ namespace Z80Emu.Core.OS;
 /// </remarks>
 public class CPM22 : IDos
 {
-    static readonly IEnumerable<word> _callVectors = new word[] { 0x0005 };
+    static readonly IEnumerable<word> _callVectors = new word[] { 0x0000, 0x0005 };
 
     public enum SystemCalls
     {
@@ -62,9 +63,54 @@ public class CPM22 : IDos
 
     public void Execute(Emulator emulator)
     {
-        if (!CallVectors.Contains(emulator.CPU.Registers.PC))
-            throw new InvalidOperationException("Invalid BDOS call");
+        switch (emulator.CPU.Registers.PC)
+        {
+            case 0x0000:    // Warm Boot
+                emulator.WarmBoot = true;
+                emulator.CPU.Return();
+                break;
+            case 0x0005:    // BDOS Call
+                ExecuteBdosCall(emulator);
+                break;
+            default:
+                throw new InvalidOperationException("Invalid CP/M Call");
+        }
+    }
 
+    public void Initialize(Emulator emulator)
+    {
+        // Initialize CP/M Zero Page memory
+        // See https://en.wikipedia.org/wiki/Zero_page_(CP/M)
+
+        emulator.Memory[0x0000] = 0xC3; // JP to warm boot entry point
+        emulator.Memory[0x0001] = 0x03; 
+        emulator.Memory[0x0002] = 0xE6;
+        emulator.Memory[0x0003] = 0x94; // I/O byte
+        emulator.Memory[0x0004] = 0x00; // Current command processor drive (low 4 bits) and user number (high 4 bits)
+        emulator.Memory[0x0005] = 0xC3; // JP to BDOS entry point
+        emulator.Memory[0x0006] = 0x06;
+        emulator.Memory[0x0007] = 0xBF;
+        // 08-3A Restart/Interupt vectors (TODO?)
+        // 3B-5B Reserved
+        // File Control Blocks one and two (FCBs) containing "A:DA.COM"
+        byte[] fcb = new byte[] { 0x01, 0x44, 0x41, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x43, 0x4F, 0x4D, 0x00, 0x80, 0x80, 0x0F };
+        for (int i = 0; i < fcb.Length; i++)
+        {
+            emulator.Memory[0x005C + i] = fcb[i];
+            emulator.Memory[0x006C + i] = fcb[i];
+        }
+
+        // Initialize the Command Tail (127 bytes)
+        string commandTail = "A:DA.COM A:DA.COM /D";
+        emulator.Memory[0x0080] = (byte)commandTail.Length; // Command tail length
+        for (int i = 0; i < commandTail.Length; i++)
+        {
+            emulator.Memory[0x0081 + i] = (byte)commandTail[i];
+        }
+    }
+
+    private static void ExecuteBdosCall(Emulator emulator)
+    { 
         var call = (SystemCalls)emulator.CPU.Registers.C;
 
         switch (call)
@@ -86,7 +132,6 @@ public class CPM22 : IDos
                 Console.WriteLine($"BDOS call {call} not implemented");
                 break;
         }
-
         emulator.CPU.Return();
     }
 

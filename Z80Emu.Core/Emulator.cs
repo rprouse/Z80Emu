@@ -18,6 +18,8 @@ public class Emulator
     
     public Interupts Interupts { get; private set; }
 
+    public bool WarmBoot { get; set; }
+
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public Emulator(IDos os)
     {
@@ -40,6 +42,9 @@ public class Emulator
         CPU = new CPU(Interupts, Memory);
         if (_filename != null && _baseAddress.HasValue)
             Memory.LoadProgram(_filename, _baseAddress.Value);
+
+        if (OperatingSystem != null)
+            OperatingSystem.Initialize(this);
     }
 
     public Opcode Tick()

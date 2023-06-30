@@ -93,8 +93,19 @@ internal class Monitor
         AnsiConsole.MarkupLine($"[blue]Running {_emulator.OperatingSystem.Name}[/]");
     }
 
-    bool IsTopLevelReturn(Opcode? opcode) =>
-        opcode?.Mnemonic == "RET" && _emulator.CPU.Registers.SP == 0xFFFE;
+    bool IsTopLevelReturn(Opcode? opcode)
+    {
+        if (_emulator.WarmBoot)
+        {
+            _emulator.WarmBoot = false;
+            return true;
+        }
+
+        if (opcode?.Mnemonic == "RET" && _emulator.CPU.Registers.SP == 0xFFFE)
+            return true;
+
+        return false;
+    }
 
     void ViewOpcode(word addr, Opcode? opcode)
     {

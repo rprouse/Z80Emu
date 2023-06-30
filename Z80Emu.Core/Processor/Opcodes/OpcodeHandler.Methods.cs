@@ -680,12 +680,38 @@ public partial class OpcodeHandler
         _opcodes["D3 OUT (n),A"].Execute = () => { };
         _opcodes["ED OUTD"].Execute = () => { };
         _opcodes["ED OUTI"].Execute = () => { };
-        _opcodes["F1 POP AF"].Execute = () => { _reg.AF = NextWord(); };
-        _opcodes["C1 POP BC"].Execute = () => { _reg.BC = NextWord(); };
-        _opcodes["D1 POP DE"].Execute = () => { _reg.DE = NextWord(); };
-        _opcodes["E1 POP HL"].Execute = () => { _reg.HL = NextWord(); };
-        _opcodes["DD POP IX"].Execute = () => { _reg.IX = NextWord(); };
-        _opcodes["FD POP IY"].Execute = () => { _reg.IY = NextWord(); };
+        _opcodes["F1 POP AF"].Execute = () => 
+        { 
+            _reg.F = _mmu[_reg.SP++];
+            _reg.A = _mmu[_reg.SP++];
+        };
+        _opcodes["C1 POP BC"].Execute = () => 
+        { 
+            _reg.C = _mmu[_reg.SP++];
+            _reg.B = _mmu[_reg.SP++];
+        };
+        _opcodes["D1 POP DE"].Execute = () => 
+        { 
+            _reg.E = _mmu[_reg.SP++];
+            _reg.D = _mmu[_reg.SP++];
+        };
+        _opcodes["E1 POP HL"].Execute = () => 
+        { 
+            _reg.L = _mmu[_reg.SP++];
+            _reg.H = _mmu[_reg.SP++];
+        };
+        _opcodes["DD POP IX"].Execute = () => 
+        { 
+            _lsb = _mmu[_reg.SP++];
+            _msb = _mmu[_reg.SP++];
+            _reg.IX = BitUtils.ToWord(_msb, _lsb);
+        };
+        _opcodes["FD POP IY"].Execute = () => 
+        { 
+            _lsb = _mmu[_reg.SP++];
+            _msb = _mmu[_reg.SP++];
+            _reg.IY = BitUtils.ToWord(_msb, _lsb);
+        };
         _opcodes["F5 PUSH AF"].Execute = () =>
         {
             _mmu[--_reg.SP] = _reg.A;
