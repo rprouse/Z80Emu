@@ -16,13 +16,13 @@ using (var file = new StreamWriter("OpcodeHandler.Initialize.cs", false))
     file.WriteLine();
     file.WriteLine("public partial class OpcodeHandler");
     file.WriteLine("{");
-    file.WriteLine("    private Dictionary<string, Opcode> Initialize() => new Dictionary<string, Opcode>");
+    file.WriteLine("    private void InitializeOpcodes()");
     file.WriteLine("    {");
     foreach (var result in results)
     {
-        file.WriteLine($"        {{ \"{result.Id}\", {result.ToCodeString()} }},");
+        file.WriteLine($"        Add({result.ToCodeString()});");
     }
-    file.WriteLine("    };");
+    file.WriteLine("    }");
     file.WriteLine("}");
 }
 

@@ -15,14 +15,14 @@ public partial class OpcodeHandler
     readonly MMU _mmu;
     readonly Interupts _int;
 
-    Dictionary<string, Opcode> _opcodes;
+    Dictionary<string, Opcode> _opcodes = new Dictionary<string, Opcode>();
 
     public OpcodeHandler(Registers registers, MMU mmu, Interupts interupts)
     {
         _reg = registers;
         _mmu = mmu;
         _int = interupts;
-        _opcodes = Initialize();
+        InitializeOpcodes();
         InitializeMethods();
     }
 
@@ -42,6 +42,11 @@ public partial class OpcodeHandler
         if (opcode == null) throw new NotImplementedException($"Opcode 0x{_mmu[addr]:X2} does not exist");
         opcode.SetSubstitutions(_mmu, addr);
         return opcode;
+    }
+
+    private void Add(Opcode opcode)
+    {
+        _opcodes.Add(opcode.Id, opcode);
     }
 
     /// <summary>

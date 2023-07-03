@@ -2,703 +2,703 @@ namespace Z80Emu.Core.Processor.Opcodes;
 
 public partial class OpcodeHandler
 {
-    private Dictionary<string, Opcode> Initialize() => new Dictionary<string, Opcode>
+    private void InitializeOpcodes()
     {
-        { "8E ADC A,(HL)", new Opcode(new [] { "8E" }, "ADC A,(HL)", "7", new Flags("+", "+", "+", "", "+", "+"), "Adds (HL) and the carry flag to A.") },
-        { "DD ADC A,(IX+d)", new Opcode(new [] { "DD", "8E", "d" }, "ADC A,(IX+d)", "19", new Flags("+", "+", "+", "", "+", "+"), "Adds the value pointed to by IX plus $d and the carry flag to A.") },
-        { "FD ADC A,(IY+d)", new Opcode(new [] { "FD", "8E", "d" }, "ADC A,(IY+d)", "19", new Flags("+", "+", "+", "", "+", "+"), "Adds the value pointed to by IY plus $d and the carry flag to A.") },
-        { "CE ADC A,n", new Opcode(new [] { "CE", "n" }, "ADC A,n", "7", new Flags("+", "+", "+", "", "+", "+"), "Adds $n and the carry flag to A.") },
-        { "88 ADC A,B", new Opcode(new [] { "88" }, "ADC A,B", "4", new Flags("+", "+", "+", "", "+", "+"), "Adds B and the carry flag to A.") },
-        { "89 ADC A,C", new Opcode(new [] { "89" }, "ADC A,C", "4", new Flags("+", "+", "+", "", "+", "+"), "Adds C and the carry flag to A.") },
-        { "8A ADC A,D", new Opcode(new [] { "8A" }, "ADC A,D", "4", new Flags("+", "+", "+", "", "+", "+"), "Adds D and the carry flag to A.") },
-        { "8B ADC A,E", new Opcode(new [] { "8B" }, "ADC A,E", "4", new Flags("+", "+", "+", "", "+", "+"), "Adds E and the carry flag to A.") },
-        { "8C ADC A,H", new Opcode(new [] { "8C" }, "ADC A,H", "4", new Flags("+", "+", "+", "", "+", "+"), "Adds H and the carry flag to A.") },
-        { "8D ADC A,L", new Opcode(new [] { "8D" }, "ADC A,L", "4", new Flags("+", "+", "+", "", "+", "+"), "Adds L and the carry flag to A.") },
-        { "8F ADC A,A", new Opcode(new [] { "8F" }, "ADC A,A", "4", new Flags("+", "+", "+", "", "+", "+"), "Adds A and the carry flag to A.") },
-        { "ED ADC HL,BC", new Opcode(new [] { "ED", "4A" }, "ADC HL,BC", "15", new Flags("+", "+", "+", "", "+", "+"), "Adds BC and the carry flag to HL.") },
-        { "ED ADC HL,DE", new Opcode(new [] { "ED", "5A" }, "ADC HL,DE", "15", new Flags("+", "+", "+", "", "+", "+"), "Adds DE and the carry flag to HL.") },
-        { "ED ADC HL,HL", new Opcode(new [] { "ED", "6A" }, "ADC HL,HL", "15", new Flags("+", "+", "+", "", "+", "+"), "Adds HL and the carry flag to HL.") },
-        { "ED ADC HL,SP", new Opcode(new [] { "ED", "7A" }, "ADC HL,SP", "15", new Flags("+", "+", "+", "", "+", "+"), "Adds SP and the carry flag to HL.") },
-        { "86 ADD A,(HL)", new Opcode(new [] { "86" }, "ADD A,(HL)", "7", new Flags("+", "+", "+", "", "+", "+"), "Adds (HL) to A.") },
-        { "DD ADD A,(IX+d)", new Opcode(new [] { "DD", "86", "d" }, "ADD A,(IX+d)", "19", new Flags("+", "+", "+", "", "+", "+"), "Adds the value pointed to by IX plus $d to A.") },
-        { "FD ADD A,(IY+d)", new Opcode(new [] { "FD", "86", "d" }, "ADD A,(IY+d)", "19", new Flags("+", "+", "+", "", "+", "+"), "Adds the value pointed to by IY plus $d to A.") },
-        { "C6 ADD A,n", new Opcode(new [] { "C6", "n" }, "ADD A,n", "7", new Flags("+", "+", "+", "", "+", "+"), "Adds $n to A.") },
-        { "80 ADD A,B", new Opcode(new [] { "80" }, "ADD A,B", "4", new Flags("+", "+", "+", "", "+", "+"), "Adds B to A.") },
-        { "81 ADD A,C", new Opcode(new [] { "81" }, "ADD A,C", "4", new Flags("+", "+", "+", "", "+", "+"), "Adds C to A.") },
-        { "82 ADD A,D", new Opcode(new [] { "82" }, "ADD A,D", "4", new Flags("+", "+", "+", "", "+", "+"), "Adds D to A.") },
-        { "83 ADD A,E", new Opcode(new [] { "83" }, "ADD A,E", "4", new Flags("+", "+", "+", "", "+", "+"), "Adds E to A.") },
-        { "84 ADD A,H", new Opcode(new [] { "84" }, "ADD A,H", "4", new Flags("+", "+", "+", "", "+", "+"), "Adds H to A.") },
-        { "85 ADD A,L", new Opcode(new [] { "85" }, "ADD A,L", "4", new Flags("+", "+", "+", "", "+", "+"), "Adds L to A.") },
-        { "87 ADD A,A", new Opcode(new [] { "87" }, "ADD A,A", "4", new Flags("+", "+", "+", "", "+", "+"), "Adds A to A.") },
-        { "09 ADD HL,BC", new Opcode(new [] { "09" }, "ADD HL,BC", "11", new Flags("+", "+", "+", "", "-", "-"), "The value of BC is added to HL.") },
-        { "19 ADD HL,DE", new Opcode(new [] { "19" }, "ADD HL,DE", "11", new Flags("+", "+", "+", "", "-", "-"), "The value of DE is added to HL.") },
-        { "29 ADD HL,HL", new Opcode(new [] { "29" }, "ADD HL,HL", "11", new Flags("+", "+", "+", "", "-", "-"), "The value of HL is added to HL.") },
-        { "39 ADD HL,SP", new Opcode(new [] { "39" }, "ADD HL,SP", "11", new Flags("+", "+", "+", "", "-", "-"), "The value of SP is added to HL.") },
-        { "DD ADD IX,BC", new Opcode(new [] { "DD", "09" }, "ADD IX,BC", "15", new Flags("+", "+", "+", "", "-", "-"), "The value of BC is added to IX.") },
-        { "DD ADD IX,DE", new Opcode(new [] { "DD", "19" }, "ADD IX,DE", "15", new Flags("+", "+", "+", "", "-", "-"), "The value of DE is added to IX.") },
-        { "DD ADD IX,IX", new Opcode(new [] { "DD", "29" }, "ADD IX,IX", "15", new Flags("+", "+", "+", "", "-", "-"), "The value of IX is added to IX.") },
-        { "DD ADD IX,SP", new Opcode(new [] { "DD", "39" }, "ADD IX,SP", "15", new Flags("+", "+", "+", "", "-", "-"), "The value of SP is added to IX.") },
-        { "FD ADD IY,BC", new Opcode(new [] { "FD", "09" }, "ADD IY,BC", "15", new Flags("+", "+", "+", "", "-", "-"), "The value of BC is added to IY.") },
-        { "FD ADD IY,DE", new Opcode(new [] { "FD", "19" }, "ADD IY,DE", "15", new Flags("+", "+", "+", "", "-", "-"), "The value of DE is added to IY.") },
-        { "FD ADD IY,IY", new Opcode(new [] { "FD", "29" }, "ADD IY,IY", "15", new Flags("+", "+", "+", "", "-", "-"), "The value of IY is added to IY.") },
-        { "FD ADD IY,SP", new Opcode(new [] { "FD", "39" }, "ADD IY,SP", "15", new Flags("+", "+", "+", "", "-", "-"), "The value of SP is added to IY.") },
-        { "A6 AND (HL)", new Opcode(new [] { "A6" }, "AND (HL)", "7", new Flags("0", "1", "0", "", "+", "+"), "Bitwise AND on A with (HL).") },
-        { "DD AND (IX+d)", new Opcode(new [] { "DD", "A6", "d" }, "AND (IX+d)", "19", new Flags("0", "1", "0", "", "+", "+"), "Bitwise AND on A with the value pointed to by IX plus $d.") },
-        { "FD AND (IY+d)", new Opcode(new [] { "FD", "A6", "d" }, "AND (IY+d)", "19", new Flags("0", "1", "0", "", "+", "+"), "Bitwise AND on A with the value pointed to by IY plus $d.") },
-        { "E6 AND n", new Opcode(new [] { "E6", "n" }, "AND n", "7", new Flags("0", "1", "0", "", "+", "+"), "Bitwise AND on A with $n.") },
-        { "A0 AND B", new Opcode(new [] { "A0" }, "AND B", "4", new Flags("0", "1", "0", "", "+", "+"), "Bitwise AND on A with B.") },
-        { "A1 AND C", new Opcode(new [] { "A1" }, "AND C", "4", new Flags("0", "1", "0", "", "+", "+"), "Bitwise AND on A with C.") },
-        { "A2 AND D", new Opcode(new [] { "A2" }, "AND D", "4", new Flags("0", "1", "0", "", "+", "+"), "Bitwise AND on A with D.") },
-        { "A3 AND E", new Opcode(new [] { "A3" }, "AND E", "4", new Flags("0", "1", "0", "", "+", "+"), "Bitwise AND on A with E.") },
-        { "A4 AND H", new Opcode(new [] { "A4" }, "AND H", "4", new Flags("0", "1", "0", "", "+", "+"), "Bitwise AND on A with H.") },
-        { "A5 AND L", new Opcode(new [] { "A5" }, "AND L", "4", new Flags("0", "1", "0", "", "+", "+"), "Bitwise AND on A with L.") },
-        { "A7 AND A", new Opcode(new [] { "A7" }, "AND A", "4", new Flags("0", "1", "0", "", "+", "+"), "Bitwise AND on A with A.") },
-        { "CB BIT 0,(HL)", new Opcode(new [] { "CB", "46" }, "BIT 0,(HL)", "12", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 0 of (HL).") },
-        { "CB BIT 1,(HL)", new Opcode(new [] { "CB", "4E" }, "BIT 1,(HL)", "12", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 1 of (HL).") },
-        { "CB BIT 2,(HL)", new Opcode(new [] { "CB", "56" }, "BIT 2,(HL)", "12", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 2 of (HL).") },
-        { "CB BIT 3,(HL)", new Opcode(new [] { "CB", "5E" }, "BIT 3,(HL)", "12", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 3 of (HL).") },
-        { "CB BIT 4,(HL)", new Opcode(new [] { "CB", "66" }, "BIT 4,(HL)", "12", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 4 of (HL).") },
-        { "CB BIT 5,(HL)", new Opcode(new [] { "CB", "6E" }, "BIT 5,(HL)", "12", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 5 of (HL).") },
-        { "CB BIT 6,(HL)", new Opcode(new [] { "CB", "76" }, "BIT 6,(HL)", "12", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 6 of (HL).") },
-        { "CB BIT 7,(HL)", new Opcode(new [] { "CB", "7E" }, "BIT 7,(HL)", "12", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 7 of (HL).") },
-        { "DD BIT 0,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "46" }, "BIT 0,(IX+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 0 of the memory location pointed to by IX plus $d.") },
-        { "DD BIT 1,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "4E" }, "BIT 1,(IX+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 1 of the memory location pointed to by IX plus $d.") },
-        { "DD BIT 2,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "56" }, "BIT 2,(IX+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 2 of the memory location pointed to by IX plus $d.") },
-        { "DD BIT 3,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "5E" }, "BIT 3,(IX+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 3 of the memory location pointed to by IX plus $d.") },
-        { "DD BIT 4,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "66" }, "BIT 4,(IX+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 4 of the memory location pointed to by IX plus $d.") },
-        { "DD BIT 5,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "6E" }, "BIT 5,(IX+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 5 of the memory location pointed to by IX plus $d.") },
-        { "DD BIT 6,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "76" }, "BIT 6,(IX+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 6 of the memory location pointed to by IX plus $d.") },
-        { "DD BIT 7,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "7E" }, "BIT 7,(IX+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 7 of the memory location pointed to by IX plus $d.") },
-        { "FD BIT 0,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "46" }, "BIT 0,(IY+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 0 of the memory location pointed to by IY plus $d.") },
-        { "FD BIT 1,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "4E" }, "BIT 1,(IY+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 1 of the memory location pointed to by IY plus $d.") },
-        { "FD BIT 2,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "56" }, "BIT 2,(IY+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 2 of the memory location pointed to by IY plus $d.") },
-        { "FD BIT 3,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "5E" }, "BIT 3,(IY+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 3 of the memory location pointed to by IY plus $d.") },
-        { "FD BIT 4,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "66" }, "BIT 4,(IY+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 4 of the memory location pointed to by IY plus $d.") },
-        { "FD BIT 5,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "6E" }, "BIT 5,(IY+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 5 of the memory location pointed to by IY plus $d.") },
-        { "FD BIT 6,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "76" }, "BIT 6,(IY+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 6 of the memory location pointed to by IY plus $d.") },
-        { "FD BIT 7,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "7E" }, "BIT 7,(IY+d)", "20", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 7 of the memory location pointed to by IY plus $d.") },
-        { "CB BIT 0,B", new Opcode(new [] { "CB", "40" }, "BIT 0,B", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 0 of B.") },
-        { "CB BIT 1,B", new Opcode(new [] { "CB", "48" }, "BIT 1,B", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 1 of B.") },
-        { "CB BIT 2,B", new Opcode(new [] { "CB", "50" }, "BIT 2,B", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 2 of B.") },
-        { "CB BIT 3,B", new Opcode(new [] { "CB", "58" }, "BIT 3,B", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 3 of B.") },
-        { "CB BIT 4,B", new Opcode(new [] { "CB", "60" }, "BIT 4,B", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 4 of B.") },
-        { "CB BIT 5,B", new Opcode(new [] { "CB", "68" }, "BIT 5,B", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 5 of B.") },
-        { "CB BIT 6,B", new Opcode(new [] { "CB", "70" }, "BIT 6,B", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 6 of B.") },
-        { "CB BIT 7,B", new Opcode(new [] { "CB", "78" }, "BIT 7,B", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 7 of B.") },
-        { "CB BIT 0,C", new Opcode(new [] { "CB", "41" }, "BIT 0,C", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 0 of C.") },
-        { "CB BIT 1,C", new Opcode(new [] { "CB", "49" }, "BIT 1,C", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 1 of C.") },
-        { "CB BIT 2,C", new Opcode(new [] { "CB", "51" }, "BIT 2,C", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 2 of C.") },
-        { "CB BIT 3,C", new Opcode(new [] { "CB", "59" }, "BIT 3,C", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 3 of C.") },
-        { "CB BIT 4,C", new Opcode(new [] { "CB", "61" }, "BIT 4,C", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 4 of C.") },
-        { "CB BIT 5,C", new Opcode(new [] { "CB", "69" }, "BIT 5,C", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 5 of C.") },
-        { "CB BIT 6,C", new Opcode(new [] { "CB", "71" }, "BIT 6,C", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 6 of C.") },
-        { "CB BIT 7,C", new Opcode(new [] { "CB", "79" }, "BIT 7,C", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 7 of C.") },
-        { "CB BIT 0,D", new Opcode(new [] { "CB", "42" }, "BIT 0,D", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 0 of D.") },
-        { "CB BIT 1,D", new Opcode(new [] { "CB", "4A" }, "BIT 1,D", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 1 of D.") },
-        { "CB BIT 2,D", new Opcode(new [] { "CB", "52" }, "BIT 2,D", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 2 of D.") },
-        { "CB BIT 3,D", new Opcode(new [] { "CB", "5A" }, "BIT 3,D", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 3 of D.") },
-        { "CB BIT 4,D", new Opcode(new [] { "CB", "62" }, "BIT 4,D", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 4 of D.") },
-        { "CB BIT 5,D", new Opcode(new [] { "CB", "6A" }, "BIT 5,D", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 5 of D.") },
-        { "CB BIT 6,D", new Opcode(new [] { "CB", "72" }, "BIT 6,D", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 6 of D.") },
-        { "CB BIT 7,D", new Opcode(new [] { "CB", "7A" }, "BIT 7,D", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 7 of D.") },
-        { "CB BIT 0,E", new Opcode(new [] { "CB", "43" }, "BIT 0,E", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 0 of E.") },
-        { "CB BIT 1,E", new Opcode(new [] { "CB", "4B" }, "BIT 1,E", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 1 of E.") },
-        { "CB BIT 2,E", new Opcode(new [] { "CB", "53" }, "BIT 2,E", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 2 of E.") },
-        { "CB BIT 3,E", new Opcode(new [] { "CB", "5B" }, "BIT 3,E", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 3 of E.") },
-        { "CB BIT 4,E", new Opcode(new [] { "CB", "63" }, "BIT 4,E", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 4 of E.") },
-        { "CB BIT 5,E", new Opcode(new [] { "CB", "6B" }, "BIT 5,E", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 5 of E.") },
-        { "CB BIT 6,E", new Opcode(new [] { "CB", "73" }, "BIT 6,E", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 6 of E.") },
-        { "CB BIT 7,E", new Opcode(new [] { "CB", "7B" }, "BIT 7,E", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 7 of E.") },
-        { "CB BIT 0,H", new Opcode(new [] { "CB", "44" }, "BIT 0,H", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 0 of H.") },
-        { "CB BIT 1,H", new Opcode(new [] { "CB", "4C" }, "BIT 1,H", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 1 of H.") },
-        { "CB BIT 2,H", new Opcode(new [] { "CB", "54" }, "BIT 2,H", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 2 of H.") },
-        { "CB BIT 3,H", new Opcode(new [] { "CB", "5C" }, "BIT 3,H", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 3 of H.") },
-        { "CB BIT 4,H", new Opcode(new [] { "CB", "64" }, "BIT 4,H", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 4 of H.") },
-        { "CB BIT 5,H", new Opcode(new [] { "CB", "6C" }, "BIT 5,H", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 5 of H.") },
-        { "CB BIT 6,H", new Opcode(new [] { "CB", "74" }, "BIT 6,H", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 6 of H.") },
-        { "CB BIT 7,H", new Opcode(new [] { "CB", "7C" }, "BIT 7,H", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 7 of H.") },
-        { "CB BIT 0,L", new Opcode(new [] { "CB", "45" }, "BIT 0,L", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 0 of L.") },
-        { "CB BIT 1,L", new Opcode(new [] { "CB", "4D" }, "BIT 1,L", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 1 of L.") },
-        { "CB BIT 2,L", new Opcode(new [] { "CB", "55" }, "BIT 2,L", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 2 of L.") },
-        { "CB BIT 3,L", new Opcode(new [] { "CB", "5D" }, "BIT 3,L", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 3 of L.") },
-        { "CB BIT 4,L", new Opcode(new [] { "CB", "65" }, "BIT 4,L", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 4 of L.") },
-        { "CB BIT 5,L", new Opcode(new [] { "CB", "6D" }, "BIT 5,L", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 5 of L.") },
-        { "CB BIT 6,L", new Opcode(new [] { "CB", "75" }, "BIT 6,L", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 6 of L.") },
-        { "CB BIT 7,L", new Opcode(new [] { "CB", "7D" }, "BIT 7,L", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 7 of L.") },
-        { "CB BIT 0,A", new Opcode(new [] { "CB", "47" }, "BIT 0,A", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 0 of A.") },
-        { "CB BIT 1,A", new Opcode(new [] { "CB", "4F" }, "BIT 1,A", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 1 of A.") },
-        { "CB BIT 2,A", new Opcode(new [] { "CB", "57" }, "BIT 2,A", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 2 of A.") },
-        { "CB BIT 3,A", new Opcode(new [] { "CB", "5F" }, "BIT 3,A", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 3 of A.") },
-        { "CB BIT 4,A", new Opcode(new [] { "CB", "67" }, "BIT 4,A", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 4 of A.") },
-        { "CB BIT 5,A", new Opcode(new [] { "CB", "6F" }, "BIT 5,A", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 5 of A.") },
-        { "CB BIT 6,A", new Opcode(new [] { "CB", "77" }, "BIT 6,A", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 6 of A.") },
-        { "CB BIT 7,A", new Opcode(new [] { "CB", "7F" }, "BIT 7,A", "8", new Flags("-", "1", "0", "", " ", "+"), "Tests bit 7 of A.") },
-        { "DC CALL C,nn", new Opcode(new [] { "DC", "nn" }, "CALL C,nn", "17/10", new Flags("-", "-", "-", "", "-", "-"), "If the carry flag is set, the current PC value plus three is pushed onto the stack, then is loaded with $nn.") },
-        { "FC CALL M,nn", new Opcode(new [] { "FC", "nn" }, "CALL M,nn", "17/10", new Flags("-", "-", "-", "", "-", "-"), "If the sign flag is set, the current PC value plus three is pushed onto the stack, then is loaded with $nn.") },
-        { "D4 CALL NC,nn", new Opcode(new [] { "D4", "nn" }, "CALL NC,nn", "17/10", new Flags("-", "-", "-", "", "-", "-"), "If the carry flag is unset, the current PC value plus three is pushed onto the stack, then is loaded with $nn.") },
-        { "C4 CALL NZ,nn", new Opcode(new [] { "C4", "nn" }, "CALL NZ,nn", "17/10", new Flags("-", "-", "-", "", "-", "-"), "If the zero flag is unset, the current PC value plus three is pushed onto the stack, then is loaded with $nn.") },
-        { "F4 CALL P,nn", new Opcode(new [] { "F4", "nn" }, "CALL P,nn", "17/10", new Flags("-", "-", "-", "", "-", "-"), "If the sign flag is unset, the current PC value plus three is pushed onto the stack, then is loaded with $nn.") },
-        { "EC CALL PE,nn", new Opcode(new [] { "EC", "nn" }, "CALL PE,nn", "17/10", new Flags("-", "-", "-", "", "-", "-"), "If the parity/overflow flag is set, the current PC value plus three is pushed onto the stack, then is loaded with $nn.") },
-        { "E4 CALL PO,nn", new Opcode(new [] { "E4", "nn" }, "CALL PO,nn", "17/10", new Flags("-", "-", "-", "", "-", "-"), "If the parity/overflow flag is unset, the current PC value plus three is pushed onto the stack, then is loaded with $nn.") },
-        { "CC CALL Z,nn", new Opcode(new [] { "CC", "nn" }, "CALL Z,nn", "17/10", new Flags("-", "-", "-", "", "-", "-"), "If the zero flag is set, the current PC value plus three is pushed onto the stack, then is loaded with $nn.") },
-        { "CD CALL nn", new Opcode(new [] { "CD", "nn" }, "CALL nn", "17", new Flags("-", "-", "-", "", "-", "-"), "The current PC value plus three is pushed onto the stack, then is loaded with $nn.") },
-        { "3F CCF", new Opcode(new [] { "3F" }, "CCF", "4", new Flags("*", "*", "0", "", "-", "-"), "Inverts the carry flag.") },
-        { "BE CP (HL)", new Opcode(new [] { "BE" }, "CP (HL)", "7", new Flags("+", "+", "+", "", "+", "+"), "Subtracts (HL) from A and affects flags according to the result. A is not modified.") },
-        { "DD CP (IX+d)", new Opcode(new [] { "DD", "BE", "d" }, "CP (IX+d)", "19", new Flags("+", "+", "+", "", "+", "+"), "Subtracts the value pointed to by IX plus $d from A and affects flags according to the result. A is not modified.") },
-        { "FD CP (IY+d)", new Opcode(new [] { "FD", "BE", "d" }, "CP (IY+d)", "19", new Flags("+", "+", "+", "", "+", "+"), "Subtracts the value pointed to by IY plus $d from A and affects flags according to the result. A is not modified.") },
-        { "FE CP n", new Opcode(new [] { "FE", "n" }, "CP n", "7", new Flags("+", "+", "+", "", "+", "+"), "Subtracts $n from A and affects flags according to the result. A is not modified.") },
-        { "B8 CP B", new Opcode(new [] { "B8" }, "CP B", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts B from A and affects flags according to the result. A is not modified.") },
-        { "B9 CP C", new Opcode(new [] { "B9" }, "CP C", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts C from A and affects flags according to the result. A is not modified.") },
-        { "BA CP D", new Opcode(new [] { "BA" }, "CP D", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts D from A and affects flags according to the result. A is not modified.") },
-        { "BB CP E", new Opcode(new [] { "BB" }, "CP E", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts E from A and affects flags according to the result. A is not modified.") },
-        { "BC CP H", new Opcode(new [] { "BC" }, "CP H", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts H from A and affects flags according to the result. A is not modified.") },
-        { "BD CP L", new Opcode(new [] { "BD" }, "CP L", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts L from A and affects flags according to the result. A is not modified.") },
-        { "BF CP A", new Opcode(new [] { "BF" }, "CP A", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts A from A and affects flags according to the result. A is not modified.") },
-        { "ED CPD", new Opcode(new [] { "ED", "A9" }, "CPD", "16", new Flags("-", "+", "1", "", "+", "+"), "Compares the value of the memory location pointed to by HL with A. Then HL and BC are decremented. p/v is reset if BC becomes zero and set otherwise.") },
-        { "ED CPDR", new Opcode(new [] { "ED", "B9" }, "CPDR", "21/16", new Flags("-", "+", "1", "", "+", "+"), "Compares the value of the memory location pointed to by HL with A. Then HL and BC are decremented. If BC is not zero and z is not set, this operation is repeated. p/v is reset if BC becomes zero and set otherwise, acting as an indicator that HL reached a memory location whose value equalled A before the counter went to zero. Interrupts can trigger while this instruction is processing.") },
-        { "ED CPI", new Opcode(new [] { "ED", "A1" }, "CPI", "16", new Flags("-", "+", "1", "", "+", "+"), "Compares the value of the memory location pointed to by HL with A. Then HL is incremented and BC is decremented. p/v is reset if BC becomes zero and set otherwise.") },
-        { "ED CPIR", new Opcode(new [] { "ED", "B1" }, "CPIR", "21/16", new Flags("-", "+", "1", "", "+", "+"), "Compares the value of the memory location pointed to by HL with A. Then HL is incremented and BC is decremented. If BC is not zero and z is not set, this operation is repeated. p/v is reset if BC becomes zero and set otherwise, acting as an indicator that HL reached a memory location whose value equalled A before the counter went to zero. Interrupts can trigger while this instruction is processing.") },
-        { "2F CPL", new Opcode(new [] { "2F" }, "CPL", "4", new Flags("-", "1", "1", "", "-", "-"), "The contents of A are inverted (one's complement).") },
-        { "27 DAA", new Opcode(new [] { "27" }, "DAA", "4", new Flags("*", "*", "-", "", "+", "+"), "Adjusts A for BCD addition and subtraction operations.") },
-        { "35 DEC (HL)", new Opcode(new [] { "35" }, "DEC (HL)", "11", new Flags("-", "+", "+", "", "+", "+"), "Subtracts one from (HL).") },
-        { "DD DEC (IX+d)", new Opcode(new [] { "DD", "35", "d" }, "DEC (IX+d)", "23", new Flags("-", "+", "+", "", "+", "+"), "Subtracts one from the memory location pointed to by IX plus $d.") },
-        { "FD DEC (IY+d)", new Opcode(new [] { "FD", "35", "d" }, "DEC (IY+d)", "23", new Flags("-", "+", "+", "", "+", "+"), "Subtracts one from the memory location pointed to by IY plus $d.") },
-        { "DD DEC IX", new Opcode(new [] { "DD", "2B" }, "DEC IX", "10", new Flags("-", "-", "-", "", "-", "-"), "Subtracts one from IX.") },
-        { "FD DEC IY", new Opcode(new [] { "FD", "2B" }, "DEC IY", "10", new Flags("-", "-", "-", "", "-", "-"), "Subtracts one from IY.") },
-        { "0B DEC BC", new Opcode(new [] { "0B" }, "DEC BC", "6", new Flags("-", "-", "-", "", "-", "-"), "Subtracts one from BC.") },
-        { "1B DEC DE", new Opcode(new [] { "1B" }, "DEC DE", "6", new Flags("-", "-", "-", "", "-", "-"), "Subtracts one from DE.") },
-        { "2B DEC HL", new Opcode(new [] { "2B" }, "DEC HL", "6", new Flags("-", "-", "-", "", "-", "-"), "Subtracts one from HL.") },
-        { "3B DEC SP", new Opcode(new [] { "3B" }, "DEC SP", "6", new Flags("-", "-", "-", "", "-", "-"), "Subtracts one from SP.") },
-        { "05 DEC B", new Opcode(new [] { "05" }, "DEC B", "4", new Flags("-", "+", "+", "", "+", "+"), "Subtracts one from B.") },
-        { "0D DEC C", new Opcode(new [] { "0D" }, "DEC C", "4", new Flags("-", "+", "+", "", "+", "+"), "Subtracts one from C.") },
-        { "15 DEC D", new Opcode(new [] { "15" }, "DEC D", "4", new Flags("-", "+", "+", "", "+", "+"), "Subtracts one from D.") },
-        { "1D DEC E", new Opcode(new [] { "1D" }, "DEC E", "4", new Flags("-", "+", "+", "", "+", "+"), "Subtracts one from E.") },
-        { "25 DEC H", new Opcode(new [] { "25" }, "DEC H", "4", new Flags("-", "+", "+", "", "+", "+"), "Subtracts one from H.") },
-        { "2D DEC L", new Opcode(new [] { "2D" }, "DEC L", "4", new Flags("-", "+", "+", "", "+", "+"), "Subtracts one from L.") },
-        { "3D DEC A", new Opcode(new [] { "3D" }, "DEC A", "4", new Flags("-", "+", "+", "", "+", "+"), "Subtracts one from A.") },
-        { "F3 DI", new Opcode(new [] { "F3" }, "DI", "4", new Flags("-", "-", "-", "", "-", "-"), "Resets both interrupt flip-flops, thus prenting maskable interrupts from triggering.") },
-        { "10 DJNZ d", new Opcode(new [] { "10", "d-$-2" }, "DJNZ d", "13/8", new Flags("-", "-", "-", "", "-", "-"), "The B register is decremented, and if not zero, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode.") },
-        { "FB EI", new Opcode(new [] { "FB" }, "EI", "4", new Flags("-", "-", "-", "", "-", "-"), "Sets both interrupt flip-flops, thus allowing maskable interrupts to occur. An interrupt will not occur until after the immediately following instruction.") },
-        { "E3 EX (SP),HL", new Opcode(new [] { "E3" }, "EX (SP),HL", "19", new Flags("-", "-", "-", "", "-", "-"), "Exchanges (SP) with L, and (SP+1) with H.") },
-        { "DD EX (SP),IX", new Opcode(new [] { "DD", "E3" }, "EX (SP),IX", "23", new Flags("-", "-", "-", "", "-", "-"), "Exchanges (SP) with IXL, and (SP+1) with IXH.") },
-        { "FD EX (SP),IY", new Opcode(new [] { "FD", "E3" }, "EX (SP),IY", "23", new Flags("-", "-", "-", "", "-", "-"), "Exchanges (SP) with IYL, and (SP+1) with IYH.") },
-        { "08 EX AF,AF'", new Opcode(new [] { "08" }, "EX AF,AF'", "4", new Flags("-", "-", "-", "", "-", "-"), "Exchanges the 16-bit contents of AF and AF'.") },
-        { "EB EX DE,HL", new Opcode(new [] { "EB" }, "EX DE,HL", "4", new Flags("-", "-", "-", "", "-", "-"), "Exchanges the 16-bit contents of DE and HL.") },
-        { "D9 EXX", new Opcode(new [] { "D9" }, "EXX", "4", new Flags("-", "-", "-", "", "-", "-"), "Exchanges the 16-bit contents of BC, DE, and HL with BC', DE', and HL'.") },
-        { "76 HALT", new Opcode(new [] { "76" }, "HALT", "4", new Flags("-", "-", "-", "", "-", "-"), "Suspends CPU operation until an interrupt or reset occurs.") },
-        { "ED IM 0", new Opcode(new [] { "ED", "46" }, "IM 0", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets interrupt mode 0.") },
-        { "ED IM 1", new Opcode(new [] { "ED", "56" }, "IM 1", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets interrupt mode 1.") },
-        { "ED IM 2", new Opcode(new [] { "ED", "5E" }, "IM 2", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets interrupt mode 2.") },
-        { "DB IN A,(n)", new Opcode(new [] { "DB", "n" }, "IN A,(n)", "11", new Flags("-", "-", "-", "", "-", "-"), "A byte from port $n is written to A.") },
-        { "ED IN B,(C)", new Opcode(new [] { "ED", "40" }, "IN B,(C)", "12", new Flags("-", "0", "0", "", "+", "+"), "A byte from port C is written to B.") },
-        { "ED IN C,(C)", new Opcode(new [] { "ED", "48" }, "IN C,(C)", "12", new Flags("-", "0", "0", "", "+", "+"), "A byte from port C is written to C.") },
-        { "ED IN D,(C)", new Opcode(new [] { "ED", "50" }, "IN D,(C)", "12", new Flags("-", "0", "0", "", "+", "+"), "A byte from port C is written to D.") },
-        { "ED IN E,(C)", new Opcode(new [] { "ED", "58" }, "IN E,(C)", "12", new Flags("-", "0", "0", "", "+", "+"), "A byte from port C is written to E.") },
-        { "ED IN H,(C)", new Opcode(new [] { "ED", "60" }, "IN H,(C)", "12", new Flags("-", "0", "0", "", "+", "+"), "A byte from port C is written to H.") },
-        { "ED IN L,(C)", new Opcode(new [] { "ED", "68" }, "IN L,(C)", "12", new Flags("-", "0", "0", "", "+", "+"), "A byte from port C is written to L.") },
-        { "ED IN A,(C)", new Opcode(new [] { "ED", "78" }, "IN A,(C)", "12", new Flags("-", "0", "0", "", "+", "+"), "A byte from port C is written to A.") },
-        { "34 INC (HL)", new Opcode(new [] { "34" }, "INC (HL)", "11", new Flags("-", "+", "+", "", "+", "+"), "Adds one to (HL).") },
-        { "DD INC (IX+d)", new Opcode(new [] { "DD", "34", "d" }, "INC (IX+d)", "23", new Flags("-", "+", "+", "", "+", "+"), "Adds one to the memory location pointed to by IX plus $d.") },
-        { "FD INC (IY+d)", new Opcode(new [] { "FD", "34", "d" }, "INC (IY+d)", "23", new Flags("-", "+", "+", "", "+", "+"), "Adds one to the memory location pointed to by IY plus $d.") },
-        { "DD INC IX", new Opcode(new [] { "DD", "23" }, "INC IX", "10", new Flags("-", "-", "-", "", "-", "-"), "Adds one to IX.") },
-        { "FD INC IY", new Opcode(new [] { "FD", "23" }, "INC IY", "10", new Flags("-", "-", "-", "", "-", "-"), "Adds one to IY.") },
-        { "03 INC BC", new Opcode(new [] { "03" }, "INC BC", "6", new Flags("-", "-", "-", "", "-", "-"), "Adds one to BC.") },
-        { "13 INC DE", new Opcode(new [] { "13" }, "INC DE", "6", new Flags("-", "-", "-", "", "-", "-"), "Adds one to DE.") },
-        { "23 INC HL", new Opcode(new [] { "23" }, "INC HL", "6", new Flags("-", "-", "-", "", "-", "-"), "Adds one to HL.") },
-        { "33 INC SP", new Opcode(new [] { "33" }, "INC SP", "6", new Flags("-", "-", "-", "", "-", "-"), "Adds one to SP.") },
-        { "04 INC B", new Opcode(new [] { "04" }, "INC B", "4", new Flags("-", "+", "+", "", "+", "+"), "Adds one to B.") },
-        { "0C INC C", new Opcode(new [] { "0C" }, "INC C", "4", new Flags("-", "+", "+", "", "+", "+"), "Adds one to C.") },
-        { "14 INC D", new Opcode(new [] { "14" }, "INC D", "4", new Flags("-", "+", "+", "", "+", "+"), "Adds one to D.") },
-        { "1C INC E", new Opcode(new [] { "1C" }, "INC E", "4", new Flags("-", "+", "+", "", "+", "+"), "Adds one to E.") },
-        { "24 INC H", new Opcode(new [] { "24" }, "INC H", "4", new Flags("-", "+", "+", "", "+", "+"), "Adds one to H.") },
-        { "2C INC L", new Opcode(new [] { "2C" }, "INC L", "4", new Flags("-", "+", "+", "", "+", "+"), "Adds one to L.") },
-        { "3C INC A", new Opcode(new [] { "3C" }, "INC A", "4", new Flags("-", "+", "+", "", "+", "+"), "Adds one to A.") },
-        { "ED IND", new Opcode(new [] { "ED", "AA" }, "IND", "16", new Flags("-", " ", "1", "", " ", "*"), "A byte from port C is written to the memory location pointed to by HL. Then HL and B are decremented.") },
-        { "ED INDR", new Opcode(new [] { "ED", "BA" }, "INDR", "21/16", new Flags("-", " ", "1", "", " ", "1"), "A byte from port C is written to the memory location pointed to by HL. Then HL and B are decremented. If B is not zero, this operation is repeated. Interrupts can trigger while this instruction is processing.") },
-        { "ED INI", new Opcode(new [] { "ED", "A2" }, "INI", "16", new Flags("-", " ", "1", "", " ", "*"), "A byte from port C is written to the memory location pointed to by HL. Then HL is incremented and B is decremented.") },
-        { "ED INIR", new Opcode(new [] { "ED", "B2" }, "INIR", "21/16", new Flags("-", " ", "1", "", " ", "1"), "A byte from port C is written to the memory location pointed to by HL. Then HL is incremented and B is decremented. If B is not zero, this operation is repeated. Interrupts can trigger while this instruction is processing.") },
-        { "E9 JP (HL)", new Opcode(new [] { "E9" }, "JP (HL)", "4", new Flags("-", "-", "-", "", "-", "-"), "Loads the value of HL into PC.") },
-        { "DD JP (IX)", new Opcode(new [] { "DD", "E9" }, "JP (IX)", "8", new Flags("-", "-", "-", "", "-", "-"), "Loads the value of IX into PC.") },
-        { "FD JP (IY)", new Opcode(new [] { "FD", "E9" }, "JP (IY)", "8", new Flags("-", "-", "-", "", "-", "-"), "Loads the value of IY into PC.") },
-        { "DA JP C,nn", new Opcode(new [] { "DA", "nn" }, "JP C,nn", "10", new Flags("-", "-", "-", "", "-", "-"), "If the carry flag is set, $nn is copied to PC.") },
-        { "FA JP M,nn", new Opcode(new [] { "FA", "nn" }, "JP M,nn", "10", new Flags("-", "-", "-", "", "-", "-"), "If the sign flag is set, $nn is copied to PC.") },
-        { "D2 JP NC,nn", new Opcode(new [] { "D2", "nn" }, "JP NC,nn", "10", new Flags("-", "-", "-", "", "-", "-"), "If the carry flag is unset, $nn is copied to PC.") },
-        { "C2 JP NZ,nn", new Opcode(new [] { "C2", "nn" }, "JP NZ,nn", "10", new Flags("-", "-", "-", "", "-", "-"), "If the zero flag is unset, $nn is copied to PC.") },
-        { "F2 JP P,nn", new Opcode(new [] { "F2", "nn" }, "JP P,nn", "10", new Flags("-", "-", "-", "", "-", "-"), "If the sign flag is unset, $nn is copied to PC.") },
-        { "EA JP PE,nn", new Opcode(new [] { "EA", "nn" }, "JP PE,nn", "10", new Flags("-", "-", "-", "", "-", "-"), "If the parity/overflow flag is set, $nn is copied to PC.") },
-        { "E2 JP PO,nn", new Opcode(new [] { "E2", "nn" }, "JP PO,nn", "10", new Flags("-", "-", "-", "", "-", "-"), "If the parity/overflow flag is unset, $nn is copied to PC.") },
-        { "CA JP Z,nn", new Opcode(new [] { "CA", "nn" }, "JP Z,nn", "10", new Flags("-", "-", "-", "", "-", "-"), "If the zero flag is set, $nn is copied to PC.") },
-        { "C3 JP nn", new Opcode(new [] { "C3", "nn" }, "JP nn", "10", new Flags("-", "-", "-", "", "-", "-"), "$nn is copied to PC.") },
-        { "38 JR C,d", new Opcode(new [] { "38", "d-$-2" }, "JR C,d", "12/7", new Flags("-", "-", "-", "", "-", "-"), "If the carry flag is set, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode.") },
-        { "30 JR NC,d", new Opcode(new [] { "30", "d-$-2" }, "JR NC,d", "12/7", new Flags("-", "-", "-", "", "-", "-"), "If the carry flag is unset, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode.") },
-        { "20 JR NZ,d", new Opcode(new [] { "20", "d-$-2" }, "JR NZ,d", "12/7", new Flags("-", "-", "-", "", "-", "-"), "If the zero flag is unset, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode.") },
-        { "28 JR Z,d", new Opcode(new [] { "28", "d-$-2" }, "JR Z,d", "12/7", new Flags("-", "-", "-", "", "-", "-"), "If the zero flag is set, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode.") },
-        { "18 JR d", new Opcode(new [] { "18", "d-$-2" }, "JR d", "12", new Flags("-", "-", "-", "", "-", "-"), "The signed value $d is added to PC. The jump is measured from the start of the instruction opcode.") },
-        { "02 LD (BC),A", new Opcode(new [] { "02" }, "LD (BC),A", "7", new Flags("-", "-", "-", "", "-", "-"), "Stores A into the memory location pointed to by BC.") },
-        { "12 LD (DE),A", new Opcode(new [] { "12" }, "LD (DE),A", "7", new Flags("-", "-", "-", "", "-", "-"), "Stores A into the memory location pointed to by DE.") },
-        { "36 LD (HL),n", new Opcode(new [] { "36", "n" }, "LD (HL),n", "10", new Flags("-", "-", "-", "", "-", "-"), "Loads $n into (HL).") },
-        { "70 LD (HL),B", new Opcode(new [] { "70" }, "LD (HL),B", "7", new Flags("-", "-", "-", "", "-", "-"), "The contents of B are loaded into (HL).") },
-        { "71 LD (HL),C", new Opcode(new [] { "71" }, "LD (HL),C", "7", new Flags("-", "-", "-", "", "-", "-"), "The contents of C are loaded into (HL).") },
-        { "72 LD (HL),D", new Opcode(new [] { "72" }, "LD (HL),D", "7", new Flags("-", "-", "-", "", "-", "-"), "The contents of D are loaded into (HL).") },
-        { "73 LD (HL),E", new Opcode(new [] { "73" }, "LD (HL),E", "7", new Flags("-", "-", "-", "", "-", "-"), "The contents of E are loaded into (HL).") },
-        { "74 LD (HL),H", new Opcode(new [] { "74" }, "LD (HL),H", "7", new Flags("-", "-", "-", "", "-", "-"), "The contents of H are loaded into (HL).") },
-        { "75 LD (HL),L", new Opcode(new [] { "75" }, "LD (HL),L", "7", new Flags("-", "-", "-", "", "-", "-"), "The contents of L are loaded into (HL).") },
-        { "77 LD (HL),A", new Opcode(new [] { "77" }, "LD (HL),A", "7", new Flags("-", "-", "-", "", "-", "-"), "The contents of A are loaded into (HL).") },
-        { "DD LD (IX+d),n", new Opcode(new [] { "DD", "36", "d", "n" }, "LD (IX+d),n", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores $n to the memory location pointed to by IX plus $d.") },
-        { "DD LD (IX+d),B", new Opcode(new [] { "DD", "70", "d" }, "LD (IX+d),B", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores B to the memory location pointed to by IX plus $d.") },
-        { "DD LD (IX+d),C", new Opcode(new [] { "DD", "71", "d" }, "LD (IX+d),C", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores C to the memory location pointed to by IX plus $d.") },
-        { "DD LD (IX+d),D", new Opcode(new [] { "DD", "72", "d" }, "LD (IX+d),D", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores D to the memory location pointed to by IX plus $d.") },
-        { "DD LD (IX+d),E", new Opcode(new [] { "DD", "73", "d" }, "LD (IX+d),E", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores E to the memory location pointed to by IX plus $d.") },
-        { "DD LD (IX+d),H", new Opcode(new [] { "DD", "74", "d" }, "LD (IX+d),H", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores H to the memory location pointed to by IX plus $d.") },
-        { "DD LD (IX+d),L", new Opcode(new [] { "DD", "75", "d" }, "LD (IX+d),L", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores L to the memory location pointed to by IX plus $d.") },
-        { "DD LD (IX+d),A", new Opcode(new [] { "DD", "77", "d" }, "LD (IX+d),A", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores A to the memory location pointed to by IX plus $d.") },
-        { "FD LD (IY+d),n", new Opcode(new [] { "FD", "36", "d", "n" }, "LD (IY+d),n", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores $n to the memory location pointed to by IY plus $d.") },
-        { "FD LD (IY+d),B", new Opcode(new [] { "FD", "70", "d" }, "LD (IY+d),B", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores B to the memory location pointed to by IY plus $d.") },
-        { "FD LD (IY+d),C", new Opcode(new [] { "FD", "71", "d" }, "LD (IY+d),C", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores C to the memory location pointed to by IY plus $d.") },
-        { "FD LD (IY+d),D", new Opcode(new [] { "FD", "72", "d" }, "LD (IY+d),D", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores D to the memory location pointed to by IY plus $d.") },
-        { "FD LD (IY+d),E", new Opcode(new [] { "FD", "73", "d" }, "LD (IY+d),E", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores E to the memory location pointed to by IY plus $d.") },
-        { "FD LD (IY+d),H", new Opcode(new [] { "FD", "74", "d" }, "LD (IY+d),H", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores H to the memory location pointed to by IY plus $d.") },
-        { "FD LD (IY+d),L", new Opcode(new [] { "FD", "75", "d" }, "LD (IY+d),L", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores L to the memory location pointed to by IY plus $d.") },
-        { "FD LD (IY+d),A", new Opcode(new [] { "FD", "77", "d" }, "LD (IY+d),A", "19", new Flags("-", "-", "-", "", "-", "-"), "Stores A to the memory location pointed to by IY plus $d.") },
-        { "32 LD (nn),A", new Opcode(new [] { "32", "nn" }, "LD (nn),A", "13", new Flags("-", "-", "-", "", "-", "-"), "Stores A into the memory location pointed to by $nn.") },
-        { "ED LD (nn),BC", new Opcode(new [] { "ED", "43", "nn" }, "LD (nn),BC", "20", new Flags("-", "-", "-", "", "-", "-"), "Stores BC into the memory location pointed to by $nn.") },
-        { "ED LD (nn),DE", new Opcode(new [] { "ED", "53", "nn" }, "LD (nn),DE", "20", new Flags("-", "-", "-", "", "-", "-"), "Stores DE into the memory location pointed to by $nn.") },
-        { "22 LD (nn),HL", new Opcode(new [] { "22", "nn" }, "LD (nn),HL", "16", new Flags("-", "-", "-", "", "-", "-"), "Stores HL into the memory location pointed to by $nn.") },
-        { "DD LD (nn),IX", new Opcode(new [] { "DD", "22", "nn" }, "LD (nn),IX", "20", new Flags("-", "-", "-", "", "-", "-"), "Stores IX into the memory location pointed to by $nn.") },
-        { "FD LD (nn),IY", new Opcode(new [] { "FD", "22", "nn" }, "LD (nn),IY", "20", new Flags("-", "-", "-", "", "-", "-"), "Stores IY into the memory location pointed to by $nn.") },
-        { "ED LD (nn),SP", new Opcode(new [] { "ED", "73", "nn" }, "LD (nn),SP", "20", new Flags("-", "-", "-", "", "-", "-"), "Stores SP into the memory location pointed to by $nn.") },
-        { "0A LD A,(BC)", new Opcode(new [] { "0A" }, "LD A,(BC)", "7", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by BC into A.") },
-        { "1A LD A,(DE)", new Opcode(new [] { "1A" }, "LD A,(DE)", "7", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by DE into A.") },
-        { "3A LD A,(nn)", new Opcode(new [] { "3A", "nn" }, "LD A,(nn)", "13", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by $nn into A.") },
-        { "ED LD A,I", new Opcode(new [] { "ED", "57" }, "LD A,I", "9", new Flags("-", "0", "0", "", "+", "+"), "Stores the value of register I into A.") },
-        { "ED LD A,R", new Opcode(new [] { "ED", "5F" }, "LD A,R", "9", new Flags("-", "0", "0", "", "+", "+"), "Stores the value of register R into A.") },
-        { "ED LD BC,(nn)", new Opcode(new [] { "ED", "4B", "nn" }, "LD BC,(nn)", "20", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by $nn into BC.") },
-        { "ED LD DE,(nn)", new Opcode(new [] { "ED", "5B", "nn" }, "LD DE,(nn)", "20", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by $nn into DE.") },
-        { "2A LD HL,(nn)", new Opcode(new [] { "2A", "nn" }, "LD HL,(nn)", "16", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by $nn into HL.") },
-        { "ED LD I,A", new Opcode(new [] { "ED", "47" }, "LD I,A", "9", new Flags("-", "-", "-", "", "-", "-"), "Stores the value of A into register I.") },
-        { "DD LD IX,(nn)", new Opcode(new [] { "DD", "2A", "nn" }, "LD IX,(nn)", "20", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by $nn into IX.") },
-        { "DD LD IX,nn", new Opcode(new [] { "DD", "21", "nn" }, "LD IX,nn", "14", new Flags("-", "-", "-", "", "-", "-"), "Loads $nn into register IX.") },
-        { "FD LD IY,(nn)", new Opcode(new [] { "FD", "2A", "nn" }, "LD IY,(nn)", "20", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by $nn into IY.") },
-        { "FD LD IY,nn", new Opcode(new [] { "FD", "21", "nn" }, "LD IY,nn", "14", new Flags("-", "-", "-", "", "-", "-"), "Loads $nn into register IY.") },
-        { "ED LD R,A", new Opcode(new [] { "ED", "4F" }, "LD R,A", "9", new Flags("-", "-", "-", "", "-", "-"), "Stores the value of A into register R.") },
-        { "ED LD SP,(nn)", new Opcode(new [] { "ED", "7B", "nn" }, "LD SP,(nn)", "20", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by $nn into SP.") },
-        { "F9 LD SP,HL", new Opcode(new [] { "F9" }, "LD SP,HL", "6", new Flags("-", "-", "-", "", "-", "-"), "Loads the value of HL into SP.") },
-        { "DD LD SP,IX", new Opcode(new [] { "DD", "F9" }, "LD SP,IX", "10", new Flags("-", "-", "-", "", "-", "-"), "Loads the value of IX into SP.") },
-        { "FD LD SP,IY", new Opcode(new [] { "FD", "F9" }, "LD SP,IY", "10", new Flags("-", "-", "-", "", "-", "-"), "Loads the value of IY into SP.") },
-        { "01 LD BC,nn", new Opcode(new [] { "01", "nn" }, "LD BC,nn", "10", new Flags("-", "-", "-", "", "-", "-"), "Loads $nn into BC.") },
-        { "11 LD DE,nn", new Opcode(new [] { "11", "nn" }, "LD DE,nn", "10", new Flags("-", "-", "-", "", "-", "-"), "Loads $nn into DE.") },
-        { "21 LD HL,nn", new Opcode(new [] { "21", "nn" }, "LD HL,nn", "10", new Flags("-", "-", "-", "", "-", "-"), "Loads $nn into HL.") },
-        { "31 LD SP,nn", new Opcode(new [] { "31", "nn" }, "LD SP,nn", "10", new Flags("-", "-", "-", "", "-", "-"), "Loads $nn into SP.") },
-        { "46 LD B,(HL)", new Opcode(new [] { "46" }, "LD B,(HL)", "7", new Flags("-", "-", "-", "", "-", "-"), "The contents of (HL) are loaded into B.") },
-        { "4E LD C,(HL)", new Opcode(new [] { "4E" }, "LD C,(HL)", "7", new Flags("-", "-", "-", "", "-", "-"), "The contents of (HL) are loaded into C.") },
-        { "56 LD D,(HL)", new Opcode(new [] { "56" }, "LD D,(HL)", "7", new Flags("-", "-", "-", "", "-", "-"), "The contents of (HL) are loaded into D.") },
-        { "5E LD E,(HL)", new Opcode(new [] { "5E" }, "LD E,(HL)", "7", new Flags("-", "-", "-", "", "-", "-"), "The contents of (HL) are loaded into E.") },
-        { "66 LD H,(HL)", new Opcode(new [] { "66" }, "LD H,(HL)", "7", new Flags("-", "-", "-", "", "-", "-"), "The contents of (HL) are loaded into H.") },
-        { "6E LD L,(HL)", new Opcode(new [] { "6E" }, "LD L,(HL)", "7", new Flags("-", "-", "-", "", "-", "-"), "The contents of (HL) are loaded into L.") },
-        { "7E LD A,(HL)", new Opcode(new [] { "7E" }, "LD A,(HL)", "7", new Flags("-", "-", "-", "", "-", "-"), "The contents of (HL) are loaded into A.") },
-        { "DD LD B,(IX+d)", new Opcode(new [] { "DD", "46", "d" }, "LD B,(IX+d)", "19", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by IX plus $d into B.") },
-        { "DD LD C,(IX+d)", new Opcode(new [] { "DD", "4E", "d" }, "LD C,(IX+d)", "19", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by IX plus $d into C.") },
-        { "DD LD D,(IX+d)", new Opcode(new [] { "DD", "56", "d" }, "LD D,(IX+d)", "19", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by IX plus $d into D.") },
-        { "DD LD E,(IX+d)", new Opcode(new [] { "DD", "5E", "d" }, "LD E,(IX+d)", "19", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by IX plus $d into E.") },
-        { "DD LD H,(IX+d)", new Opcode(new [] { "DD", "66", "d" }, "LD H,(IX+d)", "19", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by IX plus $d into H.") },
-        { "DD LD L,(IX+d)", new Opcode(new [] { "DD", "6E", "d" }, "LD L,(IX+d)", "19", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by IX plus $d into L.") },
-        { "DD LD A,(IX+d)", new Opcode(new [] { "DD", "7E", "d" }, "LD A,(IX+d)", "19", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by IX plus $d into A.") },
-        { "FD LD B,(IY+d)", new Opcode(new [] { "FD", "46", "d" }, "LD B,(IY+d)", "19", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by IY plus $d into B.") },
-        { "FD LD C,(IY+d)", new Opcode(new [] { "FD", "4E", "d" }, "LD C,(IY+d)", "19", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by IY plus $d into C.") },
-        { "FD LD D,(IY+d)", new Opcode(new [] { "FD", "56", "d" }, "LD D,(IY+d)", "19", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by IY plus $d into D.") },
-        { "FD LD E,(IY+d)", new Opcode(new [] { "FD", "5E", "d" }, "LD E,(IY+d)", "19", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by IY plus $d into E.") },
-        { "FD LD H,(IY+d)", new Opcode(new [] { "FD", "66", "d" }, "LD H,(IY+d)", "19", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by IY plus $d into H.") },
-        { "FD LD L,(IY+d)", new Opcode(new [] { "FD", "6E", "d" }, "LD L,(IY+d)", "19", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by IY plus $d into L.") },
-        { "FD LD A,(IY+d)", new Opcode(new [] { "FD", "7E", "d" }, "LD A,(IY+d)", "19", new Flags("-", "-", "-", "", "-", "-"), "Loads the value pointed to by IY plus $d into A.") },
-        { "06 LD B,n", new Opcode(new [] { "06", "n" }, "LD B,n", "7", new Flags("-", "-", "-", "", "-", "-"), "Loads $n into B.") },
-        { "0E LD C,n", new Opcode(new [] { "0E", "n" }, "LD C,n", "7", new Flags("-", "-", "-", "", "-", "-"), "Loads $n into C.") },
-        { "16 LD D,n", new Opcode(new [] { "16", "n" }, "LD D,n", "7", new Flags("-", "-", "-", "", "-", "-"), "Loads $n into D.") },
-        { "1E LD E,n", new Opcode(new [] { "1E", "n" }, "LD E,n", "7", new Flags("-", "-", "-", "", "-", "-"), "Loads $n into E.") },
-        { "26 LD H,n", new Opcode(new [] { "26", "n" }, "LD H,n", "7", new Flags("-", "-", "-", "", "-", "-"), "Loads $n into H.") },
-        { "2E LD L,n", new Opcode(new [] { "2E", "n" }, "LD L,n", "7", new Flags("-", "-", "-", "", "-", "-"), "Loads $n into L.") },
-        { "3E LD A,n", new Opcode(new [] { "3E", "n" }, "LD A,n", "7", new Flags("-", "-", "-", "", "-", "-"), "Loads $n into A.") },
-        { "40 LD B,B", new Opcode(new [] { "40" }, "LD B,B", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of B are loaded into B.") },
-        { "41 LD B,C", new Opcode(new [] { "41" }, "LD B,C", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of C are loaded into B.") },
-        { "42 LD B,D", new Opcode(new [] { "42" }, "LD B,D", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of D are loaded into B.") },
-        { "43 LD B,E", new Opcode(new [] { "43" }, "LD B,E", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of E are loaded into B.") },
-        { "44 LD B,H", new Opcode(new [] { "44" }, "LD B,H", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of H are loaded into B.") },
-        { "45 LD B,L", new Opcode(new [] { "45" }, "LD B,L", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of L are loaded into B.") },
-        { "47 LD B,A", new Opcode(new [] { "47" }, "LD B,A", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of A are loaded into B.") },
-        { "48 LD C,B", new Opcode(new [] { "48" }, "LD C,B", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of B are loaded into C.") },
-        { "49 LD C,C", new Opcode(new [] { "49" }, "LD C,C", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of C are loaded into C.") },
-        { "4A LD C,D", new Opcode(new [] { "4A" }, "LD C,D", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of D are loaded into C.") },
-        { "4B LD C,E", new Opcode(new [] { "4B" }, "LD C,E", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of E are loaded into C.") },
-        { "4C LD C,H", new Opcode(new [] { "4C" }, "LD C,H", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of H are loaded into C.") },
-        { "4D LD C,L", new Opcode(new [] { "4D" }, "LD C,L", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of L are loaded into C.") },
-        { "4F LD C,A", new Opcode(new [] { "4F" }, "LD C,A", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of A are loaded into C.") },
-        { "50 LD D,B", new Opcode(new [] { "50" }, "LD D,B", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of B are loaded into D.") },
-        { "51 LD D,C", new Opcode(new [] { "51" }, "LD D,C", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of C are loaded into D.") },
-        { "52 LD D,D", new Opcode(new [] { "52" }, "LD D,D", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of D are loaded into D.") },
-        { "53 LD D,E", new Opcode(new [] { "53" }, "LD D,E", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of E are loaded into D.") },
-        { "54 LD D,H", new Opcode(new [] { "54" }, "LD D,H", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of H are loaded into D.") },
-        { "55 LD D,L", new Opcode(new [] { "55" }, "LD D,L", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of L are loaded into D.") },
-        { "57 LD D,A", new Opcode(new [] { "57" }, "LD D,A", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of A are loaded into D.") },
-        { "58 LD E,B", new Opcode(new [] { "58" }, "LD E,B", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of B are loaded into E.") },
-        { "59 LD E,C", new Opcode(new [] { "59" }, "LD E,C", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of C are loaded into E.") },
-        { "5A LD E,D", new Opcode(new [] { "5A" }, "LD E,D", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of D are loaded into E.") },
-        { "5B LD E,E", new Opcode(new [] { "5B" }, "LD E,E", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of E are loaded into E.") },
-        { "5C LD E,H", new Opcode(new [] { "5C" }, "LD E,H", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of H are loaded into E.") },
-        { "5D LD E,L", new Opcode(new [] { "5D" }, "LD E,L", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of L are loaded into E.") },
-        { "5F LD E,A", new Opcode(new [] { "5F" }, "LD E,A", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of A are loaded into E.") },
-        { "60 LD H,B", new Opcode(new [] { "60" }, "LD H,B", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of B are loaded into H.") },
-        { "61 LD H,C", new Opcode(new [] { "61" }, "LD H,C", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of C are loaded into H.") },
-        { "62 LD H,D", new Opcode(new [] { "62" }, "LD H,D", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of D are loaded into H.") },
-        { "63 LD H,E", new Opcode(new [] { "63" }, "LD H,E", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of E are loaded into H.") },
-        { "64 LD H,H", new Opcode(new [] { "64" }, "LD H,H", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of H are loaded into H.") },
-        { "65 LD H,L", new Opcode(new [] { "65" }, "LD H,L", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of L are loaded into H.") },
-        { "67 LD H,A", new Opcode(new [] { "67" }, "LD H,A", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of A are loaded into H.") },
-        { "68 LD L,B", new Opcode(new [] { "68" }, "LD L,B", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of B are loaded into L.") },
-        { "69 LD L,C", new Opcode(new [] { "69" }, "LD L,C", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of C are loaded into L.") },
-        { "6A LD L,D", new Opcode(new [] { "6A" }, "LD L,D", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of D are loaded into L.") },
-        { "6B LD L,E", new Opcode(new [] { "6B" }, "LD L,E", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of E are loaded into L.") },
-        { "6C LD L,H", new Opcode(new [] { "6C" }, "LD L,H", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of H are loaded into L.") },
-        { "6D LD L,L", new Opcode(new [] { "6D" }, "LD L,L", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of L are loaded into L.") },
-        { "6F LD L,A", new Opcode(new [] { "6F" }, "LD L,A", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of A are loaded into L.") },
-        { "78 LD A,B", new Opcode(new [] { "78" }, "LD A,B", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of B are loaded into A.") },
-        { "79 LD A,C", new Opcode(new [] { "79" }, "LD A,C", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of C are loaded into A.") },
-        { "7A LD A,D", new Opcode(new [] { "7A" }, "LD A,D", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of D are loaded into A.") },
-        { "7B LD A,E", new Opcode(new [] { "7B" }, "LD A,E", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of E are loaded into A.") },
-        { "7C LD A,H", new Opcode(new [] { "7C" }, "LD A,H", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of H are loaded into A.") },
-        { "7D LD A,L", new Opcode(new [] { "7D" }, "LD A,L", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of L are loaded into A.") },
-        { "7F LD A,A", new Opcode(new [] { "7F" }, "LD A,A", "4", new Flags("-", "-", "-", "", "-", "-"), "The contents of A are loaded into A.") },
-        { "ED LDD", new Opcode(new [] { "ED", "A8" }, "LDD", "16", new Flags("-", "0", "0", "", "-", "-"), "Transfers a byte of data from the memory location pointed to by HL to the memory location pointed to by DE. Then HL, DE, and BC are decremented. p/v is reset if BC becomes zero and set otherwise.") },
-        { "ED LDDR", new Opcode(new [] { "ED", "B8" }, "LDDR", "21/16", new Flags("-", "0", "0", "", "-", "-"), "Transfers a byte of data from the memory location pointed to by HL to the memory location pointed to by DE. Then HL, DE, and BC are decremented. If BC is not zero, this operation is repeated. Interrupts can trigger while this instruction is processing.") },
-        { "ED LDI", new Opcode(new [] { "ED", "A0" }, "LDI", "16", new Flags("-", "0", "0", "", "-", "-"), "Transfers a byte of data from the memory location pointed to by HL to the memory location pointed to by DE. Then HL and DE are incremented and BC is decremented. p/v is reset if BC becomes zero and set otherwise.") },
-        { "ED LDIR", new Opcode(new [] { "ED", "B0" }, "LDIR", "21/16", new Flags("-", "0", "0", "", "-", "-"), "Transfers a byte of data from the memory location pointed to by HL to the memory location pointed to by DE. Then HL and DE are incremented and BC is decremented. If BC is not zero, this operation is repeated. Interrupts can trigger while this instruction is processing.") },
-        { "ED NEG", new Opcode(new [] { "ED", "44" }, "NEG", "8", new Flags("+", "+", "+", "", "+", "+"), "The contents of A are negated (two's complement). Operation is the same as subtracting A from zero.") },
-        { "00 NOP", new Opcode(new [] { "00" }, "NOP", "4", new Flags("-", "-", "-", "", "-", "-"), "No operation is performed.") },
-        { "B6 OR (HL)", new Opcode(new [] { "B6" }, "OR (HL)", "7", new Flags("0", "0", "0", "", "+", "+"), "Bitwise OR on A with (HL).") },
-        { "DD OR (IX+d)", new Opcode(new [] { "DD", "B6", "d" }, "OR (IX+d)", "19", new Flags("0", "0", "0", "", "+", "+"), "Bitwise OR on A with the value pointed to by IX plus $d.") },
-        { "FD OR (IY+d)", new Opcode(new [] { "FD", "B6", "d" }, "OR (IY+d)", "19", new Flags("0", "0", "0", "", "+", "+"), "Bitwise OR on A with the value pointed to by IY plus $d.") },
-        { "F6 OR n", new Opcode(new [] { "F6", "n" }, "OR n", "7", new Flags("0", "0", "0", "", "+", "+"), "Bitwise OR on A with $n.") },
-        { "B0 OR B", new Opcode(new [] { "B0" }, "OR B", "4", new Flags("0", "0", "0", "", "+", "+"), "Bitwise OR on A with B.") },
-        { "B1 OR C", new Opcode(new [] { "B1" }, "OR C", "4", new Flags("0", "0", "0", "", "+", "+"), "Bitwise OR on A with C.") },
-        { "B2 OR D", new Opcode(new [] { "B2" }, "OR D", "4", new Flags("0", "0", "0", "", "+", "+"), "Bitwise OR on A with D.") },
-        { "B3 OR E", new Opcode(new [] { "B3" }, "OR E", "4", new Flags("0", "0", "0", "", "+", "+"), "Bitwise OR on A with E.") },
-        { "B4 OR H", new Opcode(new [] { "B4" }, "OR H", "4", new Flags("0", "0", "0", "", "+", "+"), "Bitwise OR on A with H.") },
-        { "B5 OR L", new Opcode(new [] { "B5" }, "OR L", "4", new Flags("0", "0", "0", "", "+", "+"), "Bitwise OR on A with L.") },
-        { "B7 OR A", new Opcode(new [] { "B7" }, "OR A", "4", new Flags("0", "0", "0", "", "+", "+"), "Bitwise OR on A with A.") },
-        { "ED OTDR", new Opcode(new [] { "ED", "BB" }, "OTDR", "21/16", new Flags("-", " ", "1", "", " ", "1"), "B is decremented. A byte from the memory location pointed to by HL is written to port C. Then HL is decremented. If B is not zero, this operation is repeated. Interrupts can trigger while this instruction is processing.") },
-        { "ED OTIR", new Opcode(new [] { "ED", "B3" }, "OTIR", "21/16", new Flags("-", " ", "1", "", " ", "1"), "B is decremented. A byte from the memory location pointed to by HL is written to port C. Then HL is incremented. If B is not zero, this operation is repeated. Interrupts can trigger while this instruction is processing.") },
-        { "ED OUT (C),B", new Opcode(new [] { "ED", "41" }, "OUT (C),B", "12", new Flags("-", "-", "-", "", "-", "-"), "The value of B is written to port C.") },
-        { "ED OUT (C),C", new Opcode(new [] { "ED", "49" }, "OUT (C),C", "12", new Flags("-", "-", "-", "", "-", "-"), "The value of C is written to port C.") },
-        { "ED OUT (C),D", new Opcode(new [] { "ED", "51" }, "OUT (C),D", "12", new Flags("-", "-", "-", "", "-", "-"), "The value of D is written to port C.") },
-        { "ED OUT (C),E", new Opcode(new [] { "ED", "59" }, "OUT (C),E", "12", new Flags("-", "-", "-", "", "-", "-"), "The value of E is written to port C.") },
-        { "ED OUT (C),H", new Opcode(new [] { "ED", "61" }, "OUT (C),H", "12", new Flags("-", "-", "-", "", "-", "-"), "The value of H is written to port C.") },
-        { "ED OUT (C),L", new Opcode(new [] { "ED", "69" }, "OUT (C),L", "12", new Flags("-", "-", "-", "", "-", "-"), "The value of L is written to port C.") },
-        { "ED OUT (C),A", new Opcode(new [] { "ED", "79" }, "OUT (C),A", "12", new Flags("-", "-", "-", "", "-", "-"), "The value of A is written to port C.") },
-        { "D3 OUT (n),A", new Opcode(new [] { "D3", "n" }, "OUT (n),A", "11", new Flags("-", "-", "-", "", "-", "-"), "The value of A is written to port $n.") },
-        { "ED OUTD", new Opcode(new [] { "ED", "AB" }, "OUTD", "16", new Flags("-", " ", "1", "", " ", "*"), "B is decremented. A byte from the memory location pointed to by HL is written to port C. Then HL is decremented.") },
-        { "ED OUTI", new Opcode(new [] { "ED", "A3" }, "OUTI", "16", new Flags("-", " ", "1", "", " ", "*"), "B is decremented. A byte from the memory location pointed to by HL is written to port C. Then HL is incremented.") },
-        { "F1 POP AF", new Opcode(new [] { "F1" }, "POP AF", "10", new Flags("-", "-", "-", "", "-", "-"), "The memory location pointed to by SP is stored into f and SP is incremented. The memory location pointed to by SP is stored into A and SP is incremented again.") },
-        { "C1 POP BC", new Opcode(new [] { "C1" }, "POP BC", "10", new Flags("-", "-", "-", "", "-", "-"), "The memory location pointed to by SP is stored into C and SP is incremented. The memory location pointed to by SP is stored into B and SP is incremented again.") },
-        { "D1 POP DE", new Opcode(new [] { "D1" }, "POP DE", "10", new Flags("-", "-", "-", "", "-", "-"), "The memory location pointed to by SP is stored into E and SP is incremented. The memory location pointed to by SP is stored into D and SP is incremented again.") },
-        { "E1 POP HL", new Opcode(new [] { "E1" }, "POP HL", "10", new Flags("-", "-", "-", "", "-", "-"), "The memory location pointed to by SP is stored into L and SP is incremented. The memory location pointed to by SP is stored into H and SP is incremented again.") },
-        { "DD POP IX", new Opcode(new [] { "DD", "E1" }, "POP IX", "14", new Flags("-", "-", "-", "", "-", "-"), "The memory location pointed to by SP is stored into IXL and SP is incremented. The memory location pointed to by SP is stored into IXH and SP is incremented again.") },
-        { "FD POP IY", new Opcode(new [] { "FD", "E1" }, "POP IY", "14", new Flags("-", "-", "-", "", "-", "-"), "The memory location pointed to by SP is stored into IYL and SP is incremented. The memory location pointed to by SP is stored into IYH and SP is incremented again.") },
-        { "F5 PUSH AF", new Opcode(new [] { "F5" }, "PUSH AF", "11", new Flags("-", "-", "-", "", "-", "-"), "SP is decremented and A is stored into the memory location pointed to by SP. SP is decremented again and f is stored into the memory location pointed to by SP.") },
-        { "C5 PUSH BC", new Opcode(new [] { "C5" }, "PUSH BC", "11", new Flags("-", "-", "-", "", "-", "-"), "SP is decremented and B is stored into the memory location pointed to by SP. SP is decremented again and C is stored into the memory location pointed to by SP.") },
-        { "D5 PUSH DE", new Opcode(new [] { "D5" }, "PUSH DE", "11", new Flags("-", "-", "-", "", "-", "-"), "SP is decremented and D is stored into the memory location pointed to by SP. SP is decremented again and E is stored into the memory location pointed to by SP.") },
-        { "E5 PUSH HL", new Opcode(new [] { "E5" }, "PUSH HL", "11", new Flags("-", "-", "-", "", "-", "-"), "SP is decremented and H is stored into the memory location pointed to by SP. SP is decremented again and L is stored into the memory location pointed to by SP.") },
-        { "DD PUSH IX", new Opcode(new [] { "DD", "E5" }, "PUSH IX", "15", new Flags("-", "-", "-", "", "-", "-"), "SP is decremented and IXH is stored into the memory location pointed to by SP. SP is decremented again and IXL is stored into the memory location pointed to by SP.") },
-        { "FD PUSH IY", new Opcode(new [] { "FD", "E5" }, "PUSH IY", "15", new Flags("-", "-", "-", "", "-", "-"), "SP is decremented and IYH is stored into the memory location pointed to by SP. SP is decremented again and IYL is stored into the memory location pointed to by SP.") },
-        { "CB RES 0,(HL)", new Opcode(new [] { "CB", "86" }, "RES 0,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 0 of (HL).") },
-        { "CB RES 1,(HL)", new Opcode(new [] { "CB", "8E" }, "RES 1,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 1 of (HL).") },
-        { "CB RES 2,(HL)", new Opcode(new [] { "CB", "96" }, "RES 2,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 2 of (HL).") },
-        { "CB RES 3,(HL)", new Opcode(new [] { "CB", "9E" }, "RES 3,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 3 of (HL).") },
-        { "CB RES 4,(HL)", new Opcode(new [] { "CB", "A6" }, "RES 4,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 4 of (HL).") },
-        { "CB RES 5,(HL)", new Opcode(new [] { "CB", "AE" }, "RES 5,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 5 of (HL).") },
-        { "CB RES 6,(HL)", new Opcode(new [] { "CB", "B6" }, "RES 6,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 6 of (HL).") },
-        { "CB RES 7,(HL)", new Opcode(new [] { "CB", "BE" }, "RES 7,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 7 of (HL).") },
-        { "DD RES 0,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "86" }, "RES 0,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 0 of the memory location pointed to by IX plus $d.") },
-        { "DD RES 1,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "8E" }, "RES 1,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 1 of the memory location pointed to by IX plus $d.") },
-        { "DD RES 2,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "96" }, "RES 2,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 2 of the memory location pointed to by IX plus $d.") },
-        { "DD RES 3,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "9E" }, "RES 3,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 3 of the memory location pointed to by IX plus $d.") },
-        { "DD RES 4,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "A6" }, "RES 4,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 4 of the memory location pointed to by IX plus $d.") },
-        { "DD RES 5,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "AE" }, "RES 5,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 5 of the memory location pointed to by IX plus $d.") },
-        { "DD RES 6,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "B6" }, "RES 6,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 6 of the memory location pointed to by IX plus $d.") },
-        { "DD RES 7,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "BE" }, "RES 7,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 7 of the memory location pointed to by IX plus $d.") },
-        { "FD RES 0,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "86" }, "RES 0,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 0 of the memory location pointed to by IY plus $d.") },
-        { "FD RES 1,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "8E" }, "RES 1,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 1 of the memory location pointed to by IY plus $d.") },
-        { "FD RES 2,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "96" }, "RES 2,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 2 of the memory location pointed to by IY plus $d.") },
-        { "FD RES 3,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "9E" }, "RES 3,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 3 of the memory location pointed to by IY plus $d.") },
-        { "FD RES 4,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "A6" }, "RES 4,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 4 of the memory location pointed to by IY plus $d.") },
-        { "FD RES 5,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "AE" }, "RES 5,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 5 of the memory location pointed to by IY plus $d.") },
-        { "FD RES 6,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "B6" }, "RES 6,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 6 of the memory location pointed to by IY plus $d.") },
-        { "FD RES 7,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "BE" }, "RES 7,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 7 of the memory location pointed to by IY plus $d.") },
-        { "CB RES 0,B", new Opcode(new [] { "CB", "80" }, "RES 0,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 0 of B.") },
-        { "CB RES 1,B", new Opcode(new [] { "CB", "88" }, "RES 1,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 1 of B.") },
-        { "CB RES 2,B", new Opcode(new [] { "CB", "90" }, "RES 2,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 2 of B.") },
-        { "CB RES 3,B", new Opcode(new [] { "CB", "98" }, "RES 3,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 3 of B.") },
-        { "CB RES 4,B", new Opcode(new [] { "CB", "A0" }, "RES 4,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 4 of B.") },
-        { "CB RES 5,B", new Opcode(new [] { "CB", "A8" }, "RES 5,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 5 of B.") },
-        { "CB RES 6,B", new Opcode(new [] { "CB", "B0" }, "RES 6,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 6 of B.") },
-        { "CB RES 7,B", new Opcode(new [] { "CB", "B8" }, "RES 7,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 7 of B.") },
-        { "CB RES 0,C", new Opcode(new [] { "CB", "81" }, "RES 0,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 0 of C.") },
-        { "CB RES 1,C", new Opcode(new [] { "CB", "89" }, "RES 1,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 1 of C.") },
-        { "CB RES 2,C", new Opcode(new [] { "CB", "91" }, "RES 2,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 2 of C.") },
-        { "CB RES 3,C", new Opcode(new [] { "CB", "99" }, "RES 3,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 3 of C.") },
-        { "CB RES 4,C", new Opcode(new [] { "CB", "A1" }, "RES 4,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 4 of C.") },
-        { "CB RES 5,C", new Opcode(new [] { "CB", "A9" }, "RES 5,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 5 of C.") },
-        { "CB RES 6,C", new Opcode(new [] { "CB", "B1" }, "RES 6,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 6 of C.") },
-        { "CB RES 7,C", new Opcode(new [] { "CB", "B9" }, "RES 7,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 7 of C.") },
-        { "CB RES 0,D", new Opcode(new [] { "CB", "82" }, "RES 0,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 0 of D.") },
-        { "CB RES 1,D", new Opcode(new [] { "CB", "8A" }, "RES 1,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 1 of D.") },
-        { "CB RES 2,D", new Opcode(new [] { "CB", "92" }, "RES 2,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 2 of D.") },
-        { "CB RES 3,D", new Opcode(new [] { "CB", "9A" }, "RES 3,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 3 of D.") },
-        { "CB RES 4,D", new Opcode(new [] { "CB", "A2" }, "RES 4,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 4 of D.") },
-        { "CB RES 5,D", new Opcode(new [] { "CB", "AA" }, "RES 5,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 5 of D.") },
-        { "CB RES 6,D", new Opcode(new [] { "CB", "B2" }, "RES 6,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 6 of D.") },
-        { "CB RES 7,D", new Opcode(new [] { "CB", "BA" }, "RES 7,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 7 of D.") },
-        { "CB RES 0,E", new Opcode(new [] { "CB", "83" }, "RES 0,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 0 of E.") },
-        { "CB RES 1,E", new Opcode(new [] { "CB", "8B" }, "RES 1,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 1 of E.") },
-        { "CB RES 2,E", new Opcode(new [] { "CB", "93" }, "RES 2,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 2 of E.") },
-        { "CB RES 3,E", new Opcode(new [] { "CB", "9B" }, "RES 3,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 3 of E.") },
-        { "CB RES 4,E", new Opcode(new [] { "CB", "A3" }, "RES 4,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 4 of E.") },
-        { "CB RES 5,E", new Opcode(new [] { "CB", "AB" }, "RES 5,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 5 of E.") },
-        { "CB RES 6,E", new Opcode(new [] { "CB", "B3" }, "RES 6,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 6 of E.") },
-        { "CB RES 7,E", new Opcode(new [] { "CB", "BB" }, "RES 7,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 7 of E.") },
-        { "CB RES 0,H", new Opcode(new [] { "CB", "84" }, "RES 0,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 0 of H.") },
-        { "CB RES 1,H", new Opcode(new [] { "CB", "8C" }, "RES 1,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 1 of H.") },
-        { "CB RES 2,H", new Opcode(new [] { "CB", "94" }, "RES 2,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 2 of H.") },
-        { "CB RES 3,H", new Opcode(new [] { "CB", "9C" }, "RES 3,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 3 of H.") },
-        { "CB RES 4,H", new Opcode(new [] { "CB", "A4" }, "RES 4,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 4 of H.") },
-        { "CB RES 5,H", new Opcode(new [] { "CB", "AC" }, "RES 5,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 5 of H.") },
-        { "CB RES 6,H", new Opcode(new [] { "CB", "B4" }, "RES 6,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 6 of H.") },
-        { "CB RES 7,H", new Opcode(new [] { "CB", "BC" }, "RES 7,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 7 of H.") },
-        { "CB RES 0,L", new Opcode(new [] { "CB", "85" }, "RES 0,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 0 of L.") },
-        { "CB RES 1,L", new Opcode(new [] { "CB", "8D" }, "RES 1,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 1 of L.") },
-        { "CB RES 2,L", new Opcode(new [] { "CB", "95" }, "RES 2,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 2 of L.") },
-        { "CB RES 3,L", new Opcode(new [] { "CB", "9D" }, "RES 3,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 3 of L.") },
-        { "CB RES 4,L", new Opcode(new [] { "CB", "A5" }, "RES 4,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 4 of L.") },
-        { "CB RES 5,L", new Opcode(new [] { "CB", "AD" }, "RES 5,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 5 of L.") },
-        { "CB RES 6,L", new Opcode(new [] { "CB", "B5" }, "RES 6,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 6 of L.") },
-        { "CB RES 7,L", new Opcode(new [] { "CB", "BD" }, "RES 7,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 7 of L.") },
-        { "CB RES 0,A", new Opcode(new [] { "CB", "87" }, "RES 0,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 0 of A.") },
-        { "CB RES 1,A", new Opcode(new [] { "CB", "8F" }, "RES 1,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 1 of A.") },
-        { "CB RES 2,A", new Opcode(new [] { "CB", "97" }, "RES 2,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 2 of A.") },
-        { "CB RES 3,A", new Opcode(new [] { "CB", "9F" }, "RES 3,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 3 of A.") },
-        { "CB RES 4,A", new Opcode(new [] { "CB", "A7" }, "RES 4,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 4 of A.") },
-        { "CB RES 5,A", new Opcode(new [] { "CB", "AF" }, "RES 5,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 5 of A.") },
-        { "CB RES 6,A", new Opcode(new [] { "CB", "B7" }, "RES 6,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 6 of A.") },
-        { "CB RES 7,A", new Opcode(new [] { "CB", "BF" }, "RES 7,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Resets bit 7 of A.") },
-        { "C9 RET", new Opcode(new [] { "C9" }, "RET", "10", new Flags("-", "-", "-", "", "-", "-"), "The top stack entry is popped into PC.") },
-        { "D8 RET C", new Opcode(new [] { "D8" }, "RET C", "11/5", new Flags("-", "-", "-", "", "-", "-"), "If the carry flag is set, the top stack entry is popped into PC.") },
-        { "F8 RET M", new Opcode(new [] { "F8" }, "RET M", "11/5", new Flags("-", "-", "-", "", "-", "-"), "If the sign flag is set, the top stack entry is popped into PC.") },
-        { "D0 RET NC", new Opcode(new [] { "D0" }, "RET NC", "11/5", new Flags("-", "-", "-", "", "-", "-"), "If the carry flag is unset, the top stack entry is popped into PC.") },
-        { "C0 RET NZ", new Opcode(new [] { "C0" }, "RET NZ", "11/5", new Flags("-", "-", "-", "", "-", "-"), "If the zero flag is unset, the top stack entry is popped into PC.") },
-        { "F0 RET P", new Opcode(new [] { "F0" }, "RET P", "11/5", new Flags("-", "-", "-", "", "-", "-"), "If the sign flag is unset, the top stack entry is popped into PC.") },
-        { "E8 RET PE", new Opcode(new [] { "E8" }, "RET PE", "11/5", new Flags("-", "-", "-", "", "-", "-"), "If the parity/overflow flag is set, the top stack entry is popped into PC.") },
-        { "E0 RET PO", new Opcode(new [] { "E0" }, "RET PO", "11/5", new Flags("-", "-", "-", "", "-", "-"), "If the parity/overflow flag is unset, the top stack entry is popped into PC.") },
-        { "C8 RET Z", new Opcode(new [] { "C8" }, "RET Z", "11/5", new Flags("-", "-", "-", "", "-", "-"), "If the zero flag is set, the top stack entry is popped into PC.") },
-        { "ED RETI", new Opcode(new [] { "ED", "4D" }, "RETI", "14", new Flags("-", "-", "-", "", "-", "-"), "Used at the end of a maskable interrupt service routine. The top stack entry is popped into PC, and signals an I/O device that the interrupt has finished, allowing nested interrupts (not a consideration on the TI).") },
-        { "ED RETN", new Opcode(new [] { "ED", "45" }, "RETN", "14", new Flags("-", "-", "-", "", "-", "-"), "Used at the end of a non-maskable interrupt service routine (located at 0066h) to pop the top stack entry into PC. The value of IFF2 is copied to IFF1 so that maskable interrupts are allowed to continue as before. NMIs are not enabled on the TI.") },
-        { "CB RL (HL)", new Opcode(new [] { "CB", "16" }, "RL (HL)", "15", new Flags("+", "0", "0", "", "+", "+"), "The contents of (HL) are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0.") },
-        { "DD RL (IX+d)", new Opcode(new [] { "DD", "CB", "d", "16" }, "RL (IX+d)", "23", new Flags("+", "0", "0", "", "+", "+"), "The contents of the memory location pointed to by IX plus $d are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0.") },
-        { "FD RL (IY+d)", new Opcode(new [] { "FD", "CB", "d", "16" }, "RL (IY+d)", "23", new Flags("+", "0", "0", "", "+", "+"), "The contents of the memory location pointed to by IY plus $d are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0.") },
-        { "CB RL B", new Opcode(new [] { "CB", "10" }, "RL B", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of B are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0.") },
-        { "CB RL C", new Opcode(new [] { "CB", "11" }, "RL C", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of C are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0.") },
-        { "CB RL D", new Opcode(new [] { "CB", "12" }, "RL D", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of D are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0.") },
-        { "CB RL E", new Opcode(new [] { "CB", "13" }, "RL E", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of E are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0.") },
-        { "CB RL H", new Opcode(new [] { "CB", "14" }, "RL H", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of H are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0.") },
-        { "CB RL L", new Opcode(new [] { "CB", "15" }, "RL L", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of L are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0.") },
-        { "CB RL A", new Opcode(new [] { "CB", "17" }, "RL A", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of A are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0.") },
-        { "17 RLA", new Opcode(new [] { "17" }, "RLA", "4", new Flags("+", "0", "0", "", "-", "-"), "The contents of A are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0.") },
-        { "CB RLC (HL)", new Opcode(new [] { "CB", "06" }, "RLC (HL)", "15", new Flags("+", "0", "0", "", "+", "+"), "The contents of (HL) are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0.") },
-        { "DD RLC (IX+d)", new Opcode(new [] { "DD", "CB", "d", "06" }, "RLC (IX+d)", "23", new Flags("+", "0", "0", "", "+", "+"), "The contents of the memory location pointed to by IX plus $d are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0.") },
-        { "FD RLC (IY+d)", new Opcode(new [] { "FD", "CB", "d", "06" }, "RLC (IY+d)", "23", new Flags("+", "0", "0", "", "+", "+"), "The contents of the memory location pointed to by IY plus $d are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0.") },
-        { "CB RLC B", new Opcode(new [] { "CB", "00" }, "RLC B", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of B are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0.") },
-        { "CB RLC C", new Opcode(new [] { "CB", "01" }, "RLC C", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of C are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0.") },
-        { "CB RLC D", new Opcode(new [] { "CB", "02" }, "RLC D", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of D are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0.") },
-        { "CB RLC E", new Opcode(new [] { "CB", "03" }, "RLC E", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of E are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0.") },
-        { "CB RLC H", new Opcode(new [] { "CB", "04" }, "RLC H", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of H are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0.") },
-        { "CB RLC L", new Opcode(new [] { "CB", "05" }, "RLC L", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of L are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0.") },
-        { "CB RLC A", new Opcode(new [] { "CB", "07" }, "RLC A", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of A are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0.") },
-        { "07 RLCA", new Opcode(new [] { "07" }, "RLCA", "4", new Flags("+", "0", "0", "", "-", "-"), "The contents of A are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0.") },
-        { "ED RLD", new Opcode(new [] { "ED", "6F" }, "RLD", "18", new Flags("-", "0", "0", "", "+", "+"), "The contents of the low-order nibble of (HL) are copied to the high-order nibble of (HL). The previous contents are copied to the low-order nibble of A. The previous contents are copied to the low-order nibble of (HL).") },
-        { "CB RR (HL)", new Opcode(new [] { "CB", "1E" }, "RR (HL)", "15", new Flags("+", "0", "0", "", "+", "+"), "The contents of (HL) are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7.") },
-        { "DD RR (IX+d)", new Opcode(new [] { "DD", "CB", "d", "1E" }, "RR (IX+d)", "23", new Flags("+", "0", "0", "", "+", "+"), "The contents of the memory location pointed to by IX plus $d are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7.") },
-        { "FD RR (IY+d)", new Opcode(new [] { "FD", "CB", "d", "1E" }, "RR (IY+d)", "23", new Flags("+", "0", "0", "", "+", "+"), "The contents of the memory location pointed to by IY plus $d are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7.") },
-        { "CB RR B", new Opcode(new [] { "CB", "18" }, "RR B", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of B are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7.") },
-        { "CB RR C", new Opcode(new [] { "CB", "19" }, "RR C", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of C are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7.") },
-        { "CB RR D", new Opcode(new [] { "CB", "1A" }, "RR D", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of D are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7.") },
-        { "CB RR E", new Opcode(new [] { "CB", "1B" }, "RR E", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of E are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7.") },
-        { "CB RR H", new Opcode(new [] { "CB", "1C" }, "RR H", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of H are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7.") },
-        { "CB RR L", new Opcode(new [] { "CB", "1D" }, "RR L", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of L are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7.") },
-        { "CB RR A", new Opcode(new [] { "CB", "1F" }, "RR A", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of A are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7.") },
-        { "1F RRA", new Opcode(new [] { "1F" }, "RRA", "4", new Flags("+", "0", "0", "", "-", "-"), "The contents of A are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7.") },
-        { "CB RRC (HL)", new Opcode(new [] { "CB", "0E" }, "RRC (HL)", "15", new Flags("+", "0", "0", "", "+", "+"), "The contents of (HL) are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7.") },
-        { "DD RRC (IX+d)", new Opcode(new [] { "DD", "CB", "d", "0E" }, "RRC (IX+d)", "23", new Flags("+", "0", "0", "", "+", "+"), "The contents of the memory location pointed to by IX plus $d are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7.") },
-        { "FD RRC (IY+d)", new Opcode(new [] { "FD", "CB", "d", "0E" }, "RRC (IY+d)", "23", new Flags("+", "0", "0", "", "+", "+"), "The contents of the memory location pointed to by IY plus $d are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7.") },
-        { "CB RRC B", new Opcode(new [] { "CB", "08" }, "RRC B", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of B are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7.") },
-        { "CB RRC C", new Opcode(new [] { "CB", "09" }, "RRC C", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of C are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7.") },
-        { "CB RRC D", new Opcode(new [] { "CB", "0A" }, "RRC D", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of D are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7.") },
-        { "CB RRC E", new Opcode(new [] { "CB", "0B" }, "RRC E", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of E are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7.") },
-        { "CB RRC H", new Opcode(new [] { "CB", "0C" }, "RRC H", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of H are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7.") },
-        { "CB RRC L", new Opcode(new [] { "CB", "0D" }, "RRC L", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of L are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7.") },
-        { "CB RRC A", new Opcode(new [] { "CB", "0F" }, "RRC A", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of A are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7.") },
-        { "0F RRCA", new Opcode(new [] { "0F" }, "RRCA", "4", new Flags("+", "0", "0", "", "-", "-"), "The contents of A are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7.") },
-        { "ED RRD", new Opcode(new [] { "ED", "67" }, "RRD", "18", new Flags("-", "0", "0", "", "+", "+"), "The contents of the low-order nibble of (HL) are copied to the low-order nibble of A. The previous contents are copied to the high-order nibble of (HL). The previous contents are copied to the low-order nibble of (HL).") },
-        { "C7 RST 0", new Opcode(new [] { "C7" }, "RST 0", "11", new Flags("-", "-", "-", "", "-", "-"), "The current PC value plus one is pushed onto the stack, then is loaded with 0.") },
-        { "CF RST 8", new Opcode(new [] { "CF" }, "RST 8", "11", new Flags("-", "-", "-", "", "-", "-"), "The current PC value plus one is pushed onto the stack, then is loaded with 8.") },
-        { "D7 RST 16", new Opcode(new [] { "D7" }, "RST 16", "11", new Flags("-", "-", "-", "", "-", "-"), "The current PC value plus one is pushed onto the stack, then is loaded with 16.") },
-        { "DF RST 24", new Opcode(new [] { "DF" }, "RST 24", "11", new Flags("-", "-", "-", "", "-", "-"), "The current PC value plus one is pushed onto the stack, then is loaded with 24.") },
-        { "E7 RST 32", new Opcode(new [] { "E7" }, "RST 32", "11", new Flags("-", "-", "-", "", "-", "-"), "The current PC value plus one is pushed onto the stack, then is loaded with 32.") },
-        { "EF RST 40", new Opcode(new [] { "EF" }, "RST 40", "11", new Flags("-", "-", "-", "", "-", "-"), "The current PC value plus one is pushed onto the stack, then is loaded with 40.") },
-        { "F7 RST 48", new Opcode(new [] { "F7" }, "RST 48", "11", new Flags("-", "-", "-", "", "-", "-"), "The current PC value plus one is pushed onto the stack, then is loaded with 48.") },
-        { "FF RST 56", new Opcode(new [] { "FF" }, "RST 56", "11", new Flags("-", "-", "-", "", "-", "-"), "The current PC value plus one is pushed onto the stack, then is loaded with 56.") },
-        { "9E SBC A,(HL)", new Opcode(new [] { "9E" }, "SBC A,(HL)", "7", new Flags("+", "+", "+", "", "+", "+"), "Subtracts (HL) and the carry flag from A.") },
-        { "DD SBC A,(IX+d)", new Opcode(new [] { "DD", "9E", "d" }, "SBC A,(IX+d)", "19", new Flags("+", "+", "+", "", "+", "+"), "Subtracts the value pointed to by IX plus $d and the carry flag from A.") },
-        { "FD SBC A,(IY+d)", new Opcode(new [] { "FD", "9E", "d" }, "SBC A,(IY+d)", "19", new Flags("+", "+", "+", "", "+", "+"), "Subtracts the value pointed to by IY plus $d and the carry flag from A.") },
-        { "DE SBC A,n", new Opcode(new [] { "DE", "n" }, "SBC A,n", "7", new Flags("+", "+", "+", "", "+", "+"), "Subtracts $n and the carry flag from A.") },
-        { "98 SBC A,B", new Opcode(new [] { "98" }, "SBC A,B", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts B and the carry flag from A.") },
-        { "99 SBC A,C", new Opcode(new [] { "99" }, "SBC A,C", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts C and the carry flag from A.") },
-        { "9A SBC A,D", new Opcode(new [] { "9A" }, "SBC A,D", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts D and the carry flag from A.") },
-        { "9B SBC A,E", new Opcode(new [] { "9B" }, "SBC A,E", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts E and the carry flag from A.") },
-        { "9C SBC A,H", new Opcode(new [] { "9C" }, "SBC A,H", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts H and the carry flag from A.") },
-        { "9D SBC A,L", new Opcode(new [] { "9D" }, "SBC A,L", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts L and the carry flag from A.") },
-        { "9F SBC A,A", new Opcode(new [] { "9F" }, "SBC A,A", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts A and the carry flag from A.") },
-        { "ED SBC HL,BC", new Opcode(new [] { "ED", "42" }, "SBC HL,BC", "15", new Flags("+", "+", "+", "", "+", "+"), "Subtracts BC and the carry flag from HL.") },
-        { "ED SBC HL,DE", new Opcode(new [] { "ED", "52" }, "SBC HL,DE", "15", new Flags("+", "+", "+", "", "+", "+"), "Subtracts DE and the carry flag from HL.") },
-        { "ED SBC HL,HL", new Opcode(new [] { "ED", "62" }, "SBC HL,HL", "15", new Flags("+", "+", "+", "", "+", "+"), "Subtracts HL and the carry flag from HL.") },
-        { "ED SBC HL,SP", new Opcode(new [] { "ED", "72" }, "SBC HL,SP", "15", new Flags("+", "+", "+", "", "+", "+"), "Subtracts SP and the carry flag from HL.") },
-        { "37 SCF", new Opcode(new [] { "37" }, "SCF", "4", new Flags("1", "0", "0", "", "-", "-"), "Sets the carry flag.") },
-        { "CB SET 0,(HL)", new Opcode(new [] { "CB", "C6" }, "SET 0,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 0 of (HL).") },
-        { "CB SET 1,(HL)", new Opcode(new [] { "CB", "CE" }, "SET 1,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 1 of (HL).") },
-        { "CB SET 2,(HL)", new Opcode(new [] { "CB", "D6" }, "SET 2,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 2 of (HL).") },
-        { "CB SET 3,(HL)", new Opcode(new [] { "CB", "DE" }, "SET 3,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 3 of (HL).") },
-        { "CB SET 4,(HL)", new Opcode(new [] { "CB", "E6" }, "SET 4,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 4 of (HL).") },
-        { "CB SET 5,(HL)", new Opcode(new [] { "CB", "EE" }, "SET 5,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 5 of (HL).") },
-        { "CB SET 6,(HL)", new Opcode(new [] { "CB", "F6" }, "SET 6,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 6 of (HL).") },
-        { "CB SET 7,(HL)", new Opcode(new [] { "CB", "FE" }, "SET 7,(HL)", "15", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 7 of (HL).") },
-        { "DD SET 0,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "C6" }, "SET 0,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 0 of the memory location pointed to by IX plus $d.") },
-        { "DD SET 1,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "CE" }, "SET 1,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 1 of the memory location pointed to by IX plus $d.") },
-        { "DD SET 2,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "D6" }, "SET 2,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 2 of the memory location pointed to by IX plus $d.") },
-        { "DD SET 3,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "DE" }, "SET 3,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 3 of the memory location pointed to by IX plus $d.") },
-        { "DD SET 4,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "E6" }, "SET 4,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 4 of the memory location pointed to by IX plus $d.") },
-        { "DD SET 5,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "EE" }, "SET 5,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 5 of the memory location pointed to by IX plus $d.") },
-        { "DD SET 6,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "F6" }, "SET 6,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 6 of the memory location pointed to by IX plus $d.") },
-        { "DD SET 7,(IX+d)", new Opcode(new [] { "DD", "CB", "d", "FE" }, "SET 7,(IX+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 7 of the memory location pointed to by IX plus $d.") },
-        { "FD SET 0,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "C6" }, "SET 0,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 0 of the memory location pointed to by IY plus $d.") },
-        { "FD SET 1,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "CE" }, "SET 1,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 1 of the memory location pointed to by IY plus $d.") },
-        { "FD SET 2,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "D6" }, "SET 2,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 2 of the memory location pointed to by IY plus $d.") },
-        { "FD SET 3,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "DE" }, "SET 3,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 3 of the memory location pointed to by IY plus $d.") },
-        { "FD SET 4,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "E6" }, "SET 4,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 4 of the memory location pointed to by IY plus $d.") },
-        { "FD SET 5,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "EE" }, "SET 5,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 5 of the memory location pointed to by IY plus $d.") },
-        { "FD SET 6,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "F6" }, "SET 6,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 6 of the memory location pointed to by IY plus $d.") },
-        { "FD SET 7,(IY+d)", new Opcode(new [] { "FD", "CB", "d", "FE" }, "SET 7,(IY+d)", "23", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 7 of the memory location pointed to by IY plus $d.") },
-        { "CB SET 0,B", new Opcode(new [] { "CB", "C0" }, "SET 0,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 0 of B.") },
-        { "CB SET 1,B", new Opcode(new [] { "CB", "C8" }, "SET 1,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 1 of B.") },
-        { "CB SET 2,B", new Opcode(new [] { "CB", "D0" }, "SET 2,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 2 of B.") },
-        { "CB SET 3,B", new Opcode(new [] { "CB", "D8" }, "SET 3,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 3 of B.") },
-        { "CB SET 4,B", new Opcode(new [] { "CB", "E0" }, "SET 4,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 4 of B.") },
-        { "CB SET 5,B", new Opcode(new [] { "CB", "E8" }, "SET 5,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 5 of B.") },
-        { "CB SET 6,B", new Opcode(new [] { "CB", "F0" }, "SET 6,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 6 of B.") },
-        { "CB SET 7,B", new Opcode(new [] { "CB", "F8" }, "SET 7,B", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 7 of B.") },
-        { "CB SET 0,C", new Opcode(new [] { "CB", "C1" }, "SET 0,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 0 of C.") },
-        { "CB SET 1,C", new Opcode(new [] { "CB", "C9" }, "SET 1,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 1 of C.") },
-        { "CB SET 2,C", new Opcode(new [] { "CB", "D1" }, "SET 2,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 2 of C.") },
-        { "CB SET 3,C", new Opcode(new [] { "CB", "D9" }, "SET 3,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 3 of C.") },
-        { "CB SET 4,C", new Opcode(new [] { "CB", "E1" }, "SET 4,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 4 of C.") },
-        { "CB SET 5,C", new Opcode(new [] { "CB", "E9" }, "SET 5,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 5 of C.") },
-        { "CB SET 6,C", new Opcode(new [] { "CB", "F1" }, "SET 6,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 6 of C.") },
-        { "CB SET 7,C", new Opcode(new [] { "CB", "F9" }, "SET 7,C", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 7 of C.") },
-        { "CB SET 0,D", new Opcode(new [] { "CB", "C2" }, "SET 0,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 0 of D.") },
-        { "CB SET 1,D", new Opcode(new [] { "CB", "CA" }, "SET 1,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 1 of D.") },
-        { "CB SET 2,D", new Opcode(new [] { "CB", "D2" }, "SET 2,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 2 of D.") },
-        { "CB SET 3,D", new Opcode(new [] { "CB", "DA" }, "SET 3,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 3 of D.") },
-        { "CB SET 4,D", new Opcode(new [] { "CB", "E2" }, "SET 4,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 4 of D.") },
-        { "CB SET 5,D", new Opcode(new [] { "CB", "EA" }, "SET 5,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 5 of D.") },
-        { "CB SET 6,D", new Opcode(new [] { "CB", "F2" }, "SET 6,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 6 of D.") },
-        { "CB SET 7,D", new Opcode(new [] { "CB", "FA" }, "SET 7,D", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 7 of D.") },
-        { "CB SET 0,E", new Opcode(new [] { "CB", "C3" }, "SET 0,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 0 of E.") },
-        { "CB SET 1,E", new Opcode(new [] { "CB", "CB" }, "SET 1,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 1 of E.") },
-        { "CB SET 2,E", new Opcode(new [] { "CB", "D3" }, "SET 2,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 2 of E.") },
-        { "CB SET 3,E", new Opcode(new [] { "CB", "DB" }, "SET 3,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 3 of E.") },
-        { "CB SET 4,E", new Opcode(new [] { "CB", "E3" }, "SET 4,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 4 of E.") },
-        { "CB SET 5,E", new Opcode(new [] { "CB", "EB" }, "SET 5,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 5 of E.") },
-        { "CB SET 6,E", new Opcode(new [] { "CB", "F3" }, "SET 6,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 6 of E.") },
-        { "CB SET 7,E", new Opcode(new [] { "CB", "FB" }, "SET 7,E", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 7 of E.") },
-        { "CB SET 0,H", new Opcode(new [] { "CB", "C4" }, "SET 0,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 0 of H.") },
-        { "CB SET 1,H", new Opcode(new [] { "CB", "CC" }, "SET 1,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 1 of H.") },
-        { "CB SET 2,H", new Opcode(new [] { "CB", "D4" }, "SET 2,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 2 of H.") },
-        { "CB SET 3,H", new Opcode(new [] { "CB", "DC" }, "SET 3,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 3 of H.") },
-        { "CB SET 4,H", new Opcode(new [] { "CB", "E4" }, "SET 4,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 4 of H.") },
-        { "CB SET 5,H", new Opcode(new [] { "CB", "EC" }, "SET 5,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 5 of H.") },
-        { "CB SET 6,H", new Opcode(new [] { "CB", "F4" }, "SET 6,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 6 of H.") },
-        { "CB SET 7,H", new Opcode(new [] { "CB", "FC" }, "SET 7,H", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 7 of H.") },
-        { "CB SET 0,L", new Opcode(new [] { "CB", "C5" }, "SET 0,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 0 of L.") },
-        { "CB SET 1,L", new Opcode(new [] { "CB", "CD" }, "SET 1,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 1 of L.") },
-        { "CB SET 2,L", new Opcode(new [] { "CB", "D5" }, "SET 2,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 2 of L.") },
-        { "CB SET 3,L", new Opcode(new [] { "CB", "DD" }, "SET 3,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 3 of L.") },
-        { "CB SET 4,L", new Opcode(new [] { "CB", "E5" }, "SET 4,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 4 of L.") },
-        { "CB SET 5,L", new Opcode(new [] { "CB", "ED" }, "SET 5,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 5 of L.") },
-        { "CB SET 6,L", new Opcode(new [] { "CB", "F5" }, "SET 6,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 6 of L.") },
-        { "CB SET 7,L", new Opcode(new [] { "CB", "FD" }, "SET 7,L", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 7 of L.") },
-        { "CB SET 0,A", new Opcode(new [] { "CB", "C7" }, "SET 0,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 0 of A.") },
-        { "CB SET 1,A", new Opcode(new [] { "CB", "CF" }, "SET 1,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 1 of A.") },
-        { "CB SET 2,A", new Opcode(new [] { "CB", "D7" }, "SET 2,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 2 of A.") },
-        { "CB SET 3,A", new Opcode(new [] { "CB", "DF" }, "SET 3,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 3 of A.") },
-        { "CB SET 4,A", new Opcode(new [] { "CB", "E7" }, "SET 4,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 4 of A.") },
-        { "CB SET 5,A", new Opcode(new [] { "CB", "EF" }, "SET 5,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 5 of A.") },
-        { "CB SET 6,A", new Opcode(new [] { "CB", "F7" }, "SET 6,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 6 of A.") },
-        { "CB SET 7,A", new Opcode(new [] { "CB", "FF" }, "SET 7,A", "8", new Flags("-", "-", "-", "", "-", "-"), "Sets bit 7 of A.") },
-        { "CB SLA (HL)", new Opcode(new [] { "CB", "26" }, "SLA (HL)", "15", new Flags("+", "0", "0", "", "+", "+"), "The contents of (HL) are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0.") },
-        { "DD SLA (IX+d)", new Opcode(new [] { "DD", "CB", "d", "26" }, "SLA (IX+d)", "23", new Flags("+", "0", "0", "", "+", "+"), "The contents of the memory location pointed to by IX plus $d are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0.") },
-        { "FD SLA (IY+d)", new Opcode(new [] { "FD", "CB", "d", "26" }, "SLA (IY+d)", "23", new Flags("+", "0", "0", "", "+", "+"), "The contents of the memory location pointed to by IY plus $d are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0.") },
-        { "CB SLA B", new Opcode(new [] { "CB", "20" }, "SLA B", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of B are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0.") },
-        { "CB SLA C", new Opcode(new [] { "CB", "21" }, "SLA C", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of C are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0.") },
-        { "CB SLA D", new Opcode(new [] { "CB", "22" }, "SLA D", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of D are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0.") },
-        { "CB SLA E", new Opcode(new [] { "CB", "23" }, "SLA E", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of E are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0.") },
-        { "CB SLA H", new Opcode(new [] { "CB", "24" }, "SLA H", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of H are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0.") },
-        { "CB SLA L", new Opcode(new [] { "CB", "25" }, "SLA L", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of L are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0.") },
-        { "CB SLA A", new Opcode(new [] { "CB", "27" }, "SLA A", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of A are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0.") },
-        { "CB SRA (HL)", new Opcode(new [] { "CB", "2E" }, "SRA (HL)", "15", new Flags("+", "0", "0", "", "+", "+"), "The contents of (HL) are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged.") },
-        { "DD SRA (IX+d)", new Opcode(new [] { "DD", "CB", "d", "2E" }, "SRA (IX+d)", "23", new Flags("+", "0", "0", "", "+", "+"), "The contents of the memory location pointed to by IX plus $d are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged.") },
-        { "FD SRA (IY+d)", new Opcode(new [] { "FD", "CB", "d", "2E" }, "SRA (IY+d)", "23", new Flags("+", "0", "0", "", "+", "+"), "The contents of the memory location pointed to by IY plus $d are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged.") },
-        { "CB SRA B", new Opcode(new [] { "CB", "28" }, "SRA B", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of B are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged.") },
-        { "CB SRA C", new Opcode(new [] { "CB", "29" }, "SRA C", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of C are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged.") },
-        { "CB SRA D", new Opcode(new [] { "CB", "2A" }, "SRA D", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of D are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged.") },
-        { "CB SRA E", new Opcode(new [] { "CB", "2B" }, "SRA E", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of E are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged.") },
-        { "CB SRA H", new Opcode(new [] { "CB", "2C" }, "SRA H", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of H are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged.") },
-        { "CB SRA L", new Opcode(new [] { "CB", "2D" }, "SRA L", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of L are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged.") },
-        { "CB SRA A", new Opcode(new [] { "CB", "2F" }, "SRA A", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of A are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged.") },
-        { "CB SRL (HL)", new Opcode(new [] { "CB", "3E" }, "SRL (HL)", "15", new Flags("+", "0", "0", "", "+", "+"), "The contents of (HL) are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7.") },
-        { "DD SRL (IX+d)", new Opcode(new [] { "DD", "CB", "d", "3E" }, "SRL (IX+d)", "23", new Flags("+", "0", "0", "", "+", "+"), "The contents of the memory location pointed to by IX plus $d are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7.") },
-        { "FD SRL (IY+d)", new Opcode(new [] { "FD", "CB", "d", "3E" }, "SRL (IY+d)", "23", new Flags("+", "0", "0", "", "+", "+"), "The contents of the memory location pointed to by IY plus $d are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7.") },
-        { "CB SRL B", new Opcode(new [] { "CB", "38" }, "SRL B", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of B are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7.") },
-        { "CB SRL C", new Opcode(new [] { "CB", "39" }, "SRL C", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of C are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7.") },
-        { "CB SRL D", new Opcode(new [] { "CB", "3A" }, "SRL D", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of D are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7.") },
-        { "CB SRL E", new Opcode(new [] { "CB", "3B" }, "SRL E", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of E are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7.") },
-        { "CB SRL H", new Opcode(new [] { "CB", "3C" }, "SRL H", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of H are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7.") },
-        { "CB SRL L", new Opcode(new [] { "CB", "3D" }, "SRL L", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of L are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7.") },
-        { "CB SRL A", new Opcode(new [] { "CB", "3F" }, "SRL A", "8", new Flags("+", "0", "0", "", "+", "+"), "The contents of A are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7.") },
-        { "96 SUB (HL)", new Opcode(new [] { "96" }, "SUB (HL)", "7", new Flags("+", "+", "+", "", "+", "+"), "Subtracts (HL) from A.") },
-        { "DD SUB (IX+d)", new Opcode(new [] { "DD", "96", "d" }, "SUB (IX+d)", "19", new Flags("+", "+", "+", "", "+", "+"), "Subtracts the value pointed to by IX plus $d from A.") },
-        { "FD SUB (IY+d)", new Opcode(new [] { "FD", "96", "d" }, "SUB (IY+d)", "19", new Flags("+", "+", "+", "", "+", "+"), "Subtracts the value pointed to by IY plus $d from A.") },
-        { "D6 SUB n", new Opcode(new [] { "D6", "n" }, "SUB n", "7", new Flags("+", "+", "+", "", "+", "+"), "Subtracts $n from A.") },
-        { "90 SUB B", new Opcode(new [] { "90" }, "SUB B", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts B from A.") },
-        { "91 SUB C", new Opcode(new [] { "91" }, "SUB C", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts C from A.") },
-        { "92 SUB D", new Opcode(new [] { "92" }, "SUB D", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts D from A.") },
-        { "93 SUB E", new Opcode(new [] { "93" }, "SUB E", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts E from A.") },
-        { "94 SUB H", new Opcode(new [] { "94" }, "SUB H", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts H from A.") },
-        { "95 SUB L", new Opcode(new [] { "95" }, "SUB L", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts L from A.") },
-        { "97 SUB A", new Opcode(new [] { "97" }, "SUB A", "4", new Flags("+", "+", "+", "", "+", "+"), "Subtracts A from A.") },
-        { "AE XOR (HL)", new Opcode(new [] { "AE" }, "XOR (HL)", "7", new Flags("0", "0", "0", "", "+", "+"), "Bitwise XOR on A with (HL).") },
-        { "DD XOR (IX+d)", new Opcode(new [] { "DD", "AE", "d" }, "XOR (IX+d)", "19", new Flags("0", "0", "0", "", "+", "+"), "Bitwise XOR on A with the value pointed to by IX plus $d.") },
-        { "FD XOR (IY+d)", new Opcode(new [] { "FD", "AE", "d" }, "XOR (IY+d)", "19", new Flags("0", "0", "0", "", "+", "+"), "Bitwise XOR on A with the value pointed to by IY plus $d.") },
-        { "EE XOR n", new Opcode(new [] { "EE", "n" }, "XOR n", "7", new Flags("0", "0", "0", "", "+", "+"), "Bitwise XOR on A with $n.") },
-        { "A8 XOR B", new Opcode(new [] { "A8" }, "XOR B", "4", new Flags("0", "0", "0", "", "+", "+"), "Bitwise XOR on A with B.") },
-        { "A9 XOR C", new Opcode(new [] { "A9" }, "XOR C", "4", new Flags("0", "0", "0", "", "+", "+"), "Bitwise XOR on A with C.") },
-        { "AA XOR D", new Opcode(new [] { "AA" }, "XOR D", "4", new Flags("0", "0", "0", "", "+", "+"), "Bitwise XOR on A with D.") },
-        { "AB XOR E", new Opcode(new [] { "AB" }, "XOR E", "4", new Flags("0", "0", "0", "", "+", "+"), "Bitwise XOR on A with E.") },
-        { "AC XOR H", new Opcode(new [] { "AC" }, "XOR H", "4", new Flags("0", "0", "0", "", "+", "+"), "Bitwise XOR on A with H.") },
-        { "AD XOR L", new Opcode(new [] { "AD" }, "XOR L", "4", new Flags("0", "0", "0", "", "+", "+"), "Bitwise XOR on A with L.") },
-        { "AF XOR A", new Opcode(new [] { "AF" }, "XOR A", "4", new Flags("0", "0", "0", "", "+", "+"), "Bitwise XOR on A with A.") },
-    };
+        Add(new Opcode("ADC A,(HL)", new [] { "8E" }, "7", "Adds (HL) and the carry flag to A."));
+        Add(new Opcode("ADC A,(IX+d)", new [] { "DD", "8E", "d" }, "19", "Adds the value pointed to by IX plus $d and the carry flag to A."));
+        Add(new Opcode("ADC A,(IY+d)", new [] { "FD", "8E", "d" }, "19", "Adds the value pointed to by IY plus $d and the carry flag to A."));
+        Add(new Opcode("ADC A,n", new [] { "CE", "n" }, "7", "Adds $n and the carry flag to A."));
+        Add(new Opcode("ADC A,B", new [] { "88" }, "4", "Adds B and the carry flag to A."));
+        Add(new Opcode("ADC A,C", new [] { "89" }, "4", "Adds C and the carry flag to A."));
+        Add(new Opcode("ADC A,D", new [] { "8A" }, "4", "Adds D and the carry flag to A."));
+        Add(new Opcode("ADC A,E", new [] { "8B" }, "4", "Adds E and the carry flag to A."));
+        Add(new Opcode("ADC A,H", new [] { "8C" }, "4", "Adds H and the carry flag to A."));
+        Add(new Opcode("ADC A,L", new [] { "8D" }, "4", "Adds L and the carry flag to A."));
+        Add(new Opcode("ADC A,A", new [] { "8F" }, "4", "Adds A and the carry flag to A."));
+        Add(new Opcode("ADC HL,BC", new [] { "ED", "4A" }, "15", "Adds BC and the carry flag to HL."));
+        Add(new Opcode("ADC HL,DE", new [] { "ED", "5A" }, "15", "Adds DE and the carry flag to HL."));
+        Add(new Opcode("ADC HL,HL", new [] { "ED", "6A" }, "15", "Adds HL and the carry flag to HL."));
+        Add(new Opcode("ADC HL,SP", new [] { "ED", "7A" }, "15", "Adds SP and the carry flag to HL."));
+        Add(new Opcode("ADD A,(HL)", new [] { "86" }, "7", "Adds (HL) to A."));
+        Add(new Opcode("ADD A,(IX+d)", new [] { "DD", "86", "d" }, "19", "Adds the value pointed to by IX plus $d to A."));
+        Add(new Opcode("ADD A,(IY+d)", new [] { "FD", "86", "d" }, "19", "Adds the value pointed to by IY plus $d to A."));
+        Add(new Opcode("ADD A,n", new [] { "C6", "n" }, "7", "Adds $n to A."));
+        Add(new Opcode("ADD A,B", new [] { "80" }, "4", "Adds B to A."));
+        Add(new Opcode("ADD A,C", new [] { "81" }, "4", "Adds C to A."));
+        Add(new Opcode("ADD A,D", new [] { "82" }, "4", "Adds D to A."));
+        Add(new Opcode("ADD A,E", new [] { "83" }, "4", "Adds E to A."));
+        Add(new Opcode("ADD A,H", new [] { "84" }, "4", "Adds H to A."));
+        Add(new Opcode("ADD A,L", new [] { "85" }, "4", "Adds L to A."));
+        Add(new Opcode("ADD A,A", new [] { "87" }, "4", "Adds A to A."));
+        Add(new Opcode("ADD HL,BC", new [] { "09" }, "11", "The value of BC is added to HL."));
+        Add(new Opcode("ADD HL,DE", new [] { "19" }, "11", "The value of DE is added to HL."));
+        Add(new Opcode("ADD HL,HL", new [] { "29" }, "11", "The value of HL is added to HL."));
+        Add(new Opcode("ADD HL,SP", new [] { "39" }, "11", "The value of SP is added to HL."));
+        Add(new Opcode("ADD IX,BC", new [] { "DD", "09" }, "15", "The value of BC is added to IX."));
+        Add(new Opcode("ADD IX,DE", new [] { "DD", "19" }, "15", "The value of DE is added to IX."));
+        Add(new Opcode("ADD IX,IX", new [] { "DD", "29" }, "15", "The value of IX is added to IX."));
+        Add(new Opcode("ADD IX,SP", new [] { "DD", "39" }, "15", "The value of SP is added to IX."));
+        Add(new Opcode("ADD IY,BC", new [] { "FD", "09" }, "15", "The value of BC is added to IY."));
+        Add(new Opcode("ADD IY,DE", new [] { "FD", "19" }, "15", "The value of DE is added to IY."));
+        Add(new Opcode("ADD IY,IY", new [] { "FD", "29" }, "15", "The value of IY is added to IY."));
+        Add(new Opcode("ADD IY,SP", new [] { "FD", "39" }, "15", "The value of SP is added to IY."));
+        Add(new Opcode("AND (HL)", new [] { "A6" }, "7", "Bitwise AND on A with (HL)."));
+        Add(new Opcode("AND (IX+d)", new [] { "DD", "A6", "d" }, "19", "Bitwise AND on A with the value pointed to by IX plus $d."));
+        Add(new Opcode("AND (IY+d)", new [] { "FD", "A6", "d" }, "19", "Bitwise AND on A with the value pointed to by IY plus $d."));
+        Add(new Opcode("AND n", new [] { "E6", "n" }, "7", "Bitwise AND on A with $n."));
+        Add(new Opcode("AND B", new [] { "A0" }, "4", "Bitwise AND on A with B."));
+        Add(new Opcode("AND C", new [] { "A1" }, "4", "Bitwise AND on A with C."));
+        Add(new Opcode("AND D", new [] { "A2" }, "4", "Bitwise AND on A with D."));
+        Add(new Opcode("AND E", new [] { "A3" }, "4", "Bitwise AND on A with E."));
+        Add(new Opcode("AND H", new [] { "A4" }, "4", "Bitwise AND on A with H."));
+        Add(new Opcode("AND L", new [] { "A5" }, "4", "Bitwise AND on A with L."));
+        Add(new Opcode("AND A", new [] { "A7" }, "4", "Bitwise AND on A with A."));
+        Add(new Opcode("BIT 0,(HL)", new [] { "CB", "46" }, "12", "Tests bit 0 of (HL)."));
+        Add(new Opcode("BIT 1,(HL)", new [] { "CB", "4E" }, "12", "Tests bit 1 of (HL)."));
+        Add(new Opcode("BIT 2,(HL)", new [] { "CB", "56" }, "12", "Tests bit 2 of (HL)."));
+        Add(new Opcode("BIT 3,(HL)", new [] { "CB", "5E" }, "12", "Tests bit 3 of (HL)."));
+        Add(new Opcode("BIT 4,(HL)", new [] { "CB", "66" }, "12", "Tests bit 4 of (HL)."));
+        Add(new Opcode("BIT 5,(HL)", new [] { "CB", "6E" }, "12", "Tests bit 5 of (HL)."));
+        Add(new Opcode("BIT 6,(HL)", new [] { "CB", "76" }, "12", "Tests bit 6 of (HL)."));
+        Add(new Opcode("BIT 7,(HL)", new [] { "CB", "7E" }, "12", "Tests bit 7 of (HL)."));
+        Add(new Opcode("BIT 0,(IX+d)", new [] { "DD", "CB", "d", "46" }, "20", "Tests bit 0 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("BIT 1,(IX+d)", new [] { "DD", "CB", "d", "4E" }, "20", "Tests bit 1 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("BIT 2,(IX+d)", new [] { "DD", "CB", "d", "56" }, "20", "Tests bit 2 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("BIT 3,(IX+d)", new [] { "DD", "CB", "d", "5E" }, "20", "Tests bit 3 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("BIT 4,(IX+d)", new [] { "DD", "CB", "d", "66" }, "20", "Tests bit 4 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("BIT 5,(IX+d)", new [] { "DD", "CB", "d", "6E" }, "20", "Tests bit 5 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("BIT 6,(IX+d)", new [] { "DD", "CB", "d", "76" }, "20", "Tests bit 6 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("BIT 7,(IX+d)", new [] { "DD", "CB", "d", "7E" }, "20", "Tests bit 7 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("BIT 0,(IY+d)", new [] { "FD", "CB", "d", "46" }, "20", "Tests bit 0 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("BIT 1,(IY+d)", new [] { "FD", "CB", "d", "4E" }, "20", "Tests bit 1 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("BIT 2,(IY+d)", new [] { "FD", "CB", "d", "56" }, "20", "Tests bit 2 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("BIT 3,(IY+d)", new [] { "FD", "CB", "d", "5E" }, "20", "Tests bit 3 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("BIT 4,(IY+d)", new [] { "FD", "CB", "d", "66" }, "20", "Tests bit 4 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("BIT 5,(IY+d)", new [] { "FD", "CB", "d", "6E" }, "20", "Tests bit 5 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("BIT 6,(IY+d)", new [] { "FD", "CB", "d", "76" }, "20", "Tests bit 6 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("BIT 7,(IY+d)", new [] { "FD", "CB", "d", "7E" }, "20", "Tests bit 7 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("BIT 0,B", new [] { "CB", "40" }, "8", "Tests bit 0 of B."));
+        Add(new Opcode("BIT 1,B", new [] { "CB", "48" }, "8", "Tests bit 1 of B."));
+        Add(new Opcode("BIT 2,B", new [] { "CB", "50" }, "8", "Tests bit 2 of B."));
+        Add(new Opcode("BIT 3,B", new [] { "CB", "58" }, "8", "Tests bit 3 of B."));
+        Add(new Opcode("BIT 4,B", new [] { "CB", "60" }, "8", "Tests bit 4 of B."));
+        Add(new Opcode("BIT 5,B", new [] { "CB", "68" }, "8", "Tests bit 5 of B."));
+        Add(new Opcode("BIT 6,B", new [] { "CB", "70" }, "8", "Tests bit 6 of B."));
+        Add(new Opcode("BIT 7,B", new [] { "CB", "78" }, "8", "Tests bit 7 of B."));
+        Add(new Opcode("BIT 0,C", new [] { "CB", "41" }, "8", "Tests bit 0 of C."));
+        Add(new Opcode("BIT 1,C", new [] { "CB", "49" }, "8", "Tests bit 1 of C."));
+        Add(new Opcode("BIT 2,C", new [] { "CB", "51" }, "8", "Tests bit 2 of C."));
+        Add(new Opcode("BIT 3,C", new [] { "CB", "59" }, "8", "Tests bit 3 of C."));
+        Add(new Opcode("BIT 4,C", new [] { "CB", "61" }, "8", "Tests bit 4 of C."));
+        Add(new Opcode("BIT 5,C", new [] { "CB", "69" }, "8", "Tests bit 5 of C."));
+        Add(new Opcode("BIT 6,C", new [] { "CB", "71" }, "8", "Tests bit 6 of C."));
+        Add(new Opcode("BIT 7,C", new [] { "CB", "79" }, "8", "Tests bit 7 of C."));
+        Add(new Opcode("BIT 0,D", new [] { "CB", "42" }, "8", "Tests bit 0 of D."));
+        Add(new Opcode("BIT 1,D", new [] { "CB", "4A" }, "8", "Tests bit 1 of D."));
+        Add(new Opcode("BIT 2,D", new [] { "CB", "52" }, "8", "Tests bit 2 of D."));
+        Add(new Opcode("BIT 3,D", new [] { "CB", "5A" }, "8", "Tests bit 3 of D."));
+        Add(new Opcode("BIT 4,D", new [] { "CB", "62" }, "8", "Tests bit 4 of D."));
+        Add(new Opcode("BIT 5,D", new [] { "CB", "6A" }, "8", "Tests bit 5 of D."));
+        Add(new Opcode("BIT 6,D", new [] { "CB", "72" }, "8", "Tests bit 6 of D."));
+        Add(new Opcode("BIT 7,D", new [] { "CB", "7A" }, "8", "Tests bit 7 of D."));
+        Add(new Opcode("BIT 0,E", new [] { "CB", "43" }, "8", "Tests bit 0 of E."));
+        Add(new Opcode("BIT 1,E", new [] { "CB", "4B" }, "8", "Tests bit 1 of E."));
+        Add(new Opcode("BIT 2,E", new [] { "CB", "53" }, "8", "Tests bit 2 of E."));
+        Add(new Opcode("BIT 3,E", new [] { "CB", "5B" }, "8", "Tests bit 3 of E."));
+        Add(new Opcode("BIT 4,E", new [] { "CB", "63" }, "8", "Tests bit 4 of E."));
+        Add(new Opcode("BIT 5,E", new [] { "CB", "6B" }, "8", "Tests bit 5 of E."));
+        Add(new Opcode("BIT 6,E", new [] { "CB", "73" }, "8", "Tests bit 6 of E."));
+        Add(new Opcode("BIT 7,E", new [] { "CB", "7B" }, "8", "Tests bit 7 of E."));
+        Add(new Opcode("BIT 0,H", new [] { "CB", "44" }, "8", "Tests bit 0 of H."));
+        Add(new Opcode("BIT 1,H", new [] { "CB", "4C" }, "8", "Tests bit 1 of H."));
+        Add(new Opcode("BIT 2,H", new [] { "CB", "54" }, "8", "Tests bit 2 of H."));
+        Add(new Opcode("BIT 3,H", new [] { "CB", "5C" }, "8", "Tests bit 3 of H."));
+        Add(new Opcode("BIT 4,H", new [] { "CB", "64" }, "8", "Tests bit 4 of H."));
+        Add(new Opcode("BIT 5,H", new [] { "CB", "6C" }, "8", "Tests bit 5 of H."));
+        Add(new Opcode("BIT 6,H", new [] { "CB", "74" }, "8", "Tests bit 6 of H."));
+        Add(new Opcode("BIT 7,H", new [] { "CB", "7C" }, "8", "Tests bit 7 of H."));
+        Add(new Opcode("BIT 0,L", new [] { "CB", "45" }, "8", "Tests bit 0 of L."));
+        Add(new Opcode("BIT 1,L", new [] { "CB", "4D" }, "8", "Tests bit 1 of L."));
+        Add(new Opcode("BIT 2,L", new [] { "CB", "55" }, "8", "Tests bit 2 of L."));
+        Add(new Opcode("BIT 3,L", new [] { "CB", "5D" }, "8", "Tests bit 3 of L."));
+        Add(new Opcode("BIT 4,L", new [] { "CB", "65" }, "8", "Tests bit 4 of L."));
+        Add(new Opcode("BIT 5,L", new [] { "CB", "6D" }, "8", "Tests bit 5 of L."));
+        Add(new Opcode("BIT 6,L", new [] { "CB", "75" }, "8", "Tests bit 6 of L."));
+        Add(new Opcode("BIT 7,L", new [] { "CB", "7D" }, "8", "Tests bit 7 of L."));
+        Add(new Opcode("BIT 0,A", new [] { "CB", "47" }, "8", "Tests bit 0 of A."));
+        Add(new Opcode("BIT 1,A", new [] { "CB", "4F" }, "8", "Tests bit 1 of A."));
+        Add(new Opcode("BIT 2,A", new [] { "CB", "57" }, "8", "Tests bit 2 of A."));
+        Add(new Opcode("BIT 3,A", new [] { "CB", "5F" }, "8", "Tests bit 3 of A."));
+        Add(new Opcode("BIT 4,A", new [] { "CB", "67" }, "8", "Tests bit 4 of A."));
+        Add(new Opcode("BIT 5,A", new [] { "CB", "6F" }, "8", "Tests bit 5 of A."));
+        Add(new Opcode("BIT 6,A", new [] { "CB", "77" }, "8", "Tests bit 6 of A."));
+        Add(new Opcode("BIT 7,A", new [] { "CB", "7F" }, "8", "Tests bit 7 of A."));
+        Add(new Opcode("CALL C,nn", new [] { "DC", "nn" }, "17/10", "If the carry flag is set, the current PC value plus three is pushed onto the stack, then is loaded with $nn."));
+        Add(new Opcode("CALL M,nn", new [] { "FC", "nn" }, "17/10", "If the sign flag is set, the current PC value plus three is pushed onto the stack, then is loaded with $nn."));
+        Add(new Opcode("CALL NC,nn", new [] { "D4", "nn" }, "17/10", "If the carry flag is unset, the current PC value plus three is pushed onto the stack, then is loaded with $nn."));
+        Add(new Opcode("CALL NZ,nn", new [] { "C4", "nn" }, "17/10", "If the zero flag is unset, the current PC value plus three is pushed onto the stack, then is loaded with $nn."));
+        Add(new Opcode("CALL P,nn", new [] { "F4", "nn" }, "17/10", "If the sign flag is unset, the current PC value plus three is pushed onto the stack, then is loaded with $nn."));
+        Add(new Opcode("CALL PE,nn", new [] { "EC", "nn" }, "17/10", "If the parity/overflow flag is set, the current PC value plus three is pushed onto the stack, then is loaded with $nn."));
+        Add(new Opcode("CALL PO,nn", new [] { "E4", "nn" }, "17/10", "If the parity/overflow flag is unset, the current PC value plus three is pushed onto the stack, then is loaded with $nn."));
+        Add(new Opcode("CALL Z,nn", new [] { "CC", "nn" }, "17/10", "If the zero flag is set, the current PC value plus three is pushed onto the stack, then is loaded with $nn."));
+        Add(new Opcode("CALL nn", new [] { "CD", "nn" }, "17", "The current PC value plus three is pushed onto the stack, then is loaded with $nn."));
+        Add(new Opcode("CCF", new [] { "3F" }, "4", "Inverts the carry flag."));
+        Add(new Opcode("CP (HL)", new [] { "BE" }, "7", "Subtracts (HL) from A and affects flags according to the result. A is not modified."));
+        Add(new Opcode("CP (IX+d)", new [] { "DD", "BE", "d" }, "19", "Subtracts the value pointed to by IX plus $d from A and affects flags according to the result. A is not modified."));
+        Add(new Opcode("CP (IY+d)", new [] { "FD", "BE", "d" }, "19", "Subtracts the value pointed to by IY plus $d from A and affects flags according to the result. A is not modified."));
+        Add(new Opcode("CP n", new [] { "FE", "n" }, "7", "Subtracts $n from A and affects flags according to the result. A is not modified."));
+        Add(new Opcode("CP B", new [] { "B8" }, "4", "Subtracts B from A and affects flags according to the result. A is not modified."));
+        Add(new Opcode("CP C", new [] { "B9" }, "4", "Subtracts C from A and affects flags according to the result. A is not modified."));
+        Add(new Opcode("CP D", new [] { "BA" }, "4", "Subtracts D from A and affects flags according to the result. A is not modified."));
+        Add(new Opcode("CP E", new [] { "BB" }, "4", "Subtracts E from A and affects flags according to the result. A is not modified."));
+        Add(new Opcode("CP H", new [] { "BC" }, "4", "Subtracts H from A and affects flags according to the result. A is not modified."));
+        Add(new Opcode("CP L", new [] { "BD" }, "4", "Subtracts L from A and affects flags according to the result. A is not modified."));
+        Add(new Opcode("CP A", new [] { "BF" }, "4", "Subtracts A from A and affects flags according to the result. A is not modified."));
+        Add(new Opcode("CPD", new [] { "ED", "A9" }, "16", "Compares the value of the memory location pointed to by HL with A. Then HL and BC are decremented. p/v is reset if BC becomes zero and set otherwise."));
+        Add(new Opcode("CPDR", new [] { "ED", "B9" }, "21/16", "Compares the value of the memory location pointed to by HL with A. Then HL and BC are decremented. If BC is not zero and z is not set, this operation is repeated. p/v is reset if BC becomes zero and set otherwise, acting as an indicator that HL reached a memory location whose value equalled A before the counter went to zero. Interrupts can trigger while this instruction is processing."));
+        Add(new Opcode("CPI", new [] { "ED", "A1" }, "16", "Compares the value of the memory location pointed to by HL with A. Then HL is incremented and BC is decremented. p/v is reset if BC becomes zero and set otherwise."));
+        Add(new Opcode("CPIR", new [] { "ED", "B1" }, "21/16", "Compares the value of the memory location pointed to by HL with A. Then HL is incremented and BC is decremented. If BC is not zero and z is not set, this operation is repeated. p/v is reset if BC becomes zero and set otherwise, acting as an indicator that HL reached a memory location whose value equalled A before the counter went to zero. Interrupts can trigger while this instruction is processing."));
+        Add(new Opcode("CPL", new [] { "2F" }, "4", "The contents of A are inverted (one's complement)."));
+        Add(new Opcode("DAA", new [] { "27" }, "4", "Adjusts A for BCD addition and subtraction operations."));
+        Add(new Opcode("DEC (HL)", new [] { "35" }, "11", "Subtracts one from (HL)."));
+        Add(new Opcode("DEC (IX+d)", new [] { "DD", "35", "d" }, "23", "Subtracts one from the memory location pointed to by IX plus $d."));
+        Add(new Opcode("DEC (IY+d)", new [] { "FD", "35", "d" }, "23", "Subtracts one from the memory location pointed to by IY plus $d."));
+        Add(new Opcode("DEC IX", new [] { "DD", "2B" }, "10", "Subtracts one from IX."));
+        Add(new Opcode("DEC IY", new [] { "FD", "2B" }, "10", "Subtracts one from IY."));
+        Add(new Opcode("DEC BC", new [] { "0B" }, "6", "Subtracts one from BC."));
+        Add(new Opcode("DEC DE", new [] { "1B" }, "6", "Subtracts one from DE."));
+        Add(new Opcode("DEC HL", new [] { "2B" }, "6", "Subtracts one from HL."));
+        Add(new Opcode("DEC SP", new [] { "3B" }, "6", "Subtracts one from SP."));
+        Add(new Opcode("DEC B", new [] { "05" }, "4", "Subtracts one from B."));
+        Add(new Opcode("DEC C", new [] { "0D" }, "4", "Subtracts one from C."));
+        Add(new Opcode("DEC D", new [] { "15" }, "4", "Subtracts one from D."));
+        Add(new Opcode("DEC E", new [] { "1D" }, "4", "Subtracts one from E."));
+        Add(new Opcode("DEC H", new [] { "25" }, "4", "Subtracts one from H."));
+        Add(new Opcode("DEC L", new [] { "2D" }, "4", "Subtracts one from L."));
+        Add(new Opcode("DEC A", new [] { "3D" }, "4", "Subtracts one from A."));
+        Add(new Opcode("DI", new [] { "F3" }, "4", "Resets both interrupt flip-flops, thus prenting maskable interrupts from triggering."));
+        Add(new Opcode("DJNZ d", new [] { "10", "d-$-2" }, "13/8", "The B register is decremented, and if not zero, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
+        Add(new Opcode("EI", new [] { "FB" }, "4", "Sets both interrupt flip-flops, thus allowing maskable interrupts to occur. An interrupt will not occur until after the immediately following instruction."));
+        Add(new Opcode("EX (SP),HL", new [] { "E3" }, "19", "Exchanges (SP) with L, and (SP+1) with H."));
+        Add(new Opcode("EX (SP),IX", new [] { "DD", "E3" }, "23", "Exchanges (SP) with IXL, and (SP+1) with IXH."));
+        Add(new Opcode("EX (SP),IY", new [] { "FD", "E3" }, "23", "Exchanges (SP) with IYL, and (SP+1) with IYH."));
+        Add(new Opcode("EX AF,AF'", new [] { "08" }, "4", "Exchanges the 16-bit contents of AF and AF'."));
+        Add(new Opcode("EX DE,HL", new [] { "EB" }, "4", "Exchanges the 16-bit contents of DE and HL."));
+        Add(new Opcode("EXX", new [] { "D9" }, "4", "Exchanges the 16-bit contents of BC, DE, and HL with BC', DE', and HL'."));
+        Add(new Opcode("HALT", new [] { "76" }, "4", "Suspends CPU operation until an interrupt or reset occurs."));
+        Add(new Opcode("IM 0", new [] { "ED", "46" }, "8", "Sets interrupt mode 0."));
+        Add(new Opcode("IM 1", new [] { "ED", "56" }, "8", "Sets interrupt mode 1."));
+        Add(new Opcode("IM 2", new [] { "ED", "5E" }, "8", "Sets interrupt mode 2."));
+        Add(new Opcode("IN A,(n)", new [] { "DB", "n" }, "11", "A byte from port $n is written to A."));
+        Add(new Opcode("IN B,(C)", new [] { "ED", "40" }, "12", "A byte from port C is written to B."));
+        Add(new Opcode("IN C,(C)", new [] { "ED", "48" }, "12", "A byte from port C is written to C."));
+        Add(new Opcode("IN D,(C)", new [] { "ED", "50" }, "12", "A byte from port C is written to D."));
+        Add(new Opcode("IN E,(C)", new [] { "ED", "58" }, "12", "A byte from port C is written to E."));
+        Add(new Opcode("IN H,(C)", new [] { "ED", "60" }, "12", "A byte from port C is written to H."));
+        Add(new Opcode("IN L,(C)", new [] { "ED", "68" }, "12", "A byte from port C is written to L."));
+        Add(new Opcode("IN A,(C)", new [] { "ED", "78" }, "12", "A byte from port C is written to A."));
+        Add(new Opcode("INC (HL)", new [] { "34" }, "11", "Adds one to (HL)."));
+        Add(new Opcode("INC (IX+d)", new [] { "DD", "34", "d" }, "23", "Adds one to the memory location pointed to by IX plus $d."));
+        Add(new Opcode("INC (IY+d)", new [] { "FD", "34", "d" }, "23", "Adds one to the memory location pointed to by IY plus $d."));
+        Add(new Opcode("INC IX", new [] { "DD", "23" }, "10", "Adds one to IX."));
+        Add(new Opcode("INC IY", new [] { "FD", "23" }, "10", "Adds one to IY."));
+        Add(new Opcode("INC BC", new [] { "03" }, "6", "Adds one to BC."));
+        Add(new Opcode("INC DE", new [] { "13" }, "6", "Adds one to DE."));
+        Add(new Opcode("INC HL", new [] { "23" }, "6", "Adds one to HL."));
+        Add(new Opcode("INC SP", new [] { "33" }, "6", "Adds one to SP."));
+        Add(new Opcode("INC B", new [] { "04" }, "4", "Adds one to B."));
+        Add(new Opcode("INC C", new [] { "0C" }, "4", "Adds one to C."));
+        Add(new Opcode("INC D", new [] { "14" }, "4", "Adds one to D."));
+        Add(new Opcode("INC E", new [] { "1C" }, "4", "Adds one to E."));
+        Add(new Opcode("INC H", new [] { "24" }, "4", "Adds one to H."));
+        Add(new Opcode("INC L", new [] { "2C" }, "4", "Adds one to L."));
+        Add(new Opcode("INC A", new [] { "3C" }, "4", "Adds one to A."));
+        Add(new Opcode("IND", new [] { "ED", "AA" }, "16", "A byte from port C is written to the memory location pointed to by HL. Then HL and B are decremented."));
+        Add(new Opcode("INDR", new [] { "ED", "BA" }, "21/16", "A byte from port C is written to the memory location pointed to by HL. Then HL and B are decremented. If B is not zero, this operation is repeated. Interrupts can trigger while this instruction is processing."));
+        Add(new Opcode("INI", new [] { "ED", "A2" }, "16", "A byte from port C is written to the memory location pointed to by HL. Then HL is incremented and B is decremented."));
+        Add(new Opcode("INIR", new [] { "ED", "B2" }, "21/16", "A byte from port C is written to the memory location pointed to by HL. Then HL is incremented and B is decremented. If B is not zero, this operation is repeated. Interrupts can trigger while this instruction is processing."));
+        Add(new Opcode("JP (HL)", new [] { "E9" }, "4", "Loads the value of HL into PC."));
+        Add(new Opcode("JP (IX)", new [] { "DD", "E9" }, "8", "Loads the value of IX into PC."));
+        Add(new Opcode("JP (IY)", new [] { "FD", "E9" }, "8", "Loads the value of IY into PC."));
+        Add(new Opcode("JP C,nn", new [] { "DA", "nn" }, "10", "If the carry flag is set, $nn is copied to PC."));
+        Add(new Opcode("JP M,nn", new [] { "FA", "nn" }, "10", "If the sign flag is set, $nn is copied to PC."));
+        Add(new Opcode("JP NC,nn", new [] { "D2", "nn" }, "10", "If the carry flag is unset, $nn is copied to PC."));
+        Add(new Opcode("JP NZ,nn", new [] { "C2", "nn" }, "10", "If the zero flag is unset, $nn is copied to PC."));
+        Add(new Opcode("JP P,nn", new [] { "F2", "nn" }, "10", "If the sign flag is unset, $nn is copied to PC."));
+        Add(new Opcode("JP PE,nn", new [] { "EA", "nn" }, "10", "If the parity/overflow flag is set, $nn is copied to PC."));
+        Add(new Opcode("JP PO,nn", new [] { "E2", "nn" }, "10", "If the parity/overflow flag is unset, $nn is copied to PC."));
+        Add(new Opcode("JP Z,nn", new [] { "CA", "nn" }, "10", "If the zero flag is set, $nn is copied to PC."));
+        Add(new Opcode("JP nn", new [] { "C3", "nn" }, "10", "$nn is copied to PC."));
+        Add(new Opcode("JR C,d", new [] { "38", "d-$-2" }, "12/7", "If the carry flag is set, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
+        Add(new Opcode("JR NC,d", new [] { "30", "d-$-2" }, "12/7", "If the carry flag is unset, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
+        Add(new Opcode("JR NZ,d", new [] { "20", "d-$-2" }, "12/7", "If the zero flag is unset, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
+        Add(new Opcode("JR Z,d", new [] { "28", "d-$-2" }, "12/7", "If the zero flag is set, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
+        Add(new Opcode("JR d", new [] { "18", "d-$-2" }, "12", "The signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
+        Add(new Opcode("LD (BC),A", new [] { "02" }, "7", "Stores A into the memory location pointed to by BC."));
+        Add(new Opcode("LD (DE),A", new [] { "12" }, "7", "Stores A into the memory location pointed to by DE."));
+        Add(new Opcode("LD (HL),n", new [] { "36", "n" }, "10", "Loads $n into (HL)."));
+        Add(new Opcode("LD (HL),B", new [] { "70" }, "7", "The contents of B are loaded into (HL)."));
+        Add(new Opcode("LD (HL),C", new [] { "71" }, "7", "The contents of C are loaded into (HL)."));
+        Add(new Opcode("LD (HL),D", new [] { "72" }, "7", "The contents of D are loaded into (HL)."));
+        Add(new Opcode("LD (HL),E", new [] { "73" }, "7", "The contents of E are loaded into (HL)."));
+        Add(new Opcode("LD (HL),H", new [] { "74" }, "7", "The contents of H are loaded into (HL)."));
+        Add(new Opcode("LD (HL),L", new [] { "75" }, "7", "The contents of L are loaded into (HL)."));
+        Add(new Opcode("LD (HL),A", new [] { "77" }, "7", "The contents of A are loaded into (HL)."));
+        Add(new Opcode("LD (IX+d),n", new [] { "DD", "36", "d", "n" }, "19", "Stores $n to the memory location pointed to by IX plus $d."));
+        Add(new Opcode("LD (IX+d),B", new [] { "DD", "70", "d" }, "19", "Stores B to the memory location pointed to by IX plus $d."));
+        Add(new Opcode("LD (IX+d),C", new [] { "DD", "71", "d" }, "19", "Stores C to the memory location pointed to by IX plus $d."));
+        Add(new Opcode("LD (IX+d),D", new [] { "DD", "72", "d" }, "19", "Stores D to the memory location pointed to by IX plus $d."));
+        Add(new Opcode("LD (IX+d),E", new [] { "DD", "73", "d" }, "19", "Stores E to the memory location pointed to by IX plus $d."));
+        Add(new Opcode("LD (IX+d),H", new [] { "DD", "74", "d" }, "19", "Stores H to the memory location pointed to by IX plus $d."));
+        Add(new Opcode("LD (IX+d),L", new [] { "DD", "75", "d" }, "19", "Stores L to the memory location pointed to by IX plus $d."));
+        Add(new Opcode("LD (IX+d),A", new [] { "DD", "77", "d" }, "19", "Stores A to the memory location pointed to by IX plus $d."));
+        Add(new Opcode("LD (IY+d),n", new [] { "FD", "36", "d", "n" }, "19", "Stores $n to the memory location pointed to by IY plus $d."));
+        Add(new Opcode("LD (IY+d),B", new [] { "FD", "70", "d" }, "19", "Stores B to the memory location pointed to by IY plus $d."));
+        Add(new Opcode("LD (IY+d),C", new [] { "FD", "71", "d" }, "19", "Stores C to the memory location pointed to by IY plus $d."));
+        Add(new Opcode("LD (IY+d),D", new [] { "FD", "72", "d" }, "19", "Stores D to the memory location pointed to by IY plus $d."));
+        Add(new Opcode("LD (IY+d),E", new [] { "FD", "73", "d" }, "19", "Stores E to the memory location pointed to by IY plus $d."));
+        Add(new Opcode("LD (IY+d),H", new [] { "FD", "74", "d" }, "19", "Stores H to the memory location pointed to by IY plus $d."));
+        Add(new Opcode("LD (IY+d),L", new [] { "FD", "75", "d" }, "19", "Stores L to the memory location pointed to by IY plus $d."));
+        Add(new Opcode("LD (IY+d),A", new [] { "FD", "77", "d" }, "19", "Stores A to the memory location pointed to by IY plus $d."));
+        Add(new Opcode("LD (nn),A", new [] { "32", "nn" }, "13", "Stores A into the memory location pointed to by $nn."));
+        Add(new Opcode("LD (nn),BC", new [] { "ED", "43", "nn" }, "20", "Stores BC into the memory location pointed to by $nn."));
+        Add(new Opcode("LD (nn),DE", new [] { "ED", "53", "nn" }, "20", "Stores DE into the memory location pointed to by $nn."));
+        Add(new Opcode("LD (nn),HL", new [] { "22", "nn" }, "16", "Stores HL into the memory location pointed to by $nn."));
+        Add(new Opcode("LD (nn),IX", new [] { "DD", "22", "nn" }, "20", "Stores IX into the memory location pointed to by $nn."));
+        Add(new Opcode("LD (nn),IY", new [] { "FD", "22", "nn" }, "20", "Stores IY into the memory location pointed to by $nn."));
+        Add(new Opcode("LD (nn),SP", new [] { "ED", "73", "nn" }, "20", "Stores SP into the memory location pointed to by $nn."));
+        Add(new Opcode("LD A,(BC)", new [] { "0A" }, "7", "Loads the value pointed to by BC into A."));
+        Add(new Opcode("LD A,(DE)", new [] { "1A" }, "7", "Loads the value pointed to by DE into A."));
+        Add(new Opcode("LD A,(nn)", new [] { "3A", "nn" }, "13", "Loads the value pointed to by $nn into A."));
+        Add(new Opcode("LD A,I", new [] { "ED", "57" }, "9", "Stores the value of register I into A."));
+        Add(new Opcode("LD A,R", new [] { "ED", "5F" }, "9", "Stores the value of register R into A."));
+        Add(new Opcode("LD BC,(nn)", new [] { "ED", "4B", "nn" }, "20", "Loads the value pointed to by $nn into BC."));
+        Add(new Opcode("LD DE,(nn)", new [] { "ED", "5B", "nn" }, "20", "Loads the value pointed to by $nn into DE."));
+        Add(new Opcode("LD HL,(nn)", new [] { "2A", "nn" }, "16", "Loads the value pointed to by $nn into HL."));
+        Add(new Opcode("LD I,A", new [] { "ED", "47" }, "9", "Stores the value of A into register I."));
+        Add(new Opcode("LD IX,(nn)", new [] { "DD", "2A", "nn" }, "20", "Loads the value pointed to by $nn into IX."));
+        Add(new Opcode("LD IX,nn", new [] { "DD", "21", "nn" }, "14", "Loads $nn into register IX."));
+        Add(new Opcode("LD IY,(nn)", new [] { "FD", "2A", "nn" }, "20", "Loads the value pointed to by $nn into IY."));
+        Add(new Opcode("LD IY,nn", new [] { "FD", "21", "nn" }, "14", "Loads $nn into register IY."));
+        Add(new Opcode("LD R,A", new [] { "ED", "4F" }, "9", "Stores the value of A into register R."));
+        Add(new Opcode("LD SP,(nn)", new [] { "ED", "7B", "nn" }, "20", "Loads the value pointed to by $nn into SP."));
+        Add(new Opcode("LD SP,HL", new [] { "F9" }, "6", "Loads the value of HL into SP."));
+        Add(new Opcode("LD SP,IX", new [] { "DD", "F9" }, "10", "Loads the value of IX into SP."));
+        Add(new Opcode("LD SP,IY", new [] { "FD", "F9" }, "10", "Loads the value of IY into SP."));
+        Add(new Opcode("LD BC,nn", new [] { "01", "nn" }, "10", "Loads $nn into BC."));
+        Add(new Opcode("LD DE,nn", new [] { "11", "nn" }, "10", "Loads $nn into DE."));
+        Add(new Opcode("LD HL,nn", new [] { "21", "nn" }, "10", "Loads $nn into HL."));
+        Add(new Opcode("LD SP,nn", new [] { "31", "nn" }, "10", "Loads $nn into SP."));
+        Add(new Opcode("LD B,(HL)", new [] { "46" }, "7", "The contents of (HL) are loaded into B."));
+        Add(new Opcode("LD C,(HL)", new [] { "4E" }, "7", "The contents of (HL) are loaded into C."));
+        Add(new Opcode("LD D,(HL)", new [] { "56" }, "7", "The contents of (HL) are loaded into D."));
+        Add(new Opcode("LD E,(HL)", new [] { "5E" }, "7", "The contents of (HL) are loaded into E."));
+        Add(new Opcode("LD H,(HL)", new [] { "66" }, "7", "The contents of (HL) are loaded into H."));
+        Add(new Opcode("LD L,(HL)", new [] { "6E" }, "7", "The contents of (HL) are loaded into L."));
+        Add(new Opcode("LD A,(HL)", new [] { "7E" }, "7", "The contents of (HL) are loaded into A."));
+        Add(new Opcode("LD B,(IX+d)", new [] { "DD", "46", "d" }, "19", "Loads the value pointed to by IX plus $d into B."));
+        Add(new Opcode("LD C,(IX+d)", new [] { "DD", "4E", "d" }, "19", "Loads the value pointed to by IX plus $d into C."));
+        Add(new Opcode("LD D,(IX+d)", new [] { "DD", "56", "d" }, "19", "Loads the value pointed to by IX plus $d into D."));
+        Add(new Opcode("LD E,(IX+d)", new [] { "DD", "5E", "d" }, "19", "Loads the value pointed to by IX plus $d into E."));
+        Add(new Opcode("LD H,(IX+d)", new [] { "DD", "66", "d" }, "19", "Loads the value pointed to by IX plus $d into H."));
+        Add(new Opcode("LD L,(IX+d)", new [] { "DD", "6E", "d" }, "19", "Loads the value pointed to by IX plus $d into L."));
+        Add(new Opcode("LD A,(IX+d)", new [] { "DD", "7E", "d" }, "19", "Loads the value pointed to by IX plus $d into A."));
+        Add(new Opcode("LD B,(IY+d)", new [] { "FD", "46", "d" }, "19", "Loads the value pointed to by IY plus $d into B."));
+        Add(new Opcode("LD C,(IY+d)", new [] { "FD", "4E", "d" }, "19", "Loads the value pointed to by IY plus $d into C."));
+        Add(new Opcode("LD D,(IY+d)", new [] { "FD", "56", "d" }, "19", "Loads the value pointed to by IY plus $d into D."));
+        Add(new Opcode("LD E,(IY+d)", new [] { "FD", "5E", "d" }, "19", "Loads the value pointed to by IY plus $d into E."));
+        Add(new Opcode("LD H,(IY+d)", new [] { "FD", "66", "d" }, "19", "Loads the value pointed to by IY plus $d into H."));
+        Add(new Opcode("LD L,(IY+d)", new [] { "FD", "6E", "d" }, "19", "Loads the value pointed to by IY plus $d into L."));
+        Add(new Opcode("LD A,(IY+d)", new [] { "FD", "7E", "d" }, "19", "Loads the value pointed to by IY plus $d into A."));
+        Add(new Opcode("LD B,n", new [] { "06", "n" }, "7", "Loads $n into B."));
+        Add(new Opcode("LD C,n", new [] { "0E", "n" }, "7", "Loads $n into C."));
+        Add(new Opcode("LD D,n", new [] { "16", "n" }, "7", "Loads $n into D."));
+        Add(new Opcode("LD E,n", new [] { "1E", "n" }, "7", "Loads $n into E."));
+        Add(new Opcode("LD H,n", new [] { "26", "n" }, "7", "Loads $n into H."));
+        Add(new Opcode("LD L,n", new [] { "2E", "n" }, "7", "Loads $n into L."));
+        Add(new Opcode("LD A,n", new [] { "3E", "n" }, "7", "Loads $n into A."));
+        Add(new Opcode("LD B,B", new [] { "40" }, "4", "The contents of B are loaded into B."));
+        Add(new Opcode("LD B,C", new [] { "41" }, "4", "The contents of C are loaded into B."));
+        Add(new Opcode("LD B,D", new [] { "42" }, "4", "The contents of D are loaded into B."));
+        Add(new Opcode("LD B,E", new [] { "43" }, "4", "The contents of E are loaded into B."));
+        Add(new Opcode("LD B,H", new [] { "44" }, "4", "The contents of H are loaded into B."));
+        Add(new Opcode("LD B,L", new [] { "45" }, "4", "The contents of L are loaded into B."));
+        Add(new Opcode("LD B,A", new [] { "47" }, "4", "The contents of A are loaded into B."));
+        Add(new Opcode("LD C,B", new [] { "48" }, "4", "The contents of B are loaded into C."));
+        Add(new Opcode("LD C,C", new [] { "49" }, "4", "The contents of C are loaded into C."));
+        Add(new Opcode("LD C,D", new [] { "4A" }, "4", "The contents of D are loaded into C."));
+        Add(new Opcode("LD C,E", new [] { "4B" }, "4", "The contents of E are loaded into C."));
+        Add(new Opcode("LD C,H", new [] { "4C" }, "4", "The contents of H are loaded into C."));
+        Add(new Opcode("LD C,L", new [] { "4D" }, "4", "The contents of L are loaded into C."));
+        Add(new Opcode("LD C,A", new [] { "4F" }, "4", "The contents of A are loaded into C."));
+        Add(new Opcode("LD D,B", new [] { "50" }, "4", "The contents of B are loaded into D."));
+        Add(new Opcode("LD D,C", new [] { "51" }, "4", "The contents of C are loaded into D."));
+        Add(new Opcode("LD D,D", new [] { "52" }, "4", "The contents of D are loaded into D."));
+        Add(new Opcode("LD D,E", new [] { "53" }, "4", "The contents of E are loaded into D."));
+        Add(new Opcode("LD D,H", new [] { "54" }, "4", "The contents of H are loaded into D."));
+        Add(new Opcode("LD D,L", new [] { "55" }, "4", "The contents of L are loaded into D."));
+        Add(new Opcode("LD D,A", new [] { "57" }, "4", "The contents of A are loaded into D."));
+        Add(new Opcode("LD E,B", new [] { "58" }, "4", "The contents of B are loaded into E."));
+        Add(new Opcode("LD E,C", new [] { "59" }, "4", "The contents of C are loaded into E."));
+        Add(new Opcode("LD E,D", new [] { "5A" }, "4", "The contents of D are loaded into E."));
+        Add(new Opcode("LD E,E", new [] { "5B" }, "4", "The contents of E are loaded into E."));
+        Add(new Opcode("LD E,H", new [] { "5C" }, "4", "The contents of H are loaded into E."));
+        Add(new Opcode("LD E,L", new [] { "5D" }, "4", "The contents of L are loaded into E."));
+        Add(new Opcode("LD E,A", new [] { "5F" }, "4", "The contents of A are loaded into E."));
+        Add(new Opcode("LD H,B", new [] { "60" }, "4", "The contents of B are loaded into H."));
+        Add(new Opcode("LD H,C", new [] { "61" }, "4", "The contents of C are loaded into H."));
+        Add(new Opcode("LD H,D", new [] { "62" }, "4", "The contents of D are loaded into H."));
+        Add(new Opcode("LD H,E", new [] { "63" }, "4", "The contents of E are loaded into H."));
+        Add(new Opcode("LD H,H", new [] { "64" }, "4", "The contents of H are loaded into H."));
+        Add(new Opcode("LD H,L", new [] { "65" }, "4", "The contents of L are loaded into H."));
+        Add(new Opcode("LD H,A", new [] { "67" }, "4", "The contents of A are loaded into H."));
+        Add(new Opcode("LD L,B", new [] { "68" }, "4", "The contents of B are loaded into L."));
+        Add(new Opcode("LD L,C", new [] { "69" }, "4", "The contents of C are loaded into L."));
+        Add(new Opcode("LD L,D", new [] { "6A" }, "4", "The contents of D are loaded into L."));
+        Add(new Opcode("LD L,E", new [] { "6B" }, "4", "The contents of E are loaded into L."));
+        Add(new Opcode("LD L,H", new [] { "6C" }, "4", "The contents of H are loaded into L."));
+        Add(new Opcode("LD L,L", new [] { "6D" }, "4", "The contents of L are loaded into L."));
+        Add(new Opcode("LD L,A", new [] { "6F" }, "4", "The contents of A are loaded into L."));
+        Add(new Opcode("LD A,B", new [] { "78" }, "4", "The contents of B are loaded into A."));
+        Add(new Opcode("LD A,C", new [] { "79" }, "4", "The contents of C are loaded into A."));
+        Add(new Opcode("LD A,D", new [] { "7A" }, "4", "The contents of D are loaded into A."));
+        Add(new Opcode("LD A,E", new [] { "7B" }, "4", "The contents of E are loaded into A."));
+        Add(new Opcode("LD A,H", new [] { "7C" }, "4", "The contents of H are loaded into A."));
+        Add(new Opcode("LD A,L", new [] { "7D" }, "4", "The contents of L are loaded into A."));
+        Add(new Opcode("LD A,A", new [] { "7F" }, "4", "The contents of A are loaded into A."));
+        Add(new Opcode("LDD", new [] { "ED", "A8" }, "16", "Transfers a byte of data from the memory location pointed to by HL to the memory location pointed to by DE. Then HL, DE, and BC are decremented. p/v is reset if BC becomes zero and set otherwise."));
+        Add(new Opcode("LDDR", new [] { "ED", "B8" }, "21/16", "Transfers a byte of data from the memory location pointed to by HL to the memory location pointed to by DE. Then HL, DE, and BC are decremented. If BC is not zero, this operation is repeated. Interrupts can trigger while this instruction is processing."));
+        Add(new Opcode("LDI", new [] { "ED", "A0" }, "16", "Transfers a byte of data from the memory location pointed to by HL to the memory location pointed to by DE. Then HL and DE are incremented and BC is decremented. p/v is reset if BC becomes zero and set otherwise."));
+        Add(new Opcode("LDIR", new [] { "ED", "B0" }, "21/16", "Transfers a byte of data from the memory location pointed to by HL to the memory location pointed to by DE. Then HL and DE are incremented and BC is decremented. If BC is not zero, this operation is repeated. Interrupts can trigger while this instruction is processing."));
+        Add(new Opcode("NEG", new [] { "ED", "44" }, "8", "The contents of A are negated (two's complement). Operation is the same as subtracting A from zero."));
+        Add(new Opcode("NOP", new [] { "00" }, "4", "No operation is performed."));
+        Add(new Opcode("OR (HL)", new [] { "B6" }, "7", "Bitwise OR on A with (HL)."));
+        Add(new Opcode("OR (IX+d)", new [] { "DD", "B6", "d" }, "19", "Bitwise OR on A with the value pointed to by IX plus $d."));
+        Add(new Opcode("OR (IY+d)", new [] { "FD", "B6", "d" }, "19", "Bitwise OR on A with the value pointed to by IY plus $d."));
+        Add(new Opcode("OR n", new [] { "F6", "n" }, "7", "Bitwise OR on A with $n."));
+        Add(new Opcode("OR B", new [] { "B0" }, "4", "Bitwise OR on A with B."));
+        Add(new Opcode("OR C", new [] { "B1" }, "4", "Bitwise OR on A with C."));
+        Add(new Opcode("OR D", new [] { "B2" }, "4", "Bitwise OR on A with D."));
+        Add(new Opcode("OR E", new [] { "B3" }, "4", "Bitwise OR on A with E."));
+        Add(new Opcode("OR H", new [] { "B4" }, "4", "Bitwise OR on A with H."));
+        Add(new Opcode("OR L", new [] { "B5" }, "4", "Bitwise OR on A with L."));
+        Add(new Opcode("OR A", new [] { "B7" }, "4", "Bitwise OR on A with A."));
+        Add(new Opcode("OTDR", new [] { "ED", "BB" }, "21/16", "B is decremented. A byte from the memory location pointed to by HL is written to port C. Then HL is decremented. If B is not zero, this operation is repeated. Interrupts can trigger while this instruction is processing."));
+        Add(new Opcode("OTIR", new [] { "ED", "B3" }, "21/16", "B is decremented. A byte from the memory location pointed to by HL is written to port C. Then HL is incremented. If B is not zero, this operation is repeated. Interrupts can trigger while this instruction is processing."));
+        Add(new Opcode("OUT (C),B", new [] { "ED", "41" }, "12", "The value of B is written to port C."));
+        Add(new Opcode("OUT (C),C", new [] { "ED", "49" }, "12", "The value of C is written to port C."));
+        Add(new Opcode("OUT (C),D", new [] { "ED", "51" }, "12", "The value of D is written to port C."));
+        Add(new Opcode("OUT (C),E", new [] { "ED", "59" }, "12", "The value of E is written to port C."));
+        Add(new Opcode("OUT (C),H", new [] { "ED", "61" }, "12", "The value of H is written to port C."));
+        Add(new Opcode("OUT (C),L", new [] { "ED", "69" }, "12", "The value of L is written to port C."));
+        Add(new Opcode("OUT (C),A", new [] { "ED", "79" }, "12", "The value of A is written to port C."));
+        Add(new Opcode("OUT (n),A", new [] { "D3", "n" }, "11", "The value of A is written to port $n."));
+        Add(new Opcode("OUTD", new [] { "ED", "AB" }, "16", "B is decremented. A byte from the memory location pointed to by HL is written to port C. Then HL is decremented."));
+        Add(new Opcode("OUTI", new [] { "ED", "A3" }, "16", "B is decremented. A byte from the memory location pointed to by HL is written to port C. Then HL is incremented."));
+        Add(new Opcode("POP AF", new [] { "F1" }, "10", "The memory location pointed to by SP is stored into f and SP is incremented. The memory location pointed to by SP is stored into A and SP is incremented again."));
+        Add(new Opcode("POP BC", new [] { "C1" }, "10", "The memory location pointed to by SP is stored into C and SP is incremented. The memory location pointed to by SP is stored into B and SP is incremented again."));
+        Add(new Opcode("POP DE", new [] { "D1" }, "10", "The memory location pointed to by SP is stored into E and SP is incremented. The memory location pointed to by SP is stored into D and SP is incremented again."));
+        Add(new Opcode("POP HL", new [] { "E1" }, "10", "The memory location pointed to by SP is stored into L and SP is incremented. The memory location pointed to by SP is stored into H and SP is incremented again."));
+        Add(new Opcode("POP IX", new [] { "DD", "E1" }, "14", "The memory location pointed to by SP is stored into IXL and SP is incremented. The memory location pointed to by SP is stored into IXH and SP is incremented again."));
+        Add(new Opcode("POP IY", new [] { "FD", "E1" }, "14", "The memory location pointed to by SP is stored into IYL and SP is incremented. The memory location pointed to by SP is stored into IYH and SP is incremented again."));
+        Add(new Opcode("PUSH AF", new [] { "F5" }, "11", "SP is decremented and A is stored into the memory location pointed to by SP. SP is decremented again and f is stored into the memory location pointed to by SP."));
+        Add(new Opcode("PUSH BC", new [] { "C5" }, "11", "SP is decremented and B is stored into the memory location pointed to by SP. SP is decremented again and C is stored into the memory location pointed to by SP."));
+        Add(new Opcode("PUSH DE", new [] { "D5" }, "11", "SP is decremented and D is stored into the memory location pointed to by SP. SP is decremented again and E is stored into the memory location pointed to by SP."));
+        Add(new Opcode("PUSH HL", new [] { "E5" }, "11", "SP is decremented and H is stored into the memory location pointed to by SP. SP is decremented again and L is stored into the memory location pointed to by SP."));
+        Add(new Opcode("PUSH IX", new [] { "DD", "E5" }, "15", "SP is decremented and IXH is stored into the memory location pointed to by SP. SP is decremented again and IXL is stored into the memory location pointed to by SP."));
+        Add(new Opcode("PUSH IY", new [] { "FD", "E5" }, "15", "SP is decremented and IYH is stored into the memory location pointed to by SP. SP is decremented again and IYL is stored into the memory location pointed to by SP."));
+        Add(new Opcode("RES 0,(HL)", new [] { "CB", "86" }, "15", "Resets bit 0 of (HL)."));
+        Add(new Opcode("RES 1,(HL)", new [] { "CB", "8E" }, "15", "Resets bit 1 of (HL)."));
+        Add(new Opcode("RES 2,(HL)", new [] { "CB", "96" }, "15", "Resets bit 2 of (HL)."));
+        Add(new Opcode("RES 3,(HL)", new [] { "CB", "9E" }, "15", "Resets bit 3 of (HL)."));
+        Add(new Opcode("RES 4,(HL)", new [] { "CB", "A6" }, "15", "Resets bit 4 of (HL)."));
+        Add(new Opcode("RES 5,(HL)", new [] { "CB", "AE" }, "15", "Resets bit 5 of (HL)."));
+        Add(new Opcode("RES 6,(HL)", new [] { "CB", "B6" }, "15", "Resets bit 6 of (HL)."));
+        Add(new Opcode("RES 7,(HL)", new [] { "CB", "BE" }, "15", "Resets bit 7 of (HL)."));
+        Add(new Opcode("RES 0,(IX+d)", new [] { "DD", "CB", "d", "86" }, "23", "Resets bit 0 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("RES 1,(IX+d)", new [] { "DD", "CB", "d", "8E" }, "23", "Resets bit 1 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("RES 2,(IX+d)", new [] { "DD", "CB", "d", "96" }, "23", "Resets bit 2 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("RES 3,(IX+d)", new [] { "DD", "CB", "d", "9E" }, "23", "Resets bit 3 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("RES 4,(IX+d)", new [] { "DD", "CB", "d", "A6" }, "23", "Resets bit 4 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("RES 5,(IX+d)", new [] { "DD", "CB", "d", "AE" }, "23", "Resets bit 5 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("RES 6,(IX+d)", new [] { "DD", "CB", "d", "B6" }, "23", "Resets bit 6 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("RES 7,(IX+d)", new [] { "DD", "CB", "d", "BE" }, "23", "Resets bit 7 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("RES 0,(IY+d)", new [] { "FD", "CB", "d", "86" }, "23", "Resets bit 0 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("RES 1,(IY+d)", new [] { "FD", "CB", "d", "8E" }, "23", "Resets bit 1 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("RES 2,(IY+d)", new [] { "FD", "CB", "d", "96" }, "23", "Resets bit 2 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("RES 3,(IY+d)", new [] { "FD", "CB", "d", "9E" }, "23", "Resets bit 3 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("RES 4,(IY+d)", new [] { "FD", "CB", "d", "A6" }, "23", "Resets bit 4 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("RES 5,(IY+d)", new [] { "FD", "CB", "d", "AE" }, "23", "Resets bit 5 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("RES 6,(IY+d)", new [] { "FD", "CB", "d", "B6" }, "23", "Resets bit 6 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("RES 7,(IY+d)", new [] { "FD", "CB", "d", "BE" }, "23", "Resets bit 7 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("RES 0,B", new [] { "CB", "80" }, "8", "Resets bit 0 of B."));
+        Add(new Opcode("RES 1,B", new [] { "CB", "88" }, "8", "Resets bit 1 of B."));
+        Add(new Opcode("RES 2,B", new [] { "CB", "90" }, "8", "Resets bit 2 of B."));
+        Add(new Opcode("RES 3,B", new [] { "CB", "98" }, "8", "Resets bit 3 of B."));
+        Add(new Opcode("RES 4,B", new [] { "CB", "A0" }, "8", "Resets bit 4 of B."));
+        Add(new Opcode("RES 5,B", new [] { "CB", "A8" }, "8", "Resets bit 5 of B."));
+        Add(new Opcode("RES 6,B", new [] { "CB", "B0" }, "8", "Resets bit 6 of B."));
+        Add(new Opcode("RES 7,B", new [] { "CB", "B8" }, "8", "Resets bit 7 of B."));
+        Add(new Opcode("RES 0,C", new [] { "CB", "81" }, "8", "Resets bit 0 of C."));
+        Add(new Opcode("RES 1,C", new [] { "CB", "89" }, "8", "Resets bit 1 of C."));
+        Add(new Opcode("RES 2,C", new [] { "CB", "91" }, "8", "Resets bit 2 of C."));
+        Add(new Opcode("RES 3,C", new [] { "CB", "99" }, "8", "Resets bit 3 of C."));
+        Add(new Opcode("RES 4,C", new [] { "CB", "A1" }, "8", "Resets bit 4 of C."));
+        Add(new Opcode("RES 5,C", new [] { "CB", "A9" }, "8", "Resets bit 5 of C."));
+        Add(new Opcode("RES 6,C", new [] { "CB", "B1" }, "8", "Resets bit 6 of C."));
+        Add(new Opcode("RES 7,C", new [] { "CB", "B9" }, "8", "Resets bit 7 of C."));
+        Add(new Opcode("RES 0,D", new [] { "CB", "82" }, "8", "Resets bit 0 of D."));
+        Add(new Opcode("RES 1,D", new [] { "CB", "8A" }, "8", "Resets bit 1 of D."));
+        Add(new Opcode("RES 2,D", new [] { "CB", "92" }, "8", "Resets bit 2 of D."));
+        Add(new Opcode("RES 3,D", new [] { "CB", "9A" }, "8", "Resets bit 3 of D."));
+        Add(new Opcode("RES 4,D", new [] { "CB", "A2" }, "8", "Resets bit 4 of D."));
+        Add(new Opcode("RES 5,D", new [] { "CB", "AA" }, "8", "Resets bit 5 of D."));
+        Add(new Opcode("RES 6,D", new [] { "CB", "B2" }, "8", "Resets bit 6 of D."));
+        Add(new Opcode("RES 7,D", new [] { "CB", "BA" }, "8", "Resets bit 7 of D."));
+        Add(new Opcode("RES 0,E", new [] { "CB", "83" }, "8", "Resets bit 0 of E."));
+        Add(new Opcode("RES 1,E", new [] { "CB", "8B" }, "8", "Resets bit 1 of E."));
+        Add(new Opcode("RES 2,E", new [] { "CB", "93" }, "8", "Resets bit 2 of E."));
+        Add(new Opcode("RES 3,E", new [] { "CB", "9B" }, "8", "Resets bit 3 of E."));
+        Add(new Opcode("RES 4,E", new [] { "CB", "A3" }, "8", "Resets bit 4 of E."));
+        Add(new Opcode("RES 5,E", new [] { "CB", "AB" }, "8", "Resets bit 5 of E."));
+        Add(new Opcode("RES 6,E", new [] { "CB", "B3" }, "8", "Resets bit 6 of E."));
+        Add(new Opcode("RES 7,E", new [] { "CB", "BB" }, "8", "Resets bit 7 of E."));
+        Add(new Opcode("RES 0,H", new [] { "CB", "84" }, "8", "Resets bit 0 of H."));
+        Add(new Opcode("RES 1,H", new [] { "CB", "8C" }, "8", "Resets bit 1 of H."));
+        Add(new Opcode("RES 2,H", new [] { "CB", "94" }, "8", "Resets bit 2 of H."));
+        Add(new Opcode("RES 3,H", new [] { "CB", "9C" }, "8", "Resets bit 3 of H."));
+        Add(new Opcode("RES 4,H", new [] { "CB", "A4" }, "8", "Resets bit 4 of H."));
+        Add(new Opcode("RES 5,H", new [] { "CB", "AC" }, "8", "Resets bit 5 of H."));
+        Add(new Opcode("RES 6,H", new [] { "CB", "B4" }, "8", "Resets bit 6 of H."));
+        Add(new Opcode("RES 7,H", new [] { "CB", "BC" }, "8", "Resets bit 7 of H."));
+        Add(new Opcode("RES 0,L", new [] { "CB", "85" }, "8", "Resets bit 0 of L."));
+        Add(new Opcode("RES 1,L", new [] { "CB", "8D" }, "8", "Resets bit 1 of L."));
+        Add(new Opcode("RES 2,L", new [] { "CB", "95" }, "8", "Resets bit 2 of L."));
+        Add(new Opcode("RES 3,L", new [] { "CB", "9D" }, "8", "Resets bit 3 of L."));
+        Add(new Opcode("RES 4,L", new [] { "CB", "A5" }, "8", "Resets bit 4 of L."));
+        Add(new Opcode("RES 5,L", new [] { "CB", "AD" }, "8", "Resets bit 5 of L."));
+        Add(new Opcode("RES 6,L", new [] { "CB", "B5" }, "8", "Resets bit 6 of L."));
+        Add(new Opcode("RES 7,L", new [] { "CB", "BD" }, "8", "Resets bit 7 of L."));
+        Add(new Opcode("RES 0,A", new [] { "CB", "87" }, "8", "Resets bit 0 of A."));
+        Add(new Opcode("RES 1,A", new [] { "CB", "8F" }, "8", "Resets bit 1 of A."));
+        Add(new Opcode("RES 2,A", new [] { "CB", "97" }, "8", "Resets bit 2 of A."));
+        Add(new Opcode("RES 3,A", new [] { "CB", "9F" }, "8", "Resets bit 3 of A."));
+        Add(new Opcode("RES 4,A", new [] { "CB", "A7" }, "8", "Resets bit 4 of A."));
+        Add(new Opcode("RES 5,A", new [] { "CB", "AF" }, "8", "Resets bit 5 of A."));
+        Add(new Opcode("RES 6,A", new [] { "CB", "B7" }, "8", "Resets bit 6 of A."));
+        Add(new Opcode("RES 7,A", new [] { "CB", "BF" }, "8", "Resets bit 7 of A."));
+        Add(new Opcode("RET", new [] { "C9" }, "10", "The top stack entry is popped into PC."));
+        Add(new Opcode("RET C", new [] { "D8" }, "11/5", "If the carry flag is set, the top stack entry is popped into PC."));
+        Add(new Opcode("RET M", new [] { "F8" }, "11/5", "If the sign flag is set, the top stack entry is popped into PC."));
+        Add(new Opcode("RET NC", new [] { "D0" }, "11/5", "If the carry flag is unset, the top stack entry is popped into PC."));
+        Add(new Opcode("RET NZ", new [] { "C0" }, "11/5", "If the zero flag is unset, the top stack entry is popped into PC."));
+        Add(new Opcode("RET P", new [] { "F0" }, "11/5", "If the sign flag is unset, the top stack entry is popped into PC."));
+        Add(new Opcode("RET PE", new [] { "E8" }, "11/5", "If the parity/overflow flag is set, the top stack entry is popped into PC."));
+        Add(new Opcode("RET PO", new [] { "E0" }, "11/5", "If the parity/overflow flag is unset, the top stack entry is popped into PC."));
+        Add(new Opcode("RET Z", new [] { "C8" }, "11/5", "If the zero flag is set, the top stack entry is popped into PC."));
+        Add(new Opcode("RETI", new [] { "ED", "4D" }, "14", "Used at the end of a maskable interrupt service routine. The top stack entry is popped into PC, and signals an I/O device that the interrupt has finished, allowing nested interrupts (not a consideration on the TI)."));
+        Add(new Opcode("RETN", new [] { "ED", "45" }, "14", "Used at the end of a non-maskable interrupt service routine (located at 0066h) to pop the top stack entry into PC. The value of IFF2 is copied to IFF1 so that maskable interrupts are allowed to continue as before. NMIs are not enabled on the TI."));
+        Add(new Opcode("RL (HL)", new [] { "CB", "16" }, "15", "The contents of (HL) are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0."));
+        Add(new Opcode("RL (IX+d)", new [] { "DD", "CB", "d", "16" }, "23", "The contents of the memory location pointed to by IX plus $d are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0."));
+        Add(new Opcode("RL (IY+d)", new [] { "FD", "CB", "d", "16" }, "23", "The contents of the memory location pointed to by IY plus $d are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0."));
+        Add(new Opcode("RL B", new [] { "CB", "10" }, "8", "The contents of B are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0."));
+        Add(new Opcode("RL C", new [] { "CB", "11" }, "8", "The contents of C are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0."));
+        Add(new Opcode("RL D", new [] { "CB", "12" }, "8", "The contents of D are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0."));
+        Add(new Opcode("RL E", new [] { "CB", "13" }, "8", "The contents of E are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0."));
+        Add(new Opcode("RL H", new [] { "CB", "14" }, "8", "The contents of H are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0."));
+        Add(new Opcode("RL L", new [] { "CB", "15" }, "8", "The contents of L are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0."));
+        Add(new Opcode("RL A", new [] { "CB", "17" }, "8", "The contents of A are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0."));
+        Add(new Opcode("RLA", new [] { "17" }, "4", "The contents of A are rotated left one bit position. The contents of bit 7 are copied to the carry flag and the previous contents of the carry flag are copied to bit 0."));
+        Add(new Opcode("RLC (HL)", new [] { "CB", "06" }, "15", "The contents of (HL) are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0."));
+        Add(new Opcode("RLC (IX+d)", new [] { "DD", "CB", "d", "06" }, "23", "The contents of the memory location pointed to by IX plus $d are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0."));
+        Add(new Opcode("RLC (IY+d)", new [] { "FD", "CB", "d", "06" }, "23", "The contents of the memory location pointed to by IY plus $d are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0."));
+        Add(new Opcode("RLC B", new [] { "CB", "00" }, "8", "The contents of B are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0."));
+        Add(new Opcode("RLC C", new [] { "CB", "01" }, "8", "The contents of C are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0."));
+        Add(new Opcode("RLC D", new [] { "CB", "02" }, "8", "The contents of D are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0."));
+        Add(new Opcode("RLC E", new [] { "CB", "03" }, "8", "The contents of E are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0."));
+        Add(new Opcode("RLC H", new [] { "CB", "04" }, "8", "The contents of H are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0."));
+        Add(new Opcode("RLC L", new [] { "CB", "05" }, "8", "The contents of L are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0."));
+        Add(new Opcode("RLC A", new [] { "CB", "07" }, "8", "The contents of A are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0."));
+        Add(new Opcode("RLCA", new [] { "07" }, "4", "The contents of A are rotated left one bit position. The contents of bit 7 are copied to the carry flag and bit 0."));
+        Add(new Opcode("RLD", new [] { "ED", "6F" }, "18", "The contents of the low-order nibble of (HL) are copied to the high-order nibble of (HL). The previous contents are copied to the low-order nibble of A. The previous contents are copied to the low-order nibble of (HL)."));
+        Add(new Opcode("RR (HL)", new [] { "CB", "1E" }, "15", "The contents of (HL) are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7."));
+        Add(new Opcode("RR (IX+d)", new [] { "DD", "CB", "d", "1E" }, "23", "The contents of the memory location pointed to by IX plus $d are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7."));
+        Add(new Opcode("RR (IY+d)", new [] { "FD", "CB", "d", "1E" }, "23", "The contents of the memory location pointed to by IY plus $d are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7."));
+        Add(new Opcode("RR B", new [] { "CB", "18" }, "8", "The contents of B are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7."));
+        Add(new Opcode("RR C", new [] { "CB", "19" }, "8", "The contents of C are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7."));
+        Add(new Opcode("RR D", new [] { "CB", "1A" }, "8", "The contents of D are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7."));
+        Add(new Opcode("RR E", new [] { "CB", "1B" }, "8", "The contents of E are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7."));
+        Add(new Opcode("RR H", new [] { "CB", "1C" }, "8", "The contents of H are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7."));
+        Add(new Opcode("RR L", new [] { "CB", "1D" }, "8", "The contents of L are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7."));
+        Add(new Opcode("RR A", new [] { "CB", "1F" }, "8", "The contents of A are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7."));
+        Add(new Opcode("RRA", new [] { "1F" }, "4", "The contents of A are rotated right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of the carry flag are copied to bit 7."));
+        Add(new Opcode("RRC (HL)", new [] { "CB", "0E" }, "15", "The contents of (HL) are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7."));
+        Add(new Opcode("RRC (IX+d)", new [] { "DD", "CB", "d", "0E" }, "23", "The contents of the memory location pointed to by IX plus $d are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7."));
+        Add(new Opcode("RRC (IY+d)", new [] { "FD", "CB", "d", "0E" }, "23", "The contents of the memory location pointed to by IY plus $d are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7."));
+        Add(new Opcode("RRC B", new [] { "CB", "08" }, "8", "The contents of B are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7."));
+        Add(new Opcode("RRC C", new [] { "CB", "09" }, "8", "The contents of C are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7."));
+        Add(new Opcode("RRC D", new [] { "CB", "0A" }, "8", "The contents of D are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7."));
+        Add(new Opcode("RRC E", new [] { "CB", "0B" }, "8", "The contents of E are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7."));
+        Add(new Opcode("RRC H", new [] { "CB", "0C" }, "8", "The contents of H are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7."));
+        Add(new Opcode("RRC L", new [] { "CB", "0D" }, "8", "The contents of L are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7."));
+        Add(new Opcode("RRC A", new [] { "CB", "0F" }, "8", "The contents of A are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7."));
+        Add(new Opcode("RRCA", new [] { "0F" }, "4", "The contents of A are rotated right one bit position. The contents of bit 0 are copied to the carry flag and bit 7."));
+        Add(new Opcode("RRD", new [] { "ED", "67" }, "18", "The contents of the low-order nibble of (HL) are copied to the low-order nibble of A. The previous contents are copied to the high-order nibble of (HL). The previous contents are copied to the low-order nibble of (HL)."));
+        Add(new Opcode("RST 0", new [] { "C7" }, "11", "The current PC value plus one is pushed onto the stack, then is loaded with 0."));
+        Add(new Opcode("RST 8", new [] { "CF" }, "11", "The current PC value plus one is pushed onto the stack, then is loaded with 8."));
+        Add(new Opcode("RST 16", new [] { "D7" }, "11", "The current PC value plus one is pushed onto the stack, then is loaded with 16."));
+        Add(new Opcode("RST 24", new [] { "DF" }, "11", "The current PC value plus one is pushed onto the stack, then is loaded with 24."));
+        Add(new Opcode("RST 32", new [] { "E7" }, "11", "The current PC value plus one is pushed onto the stack, then is loaded with 32."));
+        Add(new Opcode("RST 40", new [] { "EF" }, "11", "The current PC value plus one is pushed onto the stack, then is loaded with 40."));
+        Add(new Opcode("RST 48", new [] { "F7" }, "11", "The current PC value plus one is pushed onto the stack, then is loaded with 48."));
+        Add(new Opcode("RST 56", new [] { "FF" }, "11", "The current PC value plus one is pushed onto the stack, then is loaded with 56."));
+        Add(new Opcode("SBC A,(HL)", new [] { "9E" }, "7", "Subtracts (HL) and the carry flag from A."));
+        Add(new Opcode("SBC A,(IX+d)", new [] { "DD", "9E", "d" }, "19", "Subtracts the value pointed to by IX plus $d and the carry flag from A."));
+        Add(new Opcode("SBC A,(IY+d)", new [] { "FD", "9E", "d" }, "19", "Subtracts the value pointed to by IY plus $d and the carry flag from A."));
+        Add(new Opcode("SBC A,n", new [] { "DE", "n" }, "7", "Subtracts $n and the carry flag from A."));
+        Add(new Opcode("SBC A,B", new [] { "98" }, "4", "Subtracts B and the carry flag from A."));
+        Add(new Opcode("SBC A,C", new [] { "99" }, "4", "Subtracts C and the carry flag from A."));
+        Add(new Opcode("SBC A,D", new [] { "9A" }, "4", "Subtracts D and the carry flag from A."));
+        Add(new Opcode("SBC A,E", new [] { "9B" }, "4", "Subtracts E and the carry flag from A."));
+        Add(new Opcode("SBC A,H", new [] { "9C" }, "4", "Subtracts H and the carry flag from A."));
+        Add(new Opcode("SBC A,L", new [] { "9D" }, "4", "Subtracts L and the carry flag from A."));
+        Add(new Opcode("SBC A,A", new [] { "9F" }, "4", "Subtracts A and the carry flag from A."));
+        Add(new Opcode("SBC HL,BC", new [] { "ED", "42" }, "15", "Subtracts BC and the carry flag from HL."));
+        Add(new Opcode("SBC HL,DE", new [] { "ED", "52" }, "15", "Subtracts DE and the carry flag from HL."));
+        Add(new Opcode("SBC HL,HL", new [] { "ED", "62" }, "15", "Subtracts HL and the carry flag from HL."));
+        Add(new Opcode("SBC HL,SP", new [] { "ED", "72" }, "15", "Subtracts SP and the carry flag from HL."));
+        Add(new Opcode("SCF", new [] { "37" }, "4", "Sets the carry flag."));
+        Add(new Opcode("SET 0,(HL)", new [] { "CB", "C6" }, "15", "Sets bit 0 of (HL)."));
+        Add(new Opcode("SET 1,(HL)", new [] { "CB", "CE" }, "15", "Sets bit 1 of (HL)."));
+        Add(new Opcode("SET 2,(HL)", new [] { "CB", "D6" }, "15", "Sets bit 2 of (HL)."));
+        Add(new Opcode("SET 3,(HL)", new [] { "CB", "DE" }, "15", "Sets bit 3 of (HL)."));
+        Add(new Opcode("SET 4,(HL)", new [] { "CB", "E6" }, "15", "Sets bit 4 of (HL)."));
+        Add(new Opcode("SET 5,(HL)", new [] { "CB", "EE" }, "15", "Sets bit 5 of (HL)."));
+        Add(new Opcode("SET 6,(HL)", new [] { "CB", "F6" }, "15", "Sets bit 6 of (HL)."));
+        Add(new Opcode("SET 7,(HL)", new [] { "CB", "FE" }, "15", "Sets bit 7 of (HL)."));
+        Add(new Opcode("SET 0,(IX+d)", new [] { "DD", "CB", "d", "C6" }, "23", "Sets bit 0 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("SET 1,(IX+d)", new [] { "DD", "CB", "d", "CE" }, "23", "Sets bit 1 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("SET 2,(IX+d)", new [] { "DD", "CB", "d", "D6" }, "23", "Sets bit 2 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("SET 3,(IX+d)", new [] { "DD", "CB", "d", "DE" }, "23", "Sets bit 3 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("SET 4,(IX+d)", new [] { "DD", "CB", "d", "E6" }, "23", "Sets bit 4 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("SET 5,(IX+d)", new [] { "DD", "CB", "d", "EE" }, "23", "Sets bit 5 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("SET 6,(IX+d)", new [] { "DD", "CB", "d", "F6" }, "23", "Sets bit 6 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("SET 7,(IX+d)", new [] { "DD", "CB", "d", "FE" }, "23", "Sets bit 7 of the memory location pointed to by IX plus $d."));
+        Add(new Opcode("SET 0,(IY+d)", new [] { "FD", "CB", "d", "C6" }, "23", "Sets bit 0 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("SET 1,(IY+d)", new [] { "FD", "CB", "d", "CE" }, "23", "Sets bit 1 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("SET 2,(IY+d)", new [] { "FD", "CB", "d", "D6" }, "23", "Sets bit 2 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("SET 3,(IY+d)", new [] { "FD", "CB", "d", "DE" }, "23", "Sets bit 3 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("SET 4,(IY+d)", new [] { "FD", "CB", "d", "E6" }, "23", "Sets bit 4 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("SET 5,(IY+d)", new [] { "FD", "CB", "d", "EE" }, "23", "Sets bit 5 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("SET 6,(IY+d)", new [] { "FD", "CB", "d", "F6" }, "23", "Sets bit 6 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("SET 7,(IY+d)", new [] { "FD", "CB", "d", "FE" }, "23", "Sets bit 7 of the memory location pointed to by IY plus $d."));
+        Add(new Opcode("SET 0,B", new [] { "CB", "C0" }, "8", "Sets bit 0 of B."));
+        Add(new Opcode("SET 1,B", new [] { "CB", "C8" }, "8", "Sets bit 1 of B."));
+        Add(new Opcode("SET 2,B", new [] { "CB", "D0" }, "8", "Sets bit 2 of B."));
+        Add(new Opcode("SET 3,B", new [] { "CB", "D8" }, "8", "Sets bit 3 of B."));
+        Add(new Opcode("SET 4,B", new [] { "CB", "E0" }, "8", "Sets bit 4 of B."));
+        Add(new Opcode("SET 5,B", new [] { "CB", "E8" }, "8", "Sets bit 5 of B."));
+        Add(new Opcode("SET 6,B", new [] { "CB", "F0" }, "8", "Sets bit 6 of B."));
+        Add(new Opcode("SET 7,B", new [] { "CB", "F8" }, "8", "Sets bit 7 of B."));
+        Add(new Opcode("SET 0,C", new [] { "CB", "C1" }, "8", "Sets bit 0 of C."));
+        Add(new Opcode("SET 1,C", new [] { "CB", "C9" }, "8", "Sets bit 1 of C."));
+        Add(new Opcode("SET 2,C", new [] { "CB", "D1" }, "8", "Sets bit 2 of C."));
+        Add(new Opcode("SET 3,C", new [] { "CB", "D9" }, "8", "Sets bit 3 of C."));
+        Add(new Opcode("SET 4,C", new [] { "CB", "E1" }, "8", "Sets bit 4 of C."));
+        Add(new Opcode("SET 5,C", new [] { "CB", "E9" }, "8", "Sets bit 5 of C."));
+        Add(new Opcode("SET 6,C", new [] { "CB", "F1" }, "8", "Sets bit 6 of C."));
+        Add(new Opcode("SET 7,C", new [] { "CB", "F9" }, "8", "Sets bit 7 of C."));
+        Add(new Opcode("SET 0,D", new [] { "CB", "C2" }, "8", "Sets bit 0 of D."));
+        Add(new Opcode("SET 1,D", new [] { "CB", "CA" }, "8", "Sets bit 1 of D."));
+        Add(new Opcode("SET 2,D", new [] { "CB", "D2" }, "8", "Sets bit 2 of D."));
+        Add(new Opcode("SET 3,D", new [] { "CB", "DA" }, "8", "Sets bit 3 of D."));
+        Add(new Opcode("SET 4,D", new [] { "CB", "E2" }, "8", "Sets bit 4 of D."));
+        Add(new Opcode("SET 5,D", new [] { "CB", "EA" }, "8", "Sets bit 5 of D."));
+        Add(new Opcode("SET 6,D", new [] { "CB", "F2" }, "8", "Sets bit 6 of D."));
+        Add(new Opcode("SET 7,D", new [] { "CB", "FA" }, "8", "Sets bit 7 of D."));
+        Add(new Opcode("SET 0,E", new [] { "CB", "C3" }, "8", "Sets bit 0 of E."));
+        Add(new Opcode("SET 1,E", new [] { "CB", "CB" }, "8", "Sets bit 1 of E."));
+        Add(new Opcode("SET 2,E", new [] { "CB", "D3" }, "8", "Sets bit 2 of E."));
+        Add(new Opcode("SET 3,E", new [] { "CB", "DB" }, "8", "Sets bit 3 of E."));
+        Add(new Opcode("SET 4,E", new [] { "CB", "E3" }, "8", "Sets bit 4 of E."));
+        Add(new Opcode("SET 5,E", new [] { "CB", "EB" }, "8", "Sets bit 5 of E."));
+        Add(new Opcode("SET 6,E", new [] { "CB", "F3" }, "8", "Sets bit 6 of E."));
+        Add(new Opcode("SET 7,E", new [] { "CB", "FB" }, "8", "Sets bit 7 of E."));
+        Add(new Opcode("SET 0,H", new [] { "CB", "C4" }, "8", "Sets bit 0 of H."));
+        Add(new Opcode("SET 1,H", new [] { "CB", "CC" }, "8", "Sets bit 1 of H."));
+        Add(new Opcode("SET 2,H", new [] { "CB", "D4" }, "8", "Sets bit 2 of H."));
+        Add(new Opcode("SET 3,H", new [] { "CB", "DC" }, "8", "Sets bit 3 of H."));
+        Add(new Opcode("SET 4,H", new [] { "CB", "E4" }, "8", "Sets bit 4 of H."));
+        Add(new Opcode("SET 5,H", new [] { "CB", "EC" }, "8", "Sets bit 5 of H."));
+        Add(new Opcode("SET 6,H", new [] { "CB", "F4" }, "8", "Sets bit 6 of H."));
+        Add(new Opcode("SET 7,H", new [] { "CB", "FC" }, "8", "Sets bit 7 of H."));
+        Add(new Opcode("SET 0,L", new [] { "CB", "C5" }, "8", "Sets bit 0 of L."));
+        Add(new Opcode("SET 1,L", new [] { "CB", "CD" }, "8", "Sets bit 1 of L."));
+        Add(new Opcode("SET 2,L", new [] { "CB", "D5" }, "8", "Sets bit 2 of L."));
+        Add(new Opcode("SET 3,L", new [] { "CB", "DD" }, "8", "Sets bit 3 of L."));
+        Add(new Opcode("SET 4,L", new [] { "CB", "E5" }, "8", "Sets bit 4 of L."));
+        Add(new Opcode("SET 5,L", new [] { "CB", "ED" }, "8", "Sets bit 5 of L."));
+        Add(new Opcode("SET 6,L", new [] { "CB", "F5" }, "8", "Sets bit 6 of L."));
+        Add(new Opcode("SET 7,L", new [] { "CB", "FD" }, "8", "Sets bit 7 of L."));
+        Add(new Opcode("SET 0,A", new [] { "CB", "C7" }, "8", "Sets bit 0 of A."));
+        Add(new Opcode("SET 1,A", new [] { "CB", "CF" }, "8", "Sets bit 1 of A."));
+        Add(new Opcode("SET 2,A", new [] { "CB", "D7" }, "8", "Sets bit 2 of A."));
+        Add(new Opcode("SET 3,A", new [] { "CB", "DF" }, "8", "Sets bit 3 of A."));
+        Add(new Opcode("SET 4,A", new [] { "CB", "E7" }, "8", "Sets bit 4 of A."));
+        Add(new Opcode("SET 5,A", new [] { "CB", "EF" }, "8", "Sets bit 5 of A."));
+        Add(new Opcode("SET 6,A", new [] { "CB", "F7" }, "8", "Sets bit 6 of A."));
+        Add(new Opcode("SET 7,A", new [] { "CB", "FF" }, "8", "Sets bit 7 of A."));
+        Add(new Opcode("SLA (HL)", new [] { "CB", "26" }, "15", "The contents of (HL) are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0."));
+        Add(new Opcode("SLA (IX+d)", new [] { "DD", "CB", "d", "26" }, "23", "The contents of the memory location pointed to by IX plus $d are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0."));
+        Add(new Opcode("SLA (IY+d)", new [] { "FD", "CB", "d", "26" }, "23", "The contents of the memory location pointed to by IY plus $d are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0."));
+        Add(new Opcode("SLA B", new [] { "CB", "20" }, "8", "The contents of B are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0."));
+        Add(new Opcode("SLA C", new [] { "CB", "21" }, "8", "The contents of C are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0."));
+        Add(new Opcode("SLA D", new [] { "CB", "22" }, "8", "The contents of D are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0."));
+        Add(new Opcode("SLA E", new [] { "CB", "23" }, "8", "The contents of E are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0."));
+        Add(new Opcode("SLA H", new [] { "CB", "24" }, "8", "The contents of H are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0."));
+        Add(new Opcode("SLA L", new [] { "CB", "25" }, "8", "The contents of L are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0."));
+        Add(new Opcode("SLA A", new [] { "CB", "27" }, "8", "The contents of A are shifted left one bit position. The contents of bit 7 are copied to the carry flag and a zero is put into bit 0."));
+        Add(new Opcode("SRA (HL)", new [] { "CB", "2E" }, "15", "The contents of (HL) are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged."));
+        Add(new Opcode("SRA (IX+d)", new [] { "DD", "CB", "d", "2E" }, "23", "The contents of the memory location pointed to by IX plus $d are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged."));
+        Add(new Opcode("SRA (IY+d)", new [] { "FD", "CB", "d", "2E" }, "23", "The contents of the memory location pointed to by IY plus $d are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged."));
+        Add(new Opcode("SRA B", new [] { "CB", "28" }, "8", "The contents of B are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged."));
+        Add(new Opcode("SRA C", new [] { "CB", "29" }, "8", "The contents of C are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged."));
+        Add(new Opcode("SRA D", new [] { "CB", "2A" }, "8", "The contents of D are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged."));
+        Add(new Opcode("SRA E", new [] { "CB", "2B" }, "8", "The contents of E are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged."));
+        Add(new Opcode("SRA H", new [] { "CB", "2C" }, "8", "The contents of H are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged."));
+        Add(new Opcode("SRA L", new [] { "CB", "2D" }, "8", "The contents of L are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged."));
+        Add(new Opcode("SRA A", new [] { "CB", "2F" }, "8", "The contents of A are shifted right one bit position. The contents of bit 0 are copied to the carry flag and the previous contents of bit 7 are unchanged."));
+        Add(new Opcode("SRL (HL)", new [] { "CB", "3E" }, "15", "The contents of (HL) are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7."));
+        Add(new Opcode("SRL (IX+d)", new [] { "DD", "CB", "d", "3E" }, "23", "The contents of the memory location pointed to by IX plus $d are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7."));
+        Add(new Opcode("SRL (IY+d)", new [] { "FD", "CB", "d", "3E" }, "23", "The contents of the memory location pointed to by IY plus $d are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7."));
+        Add(new Opcode("SRL B", new [] { "CB", "38" }, "8", "The contents of B are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7."));
+        Add(new Opcode("SRL C", new [] { "CB", "39" }, "8", "The contents of C are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7."));
+        Add(new Opcode("SRL D", new [] { "CB", "3A" }, "8", "The contents of D are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7."));
+        Add(new Opcode("SRL E", new [] { "CB", "3B" }, "8", "The contents of E are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7."));
+        Add(new Opcode("SRL H", new [] { "CB", "3C" }, "8", "The contents of H are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7."));
+        Add(new Opcode("SRL L", new [] { "CB", "3D" }, "8", "The contents of L are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7."));
+        Add(new Opcode("SRL A", new [] { "CB", "3F" }, "8", "The contents of A are shifted right one bit position. The contents of bit 0 are copied to the carry flag and a zero is put into bit 7."));
+        Add(new Opcode("SUB (HL)", new [] { "96" }, "7", "Subtracts (HL) from A."));
+        Add(new Opcode("SUB (IX+d)", new [] { "DD", "96", "d" }, "19", "Subtracts the value pointed to by IX plus $d from A."));
+        Add(new Opcode("SUB (IY+d)", new [] { "FD", "96", "d" }, "19", "Subtracts the value pointed to by IY plus $d from A."));
+        Add(new Opcode("SUB n", new [] { "D6", "n" }, "7", "Subtracts $n from A."));
+        Add(new Opcode("SUB B", new [] { "90" }, "4", "Subtracts B from A."));
+        Add(new Opcode("SUB C", new [] { "91" }, "4", "Subtracts C from A."));
+        Add(new Opcode("SUB D", new [] { "92" }, "4", "Subtracts D from A."));
+        Add(new Opcode("SUB E", new [] { "93" }, "4", "Subtracts E from A."));
+        Add(new Opcode("SUB H", new [] { "94" }, "4", "Subtracts H from A."));
+        Add(new Opcode("SUB L", new [] { "95" }, "4", "Subtracts L from A."));
+        Add(new Opcode("SUB A", new [] { "97" }, "4", "Subtracts A from A."));
+        Add(new Opcode("XOR (HL)", new [] { "AE" }, "7", "Bitwise XOR on A with (HL)."));
+        Add(new Opcode("XOR (IX+d)", new [] { "DD", "AE", "d" }, "19", "Bitwise XOR on A with the value pointed to by IX plus $d."));
+        Add(new Opcode("XOR (IY+d)", new [] { "FD", "AE", "d" }, "19", "Bitwise XOR on A with the value pointed to by IY plus $d."));
+        Add(new Opcode("XOR n", new [] { "EE", "n" }, "7", "Bitwise XOR on A with $n."));
+        Add(new Opcode("XOR B", new [] { "A8" }, "4", "Bitwise XOR on A with B."));
+        Add(new Opcode("XOR C", new [] { "A9" }, "4", "Bitwise XOR on A with C."));
+        Add(new Opcode("XOR D", new [] { "AA" }, "4", "Bitwise XOR on A with D."));
+        Add(new Opcode("XOR E", new [] { "AB" }, "4", "Bitwise XOR on A with E."));
+        Add(new Opcode("XOR H", new [] { "AC" }, "4", "Bitwise XOR on A with H."));
+        Add(new Opcode("XOR L", new [] { "AD" }, "4", "Bitwise XOR on A with L."));
+        Add(new Opcode("XOR A", new [] { "AF" }, "4", "Bitwise XOR on A with A."));
+    }
 }
