@@ -4,6 +4,7 @@ namespace Z80Emu;
 
 using System;
 using System.Globalization;
+using System.Reflection;
 
 internal class Monitor
 {
@@ -83,13 +84,14 @@ internal class Monitor
 
     public void Banner()
     {
+        var version = Assembly.GetExecutingAssembly().GetName().Version;
         FigletFont font = FigletFont.Load(@"font/ANSI Shadow.flf");
 
         AnsiConsole.Write(
             new FigletText(font, "Zilog Z80")
                 .LeftJustified()
                 .Color(Color.Blue));
-        AnsiConsole.MarkupLine("[yellow]8-Bit Retro Z80 Emulator by Rob Prouse[/]");
+        AnsiConsole.MarkupLine($"[yellow]8-Bit Retro Z80 Emulator by Rob Prouse v{version?.ToString(3)}[/]");
         AnsiConsole.MarkupLine($"[blue]Running {_emulator.OperatingSystem.Name}[/]");
     }
 
