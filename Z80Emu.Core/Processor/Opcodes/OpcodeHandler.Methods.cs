@@ -477,32 +477,32 @@ public partial class OpcodeHandler
         _opcodes["ED LD (nn),BC"].Execute = () =>
         {
             _address = NextWord();
-            _mmu[_address] = _reg.H;
-            _mmu[_address + 1] = _reg.L;
+            _mmu[_address] = _reg.C;
+            _mmu[_address + 1] = _reg.B;
         };
         _opcodes["ED LD (nn),DE"].Execute = () =>
         {
             _address = NextWord();
-            _mmu[_address] = _reg.H;
-            _mmu[_address + 1] = _reg.L;
+            _mmu[_address] = _reg.E;
+            _mmu[_address + 1] = _reg.D;
         };
         _opcodes["22 LD (nn),HL"].Execute = () =>
         {
             _address = NextWord();
-            _mmu[_address] = _reg.H;
-            _mmu[_address + 1] = _reg.L;
+            _mmu[_address] = _reg.L;
+            _mmu[_address + 1] = _reg.H;
         };
         _opcodes["DD LD (nn),IX"].Execute = () =>
         {
             _address = NextWord();
-            _mmu[_address] = _reg.H;
-            _mmu[_address + 1] = _reg.L;
+            _mmu[_address] = _reg.IX.Lsb();
+            _mmu[_address + 1] = _reg.IX.Msb();
         };
         _opcodes["FD LD (nn),IY"].Execute = () =>
         {
             _address = NextWord();
-            _mmu[_address] = _reg.H;
-            _mmu[_address + 1] = _reg.L;
+            _mmu[_address] = _reg.IY.Lsb();
+            _mmu[_address + 1] = _reg.IY.Msb();
         };
         _opcodes["ED LD (nn),SP"].Execute = () =>
         {
@@ -534,34 +534,36 @@ public partial class OpcodeHandler
         _opcodes["ED LD BC,(nn)"].Execute = () =>
         {
             _address = NextWord();
-            _reg.B = _mmu[_address];
-            _reg.C = _mmu[_address + 1];
+            _reg.C = _mmu[_address];
+            _reg.B = _mmu[_address + 1];
         };
         _opcodes["ED LD DE,(nn)"].Execute = () =>
         {
             _address = NextWord();
-            _reg.D = _mmu[_address];
-            _reg.E = _mmu[_address + 1];
+            _reg.E = _mmu[_address];
+            _reg.D = _mmu[_address + 1];
         };
         _opcodes["2A LD HL,(nn)"].Execute = () =>
         {
             _address = NextWord();
-            _reg.H = _mmu[_address];
-            _reg.L = _mmu[_address + 1];
+            _reg.L = _mmu[_address];
+            _reg.H = _mmu[_address + 1];
         };
         _opcodes["ED LD I,A"].Execute = () => { _reg.I = _reg.A; };
         _opcodes["DD LD IX,(nn)"].Execute = () =>
         {
             _lsb = NextByte();
             _msb = NextByte();
-            _reg.IX = BitUtils.ToWord(_mmu[_msb], _mmu[_lsb]);
+            _address = BitUtils.ToWord(_msb, _lsb);
+            _reg.IX = BitUtils.ToWord(_mmu[_address + 1], _mmu[_address]);
         };
         _opcodes["DD LD IX,nn"].Execute = () => { _reg.IX = NextWord(); };
         _opcodes["FD LD IY,(nn)"].Execute = () =>
         {
             _lsb = NextByte();
             _msb = NextByte();
-            _reg.IY = BitUtils.ToWord(_mmu[_msb], _mmu[_lsb]);
+            _address = BitUtils.ToWord(_msb, _lsb);
+            _reg.IY = BitUtils.ToWord(_mmu[_address + 1], _mmu[_address]);
         };
         _opcodes["FD LD IY,nn"].Execute = () => { _reg.IY = NextWord(); };
         _opcodes["ED LD R,A"].Execute = () => { _reg.R = _reg.A; };
@@ -569,10 +571,11 @@ public partial class OpcodeHandler
         {
             _lsb = NextByte();
             _msb = NextByte();
-            _reg.SP = BitUtils.ToWord(_mmu[_msb], _mmu[_lsb]);
+            _address = BitUtils.ToWord(_msb, _lsb);
+            _reg.SP = BitUtils.ToWord(_mmu[_address + 1], _mmu[_address]);
         };
         _opcodes["F9 LD SP,HL"].Execute = () => { _reg.SP = _reg.HL; };
-        _opcodes["DD LD SP,IX"].Execute = () => { _reg.SP = _reg.IY; };
+        _opcodes["DD LD SP,IX"].Execute = () => { _reg.SP = _reg.IX; };
         _opcodes["FD LD SP,IY"].Execute = () => { _reg.SP = _reg.IY; };
         _opcodes["01 LD BC,nn"].Execute = () => { _reg.BC = NextWord(); };
         _opcodes["11 LD DE,nn"].Execute = () => { _reg.DE = NextWord(); };

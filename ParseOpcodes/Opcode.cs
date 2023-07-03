@@ -1,5 +1,4 @@
 using OC = Z80Emu.Core.Processor.Opcodes.Opcode;
-using FL = Z80Emu.Core.Processor.Opcodes.Flags;
 using System.Globalization;
 
 namespace ParseOpcodes;
@@ -39,11 +38,11 @@ public class Opcode
     {
         if (!bytes.Any(b =>IteratedParameters.Any(p => b.Contains(p))))
         {
-            yield return new OC(bytes, mnemonic, cycles, GenerateFlags(), description);
+            yield return new OC(mnemonic, bytes, cycles, description);
         }
         else if (bytes.Any(b => b.Equals("d-$-2")))
         {
-            yield return new OC(bytes, mnemonic, cycles, GenerateFlags(), description);
+            yield return new OC(mnemonic, bytes, cycles, description);
         }
         else if (bytes.Any(b => b.StartsWith("p+$C7")))
         {
@@ -52,7 +51,7 @@ public class Opcode
                 string by = (port + 0xC7).ToString("X2");
                 string mn = mnemonic.Replace("p", port.ToString());
                 string ds = description.Replace("$p", port.ToString());
-                yield return new OC(new[] { by }, mn, cycles, GenerateFlags(), ds);
+                yield return new OC(mn, new[] { by }, cycles, ds);
             }
         }
         else if (bytes.Any(b => b.Equals("r")))
@@ -64,7 +63,7 @@ public class Opcode
                 bytes[i] = r.ToString("X2");
                 string mn = mnemonic.Replace("r", EightBitRegisterNames[Category][r]);
                 string ds = description.Replace("$r", EightBitRegisterNames[Category][r]);
-                yield return new OC((string[])bytes.Clone(), mn, cycles, GenerateFlags(), ds);
+                yield return new OC(mn, (string[])bytes.Clone(), cycles, ds);
             }
         }
         else if (bytes.Any(b => b.StartsWith("r+$")))
@@ -77,7 +76,7 @@ public class Opcode
                 bytes[i] = (r + offset).ToString("X2");
                 string mn = mnemonic.Replace("r", EightBitRegisterNames[Category][r]);
                 string ds = description.Replace("$r", EightBitRegisterNames[Category][r]);
-                yield return new OC((string[])bytes.Clone(), mn, cycles, GenerateFlags(), ds);
+                yield return new OC(mn, (string[])bytes.Clone(), cycles, ds);
             }
         }
         else if (bytes.Any(b => b.StartsWith("(r<<3)+$")))
@@ -90,7 +89,7 @@ public class Opcode
                 bytes[i] = ((r << 3) + offset).ToString("X2");
                 string mn = mnemonic.Replace("r", EightBitRegisterNames[Category][r]);
                 string ds = description.Replace("$r", EightBitRegisterNames[Category][r]);
-                yield return new OC((string[])bytes.Clone(), mn, cycles, GenerateFlags(), ds);
+                yield return new OC(mn, (string[])bytes.Clone(), cycles, ds);
             }
         }
         else if (bytes.Any(b => b.StartsWith("(r1<<3)+r2+$")))
@@ -106,7 +105,7 @@ public class Opcode
                     bytes[i] = ((r1 << 3) + r2 + offset).ToString("X2");
                     string mn = mnemonic.Replace("r1", EightBitRegisterNames[Category][r1]).Replace("r2", EightBitRegisterNames[Category][r2]);
                     string ds = description.Replace("$r1", EightBitRegisterNames[Category][r1]).Replace("$r2", EightBitRegisterNames[Category][r2]);
-                    yield return new OC((string[])bytes.Clone(), mn, cycles, GenerateFlags(), ds);
+                    yield return new OC(mn, (string[])bytes.Clone(), cycles, ds);
                 }
             }
         }
@@ -119,7 +118,7 @@ public class Opcode
                 bytes[i] = ((dd << 4) + offset).ToString("X2");
                 string mn = mnemonic.Replace("dd", SixteenBitRegisterNames[Category][dd]);
                 string ds = description.Replace("$dd", SixteenBitRegisterNames[Category][dd]);
-                yield return new OC((string[])bytes.Clone(), mn, cycles, GenerateFlags(), ds);
+                yield return new OC(mn, (string[])bytes.Clone(), cycles, ds);
             }
         }
         else if (bytes.Any(b => b.StartsWith("(b<<3)+$")))
@@ -131,7 +130,7 @@ public class Opcode
                 bytes[i] = ((b << 3) + offset).ToString("X2");
                 string mn = mnemonic.Replace("b", b.ToString());
                 string ds = description.Replace("$b", b.ToString());
-                yield return new OC((string[])bytes.Clone(), mn, cycles, GenerateFlags(), ds);
+                yield return new OC(mn, (string[])bytes.Clone(), cycles, ds);
             }
         }
         else if (bytes.Any(b => b.StartsWith("(b<<3)+r+$")))
@@ -146,7 +145,7 @@ public class Opcode
                     bytes[i] = ((b << 3) + r + offset).ToString("X2");
                     string mn = mnemonic.Replace("b", b.ToString()).Replace("r", EightBitRegisterNames[Category][r]);
                     string ds = description.Replace("$b", b.ToString()).Replace("$r", EightBitRegisterNames[Category][r]);
-                    yield return new OC((string[])bytes.Clone(), mn, cycles, GenerateFlags(), ds);
+                    yield return new OC(mn, (string[])bytes.Clone(), cycles, ds);
                 }
             }
         }
@@ -166,11 +165,6 @@ public class Opcode
             }
         }
         return 0;
-    }
-
-    private FL GenerateFlags()
-    {
-        return new FL(flags.c, flags.h, flags.n, flags.pv, flags.s, flags.z);
     }
 }
 

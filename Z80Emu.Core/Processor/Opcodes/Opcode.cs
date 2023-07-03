@@ -29,8 +29,6 @@ public class Opcode
         }
     }
 
-    public Flags Flags { get; set; }
-
     public string Mnemonic 
     { 
         get
@@ -70,12 +68,11 @@ public class Opcode
         return true;
     }
 
-    public Opcode(string[] bytes, string mnemonic, string cycles, Flags flags, string description)
+    public Opcode(string mnemonic, string[] bytes, string cycles, string description)
     {
         Bytes = bytes;
         _mnemonic = mnemonic;
         Cycles = cycles;
-        Flags = flags;
         _description = description;
     }
 
@@ -115,41 +112,5 @@ public class Opcode
     override public string ToString() => Mnemonic;
 
     public string ToCodeString() =>
-        $"new Opcode(new [] {{ {string.Join(", ", Bytes.Select(b => $"\"{b}\""))} }}, \"{Mnemonic}\", \"{Cycles}\", {Flags.ToCodeString()}, \"{Description}\")";
-}
-
-public class Flags
-{
-    public string C { get; set; }
-    public string H { get; set; }
-    public string N { get; set; }
-    public string PV { get; set; }
-    public string S { get; set; }
-    public string Z { get; set; }
-
-    public Flags(string c, string h, string n, string pv, string s, string z)
-    {
-        C = c;
-        H = h;
-        N = n;
-        PV = pv;
-        S = s;
-        Z = z;
-    }
-    public string ToCodeString() =>
-        $"new Flags(\"{C}\", \"{H}\", \"{N}\", \"{PV}\", \"{S}\", \"{Z}\")";
-
-    static string FlagBehaviour(string behaviour) =>
-        behaviour switch
-        {
-            " " => "undefined",
-            "*" => "exceptional",
-            "+" => "as defined",
-            "-" => "not affected",
-            "0" => "reset",
-            "1" => "set",
-            "p" => "detect parity",
-            "v" => "detect overflow",
-            _ => throw new ArgumentException($"Unknown flag behaviour: {behaviour}")
-        };
+        $"new Opcode(\"{Mnemonic}\", new [] {{ {string.Join(", ", Bytes.Select(b => $"\"{b}\""))} }}, \"{Cycles}\", \"{Description}\")";
 }
