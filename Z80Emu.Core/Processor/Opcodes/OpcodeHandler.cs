@@ -65,17 +65,18 @@ public partial class OpcodeHandler
     {
         ushort result;  // To detect carry and overflow
 
+        byte carry = (byte)(withCarry && _reg.FlagC ? 1 : 0);
         if (subtract)
         {
             _reg.FlagN = true;
-            _reg.FlagH = (_reg.A & 0x0F) < (value & 0x0F) + (withCarry ? 1 : 0);
-            result = (ushort)(_reg.A - value - (withCarry ? 1 : 0));
+            _reg.FlagH = (_reg.A & 0x0F) < (value & 0x0F) + carry;
+            result = (ushort)(_reg.A - value - carry);
         }
         else
         {
             _reg.FlagN = false;
-            _reg.FlagH = (_reg.A & 0x0F) + (value & 0x0F) + (withCarry ? 1 : 0) > 0x0F;
-            result = (ushort)(_reg.A + value + (withCarry ? 1 : 0));
+            _reg.FlagH = (_reg.A & 0x0F) + (value & 0x0F) + carry > 0x0F;
+            result = (ushort)(_reg.A + value + carry);
         }
         _reg.FlagS = ((byte)result).IsNegative();
         _reg.FlagC = (result & 0x100) != 0;
@@ -223,26 +224,43 @@ public partial class OpcodeHandler
 
     void DAA()
     {
-        var a = _reg.A;
+        byte correction = 0;
+        byte carry = 0;
+
+        if ((_reg.A & 0x99) > 9 || _reg.FlagC)
+        {
+            correction |= 0x60;
+            carry = 1;
+        }
+        if ((_reg.A & 0x0F) > 9 || _reg.FlagH)
+            correction |= 0x06;
+
+        byte a = _reg.A;
         if (_reg.FlagN)
-        {
-            _reg.A -= (byte)(_reg.FlagC ? 0x60 : 0x06);
-            _reg.FlagC = false;
-        }
+            _reg.A -= correction;
         else
-        {
-            if (_reg.FlagC || (_reg.A > 0x99))
-            {
-                _reg.A += 0x60;
-                _reg.FlagC = true;
-            }
-            if (_reg.FlagH || (_reg.A & 0x0F) > 0x09)
-            {
-                _reg.A += 0x06;
-                _reg.FlagC = false;
-            }
-        }
+            _reg.A += correction;
+
+        //var a = _reg.A;
+        //if (_reg.FlagN)
+        //{
+        //    _reg.A -= (byte)(_reg.FlagC ? 0x60 : 0x06);
+        //    _reg.FlagC = false;
+        //}
+        //else
+        //{
+        //    if (_reg.FlagC || (_reg.A > 0x99))
+        //    {
+        //        _reg.A += 0x60;
+        //        _reg.FlagC = true;
+        //    }
+        //    if (_reg.FlagH || (_reg.A & 0x0F) > 0x09)
+        //    {
+        //        _reg.A += 0x06;
+        //    }
+        //}
         _reg.FlagH = ((a ^ _reg.A) & 0x10) != 0;
+        _reg.FlagC = carry != 0;
         _reg.FlagS = _reg.A.IsNegative();
         _reg.FlagZ = _reg.A == 0;
         _reg.FlagPV = _reg.A.IsEvenParity();
