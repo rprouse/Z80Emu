@@ -84,8 +84,10 @@ internal class Monitor
 
     public void Banner()
     {
-        var version = Assembly.GetExecutingAssembly().GetName().Version;
-        FigletFont font = FigletFont.Load(@"font/ANSI Shadow.flf");
+        var assembly = Assembly.GetExecutingAssembly();
+        var version = assembly.GetName().Version;
+        var fontDir = Path.Combine(Path.GetDirectoryName(assembly.Location) ?? ".", "font", "ANSI Shadow.flf");
+        FigletFont font = FigletFont.Load(fontDir);
 
         AnsiConsole.Write(
             new FigletText(font, "Zilog Z80")
