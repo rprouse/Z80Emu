@@ -48,7 +48,7 @@ jobs:
       run: dotnet publish -c Release -r osx-x64 --self-contained true
 
     - name: 📦 Package macOS Artifacts
-      run: zip -r Z80Emu-macOS.zip Z80Emu/bin/Release/net7.0/macos-x64/publish
+      run: zip -r Z80Emu-macOS.zip Z80Emu/bin/Release/net7.0/osx-x64/publish
 
     - name: 📤 Upload macOS Artifacts
       uses: actions/upload-artifact@v3
