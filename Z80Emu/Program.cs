@@ -19,10 +19,10 @@ if (args.Length < 1 || args.Length > 2)
 word baseAddress = 0x0100;
 if (args.Length == 2)
 {
-    if (args[1].StartsWith("0x")) args[1] = 
+    if (args[1].StartsWith("0x")) args[1] =
             args[1].Substring(2);
 
-    if (word.TryParse(args[1], NumberStyles.HexNumber, null, out var address))
+    if (args[1].TryParseHex(out var address))
         baseAddress = address;
     else
         AnsiConsole.MarkupLine("[red]Invalid base address[/]");

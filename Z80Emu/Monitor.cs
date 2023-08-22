@@ -42,7 +42,7 @@ internal class Monitor
             switch (parts[0])
             {
                 case "s":   // Step
-                    if (Step()) 
+                    if (Step())
                         lastCommand = "q";
                     break;
                 case "r":   // Run to Breakpoint
@@ -50,7 +50,7 @@ internal class Monitor
                         lastCommand = "q";
                     break;
                 case "m":   // Memory
-                    if (parts.Length == 2 && word.TryParse(parts[1], NumberStyles.HexNumber, null, out word memAddr))
+                    if (parts.Length == 2 && parts[1].TryParseHex(out word memAddr))
                         _lastMemAddr = memAddr;
 
                     ViewMemory(_lastMemAddr ?? 0x100);
@@ -59,7 +59,7 @@ internal class Monitor
                     ViewRegisters();
                     break;
                 case "d":   // Disassemble
-                    if (parts.Length == 2 && word.TryParse(parts[1], NumberStyles.HexNumber, null, out word disAddr))
+                    if (parts.Length == 2 && parts[1].TryParseHex(out word disAddr))
                         _lastDisAddr = disAddr;
 
                     ViewDisassembly(_lastDisAddr ?? _emulator.CPU.Registers.PC);
@@ -320,7 +320,7 @@ internal class Monitor
     private void AddBreakpoint()
     {
         string addr = AnsiConsole.Ask<string>("Address to break on (in HEX): ");
-        if (word.TryParse(addr, NumberStyles.HexNumber, null, out ushort breakpoint))
+        if (addr.TryParseHex(out ushort breakpoint))
         {
             _breakpoints.Add(breakpoint);
         }
@@ -338,7 +338,7 @@ internal class Monitor
                 .Title("[blue]Select breakpoint to delete[/]")
                 .AddChoices(_breakpoints.Select(b => $"0x{b:X4}")));
 
-        if (word.TryParse(delete, NumberStyles.HexNumber, null, out ushort breakpoint))
+        if (delete.TryParseHex(out ushort breakpoint))
         {
             _breakpoints.Remove(breakpoint);
         }
