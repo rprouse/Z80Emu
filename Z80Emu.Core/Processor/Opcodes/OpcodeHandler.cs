@@ -14,14 +14,16 @@ public partial class OpcodeHandler
     readonly Registers _reg;
     readonly MMU _mmu;
     readonly Interupts _int;
+    readonly Ports _ports;
 
     Dictionary<string, Opcode> _opcodes = new Dictionary<string, Opcode>();
 
-    public OpcodeHandler(Registers registers, MMU mmu, Interupts interupts)
+    public OpcodeHandler(Registers registers, MMU mmu, Interupts interupts, Ports ports)
     {
         _reg = registers;
         _mmu = mmu;
         _int = interupts;
+        _ports = ports;
         InitializeOpcodes();
         InitializeMethods();
     }
@@ -198,7 +200,7 @@ public partial class OpcodeHandler
         bool carry = _reg.FlagC;
         CP(_mmu[_reg.HL]);
         _reg.HL--;
-        _reg.BC--;
+        _reg.B--;
         _reg.FlagPV = _reg.BC != 0;
         _reg.FlagC = carry;
     }
@@ -206,7 +208,7 @@ public partial class OpcodeHandler
     void CPDR()
     {
         CPD();
-        if (_reg.BC != 0 && !_reg.FlagZ)
+        if (_reg.B != 0 && !_reg.FlagZ)
             _reg.PC -= 2;
     }
 
@@ -215,7 +217,7 @@ public partial class OpcodeHandler
         bool carry = _reg.FlagC;
         CP(_mmu[_reg.HL]);
         _reg.HL++;
-        _reg.BC--;
+        _reg.B--;
         _reg.FlagPV = _reg.BC != 0;
         _reg.FlagC = carry;
     }
@@ -223,7 +225,7 @@ public partial class OpcodeHandler
     void CPIR()
     {
         CPI();
-        if (_reg.BC != 0 && !_reg.FlagZ)
+        if (_reg.B != 0 && !_reg.FlagZ)
             _reg.PC -= 2;
     }
 
@@ -293,10 +295,50 @@ public partial class OpcodeHandler
         return (byte)result;
     }
 
+    void IND()
+    {
+        byte val = _ports[_reg.C];
+        _mmu[_reg.HL] = val;
+        _reg.HL--;
+        _reg.B--;
+
+        _reg.FlagN = (val & 0x80) != 0;
+        int flagval = val + ((_reg.C - 1) & 0xff);
+        _reg.FlagH = flagval > 0xff;
+        _reg.FlagC = flagval > 0xff;
+        _reg.FlagPV = ((byte)((flagval & 7) ^ _reg.B)).IsEvenParity();
+    }
+
+    void INDR()
+    {
+        IND();
+        if (_reg.B != 0) _reg.PC -= 2;
+    }
+
+    void INI()
+    {
+        byte val = _ports[_reg.C];
+        _mmu[_reg.HL] = val;
+        _reg.HL++;
+        _reg.B--;
+
+        _reg.FlagN = (val & 0x80) != 0;
+        int flagval = val + ((_reg.C + 1) & 0xff);
+        _reg.FlagH = flagval > 0xff;
+        _reg.FlagC = flagval > 0xff;
+        _reg.FlagPV = ((byte)((flagval & 7) ^ _reg.B)).IsEvenParity();
+    }
+
+    void INIR()
+    {
+        INI();
+        if (_reg.B != 0) _reg.PC -= 2;
+    }
+
     void LDD()
     {
         _mmu[_reg.DE--] = _mmu[_reg.HL--];
-        _reg.BC--;
+        _reg.B--;
         _reg.FlagH = false;
         _reg.FlagN = false;
         _reg.FlagPV = _reg.BC != 0;
@@ -305,13 +347,13 @@ public partial class OpcodeHandler
     void LDDR()
     {
         LDD();
-        if (_reg.BC != 0) _reg.PC -= 2;
+        if (_reg.B != 0) _reg.PC -= 2;
     }
 
     void LDI()
     {
         _mmu[_reg.DE++] = _mmu[_reg.HL++];
-        _reg.BC--;
+        _reg.B--;
         _reg.FlagH = false;
         _reg.FlagN = false;
         _reg.FlagPV = _reg.BC != 0;
@@ -320,7 +362,7 @@ public partial class OpcodeHandler
     void LDIR()
     {
         LDI();
-        if (_reg.BC != 0) _reg.PC -= 2;
+        if (_reg.B != 0) _reg.PC -= 2;
     }
 
     void NEG()
@@ -335,6 +377,46 @@ public partial class OpcodeHandler
     {
         _reg.A = (byte)(_reg.A | value);
         SetLogicFlags(false);
+    }
+
+    void OUTD()
+    {
+        byte val = _mmu[_reg.HL];
+        _ports[_reg.C] = val;
+        _reg.HL--;
+        _reg.B--;
+
+        int flagval = val + _reg.L;
+        _reg.FlagN = (val & 0x80) != 0;
+        _reg.FlagH = flagval > 0xff;
+        _reg.FlagC = flagval > 0xff;
+        _reg.FlagPV = ((byte)((flagval & 7) ^ _reg.B)).IsEvenParity();
+    }
+
+    void OTDR()
+    {
+        OUTD();
+        if (_reg.B != 0) _reg.PC -= 2;
+    }
+
+    void OUTI()
+    {
+        byte val = _mmu[_reg.HL];
+        _ports[_reg.C] = val;
+        _reg.HL++;
+        _reg.B--;
+
+        int flagval = val + _reg.L;
+        _reg.FlagN = (val & 0x80) != 0;
+        _reg.FlagH = flagval > 0xff;
+        _reg.FlagC = flagval > 0xff;
+        _reg.FlagPV = ((byte)((flagval & 7) ^ _reg.B)).IsEvenParity();
+    }
+
+    void OTIR()
+    {
+        OUTI();
+        if (_reg.B != 0) _reg.PC -= 2;
     }
 
     // Reset bit in value
