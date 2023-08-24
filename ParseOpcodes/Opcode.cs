@@ -70,7 +70,7 @@ public class Opcode
         else if (bytes.Any(b => b.StartsWith("r+$")))
         {
             int i = IndexOfByteStartingWith("r+$");
-            word offset = bytes[i].Substring(3).ParseHex();
+            word offset = bytes[i].Substring(3).ParseHexWord();
             for (byte r = 0; r < 8; r++)
             {
                 if (r == 6) continue;
@@ -83,7 +83,7 @@ public class Opcode
         else if (bytes.Any(b => b.StartsWith("(r<<3)+$")))
         {
             int i = IndexOfByteStartingWith("(r<<3)+$");
-            word offset = bytes[i].Substring(8).ParseHex();
+            word offset = bytes[i].Substring(8).ParseHexWord();
             for (byte r = 0; r < 8; r++)
             {
                 if (r == 6) continue;
@@ -96,7 +96,7 @@ public class Opcode
         else if (bytes.Any(b => b.StartsWith("(r1<<3)+r2+$")))
         {
             int i = IndexOfByteStartingWith("(r1<<3)+r2+$");
-            word offset = bytes[i].Substring(12).ParseHex();
+            word offset = bytes[i].Substring(12).ParseHexWord();
             for (byte r1 = 0; r1 < 8; r1++)
             {
                 if (r1 == 6) continue;
@@ -113,7 +113,7 @@ public class Opcode
         else if (bytes.Any(b => b.StartsWith("(dd<<4)+$")))
         {
             int i = IndexOfByteStartingWith("(dd<<4)+$");
-            word offset = bytes[i].Substring(9).ParseHex();
+            word offset = bytes[i].Substring(9).ParseHexWord();
             for (byte dd = 0; dd < 4; dd++)
             {
                 bytes[i] = ((dd << 4) + offset).ToString("X2");
@@ -125,7 +125,7 @@ public class Opcode
         else if (bytes.Any(b => b.StartsWith("(b<<3)+$")))
         {
             int i = IndexOfByteStartingWith("(b<<3)+$");
-            word offset = bytes[i].Substring(8).ParseHex();
+            word offset = bytes[i].Substring(8).ParseHexWord();
             for (byte b = 0; b < 8; b++)
             {
                 bytes[i] = ((b << 3) + offset).ToString("X2");
@@ -137,7 +137,7 @@ public class Opcode
         else if (bytes.Any(b => b.StartsWith("(b<<3)+r+$")))
         {
             int i = IndexOfByteStartingWith("(b<<3)+r+$");
-            word offset = bytes[i].Substring(10).ParseHex();
+            word offset = bytes[i].Substring(10).ParseHexWord();
             for (byte r = 0; r < 8; r++)
             {
                 if (r == 6) continue;

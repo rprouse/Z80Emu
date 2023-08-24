@@ -1,5 +1,4 @@
 using Z80Emu.Core.Memory;
-using Z80Emu.Core.OS;
 using Z80Emu.Core.Processor.Opcodes;
 
 namespace Z80Emu.Core.Processor;
@@ -12,11 +11,13 @@ public class CPU
     private readonly MMU _mmu;
     private readonly Registers _reg;
     private readonly OpcodeHandler _opcodeHandler;
+    private readonly Ports _ports;
 
-    public CPU(Interupts interupts, MMU mmu)
+    public CPU(Interupts interupts, MMU mmu, Ports ports)
     {
         _int = interupts;
         _mmu = mmu;
+        _ports = ports;
 
         _reg = new Registers
         {
@@ -28,7 +29,7 @@ public class CPU
             SP = 0xFFFE
         };
 
-        _opcodeHandler = new OpcodeHandler(_reg, _mmu, _int);
+        _opcodeHandler = new OpcodeHandler(_reg, _mmu, _int, _ports);
     }
 
     public Opcode Tick()

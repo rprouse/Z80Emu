@@ -1,4 +1,4 @@
-﻿using Z80Emu.Core;
+using Z80Emu.Core;
 
 namespace Z80Emu.Tests.Utilities;
 
@@ -14,9 +14,9 @@ public class WordExtensionTests
     [TestCase("$0000", 0x0000)]
     [TestCase("$DEAD", 0xDEAD)]
     [TestCase("$FFFF", 0xFFFF)]
-    public void TestParseHex(string s, int expected)
+    public void TestParseHexWord(string s, int expected)
     {
-        var actual = s.ParseHex();
+        var actual = s.ParseHexWord();
         actual.Should().Be((word)expected);
     }
 
@@ -30,9 +30,9 @@ public class WordExtensionTests
     [TestCase("$0000", 0x0000)]
     [TestCase("$DEAD", 0xDEAD)]
     [TestCase("$FFFF", 0xFFFF)]
-    public void TestTryParseHex_Success(string s, int expected)
+    public void TestTryParseHexWord_Success(string s, int expected)
     {
-        var result = s.TryParseHex(out var actual);
+        var result = s.TryParseHexWord(out var actual);
         result.Should().BeTrue();
         actual.Should().Be((word)expected);
     }
@@ -41,9 +41,9 @@ public class WordExtensionTests
     [TestCase("0xHEAD")]
     [TestCase("HEAD")]
     [TestCase("%0000")]
-    public void TestTryParseHex_Failure(string s)
+    public void TestTryParseHexWord_Failure(string s)
     {
-        var result = s.TryParseHex(out var actual);
+        var result = s.TryParseHexWord(out var actual);
         result.Should().BeFalse();
     }
 }

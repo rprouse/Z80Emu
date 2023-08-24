@@ -18,6 +18,10 @@ public class Emulator
     
     public Interupts Interupts { get; private set; }
 
+    public Ports Ports { get; private set; }
+
+    public event PortChangedEventHandler? OnPortChanged;
+
     public bool WarmBoot { get; set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -37,9 +41,12 @@ public class Emulator
 
     public void Reset()
     {
+        WarmBoot = false;
         Memory = new MMU();
         Interupts = new Interupts(Memory);
-        CPU = new CPU(Interupts, Memory);
+        Ports = new Ports();
+        Ports.OnPortChanged += (sender, args) => OnPortChanged?.Invoke(sender, args);
+        CPU = new CPU(Interupts, Memory, Ports);
         if (_filename != null && _baseAddress.HasValue)
             Memory.LoadProgram(_filename, _baseAddress.Value);
 
