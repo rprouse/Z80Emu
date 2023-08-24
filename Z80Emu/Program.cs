@@ -1,4 +1,3 @@
-using System.Globalization;
 using Z80Emu.Core.OS;
 using Monitor = Z80Emu.Monitor;
 
