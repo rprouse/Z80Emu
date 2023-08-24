@@ -849,8 +849,8 @@ public partial class OpcodeHandler
             RET();
         };
         _opcodes["CB RL (HL)"].Execute = () => { _mmu[_reg.HL] = RL(_mmu[_reg.HL]); };
-        _opcodes["DD RL (IX+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IX + d] = RL(_mmu[_reg.IX + d]); };
-        _opcodes["FD RL (IY+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IY + d] = RL(_mmu[_reg.IY + d]); };
+        _opcodes["DD RL (IX+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IX + d] = RL(_mmu[_reg.IX + d]); NextByte(); };
+        _opcodes["FD RL (IY+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IY + d] = RL(_mmu[_reg.IY + d]); NextByte(); };
         _opcodes["CB RL B"].Execute = () => { _reg.B = RL(_reg.B); };
         _opcodes["CB RL C"].Execute = () => { _reg.C = RL(_reg.C); };
         _opcodes["CB RL D"].Execute = () => { _reg.D = RL(_reg.D); };
@@ -864,8 +864,8 @@ public partial class OpcodeHandler
             _reg.FlagZ = false;
         };
         _opcodes["CB RLC (HL)"].Execute = () => { _mmu[_reg.HL] = RLC(_mmu[_reg.HL]); };
-        _opcodes["DD RLC (IX+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IX + d] = RLC(_mmu[_reg.IX + d]); };
-        _opcodes["FD RLC (IY+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IY + d] = RLC(_mmu[_reg.IY + d]); };
+        _opcodes["DD RLC (IX+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IX + d] = RLC(_mmu[_reg.IX + d]); NextByte(); };
+        _opcodes["FD RLC (IY+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IY + d] = RLC(_mmu[_reg.IY + d]); NextByte(); };
         _opcodes["CB RLC B"].Execute = () => { _reg.B = RLC(_reg.B); };
         _opcodes["CB RLC C"].Execute = () => { _reg.C = RLC(_reg.C); };
         _opcodes["CB RLC D"].Execute = () => { _reg.D = RLC(_reg.D); };
@@ -880,8 +880,8 @@ public partial class OpcodeHandler
         };
         _opcodes["ED RLD"].Execute = () => RLD();
         _opcodes["CB RR (HL)"].Execute = () => { _mmu[_reg.HL] = RR(_mmu[_reg.HL]); };
-        _opcodes["DD RR (IX+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IX + d] = RR(_mmu[_reg.IX + d]); };
-        _opcodes["FD RR (IY+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IY + d] = RR(_mmu[_reg.IY + d]); };
+        _opcodes["DD RR (IX+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IX + d] = RR(_mmu[_reg.IX + d]); NextByte(); };
+        _opcodes["FD RR (IY+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IY + d] = RR(_mmu[_reg.IY + d]); NextByte(); };
         _opcodes["CB RR B"].Execute = () => { _reg.B = RR(_reg.B); };
         _opcodes["CB RR C"].Execute = () => { _reg.C = RR(_reg.C); };
         _opcodes["CB RR D"].Execute = () => { _reg.D = RR(_reg.D); };
@@ -895,8 +895,8 @@ public partial class OpcodeHandler
             _reg.FlagZ = false;
         };
         _opcodes["CB RRC (HL)"].Execute = () => { _mmu[_reg.HL] = RRC(_mmu[_reg.HL]); };
-        _opcodes["DD RRC (IX+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IX + d] = RRC(_mmu[_reg.IX + d]); };
-        _opcodes["FD RRC (IY+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IY + d] = RRC(_mmu[_reg.IY + d]); };
+        _opcodes["DD RRC (IX+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IX + d] = RRC(_mmu[_reg.IX + d]); NextByte(); };
+        _opcodes["FD RRC (IY+d)"].Execute = () => { var d = (sbyte)NextByte(); _mmu[_reg.IY + d] = RRC(_mmu[_reg.IY + d]); NextByte(); };
         _opcodes["CB RRC B"].Execute = () => { _reg.B = RRC(_reg.B); };
         _opcodes["CB RRC C"].Execute = () => { _reg.C = RRC(_reg.C); };
         _opcodes["CB RRC D"].Execute = () => { _reg.D = RRC(_reg.D); };

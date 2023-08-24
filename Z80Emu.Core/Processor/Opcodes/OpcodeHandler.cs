@@ -457,9 +457,9 @@ public partial class OpcodeHandler
 
     void RLD()
     {
-        byte ah = (byte)(_reg.A & 0xF0);
+        byte ah = (byte)(_reg.A & 0x0F);
         byte hl = _mmu[_reg.HL];
-        _mmu[_reg.HL] = (byte)((_reg.A << 4) | (hl & 0x0F));
+        _mmu[_reg.HL] = (byte)((hl << 4) | (_reg.A & 0x0F));
         _reg.A = (byte)((_reg.A & 0xF0) | (hl >> 4));
         _reg.HL = (byte)((hl << 4) | ah);
         _reg.FlagZ = _reg.A == 0;
@@ -498,8 +498,7 @@ public partial class OpcodeHandler
         byte ah = (byte)(_reg.A & 0x0F);
         byte hl = _mmu[_reg.HL];
         _reg.A = (byte)((_reg.A & 0xF0) | (hl & 0x0F));
-        _mmu[_reg.HL] = (byte)((_reg.A << 4) | (hl & 0x0F));
-        _reg.HL = (byte)((hl >> 4) | (ah << 4));
+        _mmu[_reg.HL] = (byte)((ah << 4) | (hl >> 4));
         _reg.FlagZ = _reg.A == 0;
         _reg.FlagS = _reg.A.IsNegative();
         _reg.FlagPV = _reg.A.IsEvenParity();

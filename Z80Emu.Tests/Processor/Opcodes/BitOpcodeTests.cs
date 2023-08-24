@@ -583,4 +583,946 @@ public class BitOpcodeTests
         _reg.PC.Should().Be(0x0104);
         _mmu[0x0204].Should().Be((byte)(0b0000_0001 << bit));
     }
+
+    [Test]
+    public void RLA()
+    {
+        _reg.FlagC = true;
+        _reg.A = 0b1000_0000;
+        _mmu[0x0100] = 0x17;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RLA");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0101);
+        _reg.A.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+        _reg.FlagZ.Should().BeFalse();
+    }
+
+    [Test]
+    public void RL_A()
+    {
+        _reg.FlagC = true;
+        _reg.A = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x17;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RL A");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.A.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RL_B()
+    {
+        _reg.FlagC = true;
+        _reg.B = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x10;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RL B");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.B.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RL_C()
+    {
+        _reg.FlagC = true;
+        _reg.C = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x11;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RL C");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.C.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RL_D()
+    {
+        _reg.FlagC = true;
+        _reg.D = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x12;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RL D");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.D.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RL_E()
+    {
+        _reg.FlagC = true;
+        _reg.E = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x13;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RL E");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.E.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RL_H()
+    {
+        _reg.FlagC = true;
+        _reg.H = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x14;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RL H");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.H.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RL_L()
+    {
+        _reg.FlagC = true;
+        _reg.L = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x15;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RL L");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.L.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RL_HL()
+    {
+        _reg.FlagC = true;
+        _reg.HL = 0x0200;
+        _mmu[0x0200] = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x16;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RL (HL)");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _mmu[0x0200].Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RL_IX()
+    {
+        _reg.FlagC = true;
+        _reg.IX = 0x0200;
+        _mmu[0x0204] = 0b1000_0000;
+        _mmu[0x0100] = 0xDD;
+        _mmu[0x0101] = 0xCB;
+        _mmu[0x0102] = 0x04;
+        _mmu[0x0103] = 0x16;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RL (IX+4)");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0104);
+        _mmu[0x0204].Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RL_IY()
+    {
+        _reg.FlagC = true;
+        _reg.IY = 0x0200;
+        _mmu[0x0204] = 0b1000_0000;
+        _mmu[0x0100] = 0xFD;
+        _mmu[0x0101] = 0xCB;
+        _mmu[0x0102] = 0x04;
+        _mmu[0x0103] = 0x16;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RL (IY+4)");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0104);
+        _mmu[0x0204].Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RRA()
+    {
+        _reg.FlagC = true;
+        _reg.A = 0b0000_0001;
+        _mmu[0x0100] = 0x1F;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RRA");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0101);
+        _reg.A.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+        _reg.FlagZ.Should().BeFalse();
+    }
+
+    [Test]
+    public void RR_A()
+    {
+        _reg.FlagC = true;
+        _reg.A = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x1F;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RR A");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.A.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RR_B()
+    {
+        _reg.FlagC = true;
+        _reg.B = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x18;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RR B");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.B.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RR_C()
+    {
+        _reg.FlagC = true;
+        _reg.C = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x19;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RR C");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.C.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RR_D()
+    {
+        _reg.FlagC = true;
+        _reg.D = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x1A;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RR D");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.D.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RR_E()
+    {
+        _reg.FlagC = true;
+        _reg.E = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x1B;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RR E");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.E.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RR_H()
+    {
+        _reg.FlagC = true;
+        _reg.H = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x1C;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RR H");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.H.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RR_L()
+    {
+        _reg.FlagC = true;
+        _reg.L = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x1D;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RR L");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.L.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RR_HL()
+    {
+        _reg.FlagC = true;
+        _reg.HL = 0x0200;
+        _mmu[0x0200] = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x1E;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RR (HL)");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _mmu[0x0200].Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RR_IX()
+    {
+        _reg.FlagC = true;
+        _reg.IX = 0x0200;
+        _mmu[0x0204] = 0b0000_0001;
+        _mmu[0x0100] = 0xDD;
+        _mmu[0x0101] = 0xCB;
+        _mmu[0x0102] = 0x04;
+        _mmu[0x0103] = 0x1E;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RR (IX+4)");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0104);
+        _mmu[0x0204].Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RR_IY()
+    {
+        _reg.FlagC = true;
+        _reg.IY = 0x0200;
+        _mmu[0x0204] = 0b0000_0001;
+        _mmu[0x0100] = 0xFD;
+        _mmu[0x0101] = 0xCB;
+        _mmu[0x0102] = 0x04;
+        _mmu[0x0103] = 0x1E;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RR (IY+4)");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0104);
+        _mmu[0x0204].Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RLCA()
+    {
+        _reg.A = 0b1000_0000;
+        _mmu[0x0100] = 0x07;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RLCA");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0101);
+        _reg.A.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+        _reg.FlagZ.Should().BeFalse();
+    }
+
+    [Test]
+    public void RLC_A()
+    {
+        _reg.A = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x07;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RLC A");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.A.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RLC_B()
+    {
+        _reg.B = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x00;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RLC B");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.B.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RLC_C()
+    {
+        _reg.C = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x01;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RLC C");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.C.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RLC_D()
+    {
+        _reg.D = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x02;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RLC D");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.D.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RLC_E()
+    {
+        _reg.E = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x03;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RLC E");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.E.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RLC_H()
+    {
+        _reg.H = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x04;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RLC H");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.H.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RLC_L()
+    {
+        _reg.L = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x05;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RLC L");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.L.Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RLC_HL()
+    {
+        _reg.HL = 0x0200;
+        _mmu[0x0200] = 0b1000_0000;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x06;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RLC (HL)");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _mmu[0x0200].Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RLC_IX()
+    {
+        _reg.IX = 0x0200;
+        _mmu[0x0204] = 0b1000_0000;
+        _mmu[0x0100] = 0xDD;
+        _mmu[0x0101] = 0xCB;
+        _mmu[0x0102] = 0x04;
+        _mmu[0x0103] = 0x06;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RLC (IX+4)");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0104);
+        _mmu[0x0204].Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RLC_IY()
+    {
+        _reg.IY = 0x0200;
+        _mmu[0x0204] = 0b1000_0000;
+        _mmu[0x0100] = 0xFD;
+        _mmu[0x0101] = 0xCB;
+        _mmu[0x0102] = 0x04;
+        _mmu[0x0103] = 0x06;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RLC (IY+4)");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0104);
+        _mmu[0x0204].Should().Be(0b0000_0001);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RRCA()
+    {
+        _reg.A = 0b0000_0001;
+        _mmu[0x0100] = 0x0F;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RRCA");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0101);
+        _reg.A.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+        _reg.FlagZ.Should().BeFalse();
+    }
+
+    [Test]
+    public void RRC_A()
+    {
+        _reg.A = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x0F;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RRC A");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.A.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RRC_B()
+    {
+        _reg.B = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x08;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RRC B");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.B.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RRC_C()
+    {
+        _reg.C = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x09;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RRC C");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.C.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RRC_D()
+    {
+        _reg.D = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x0A;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RRC D");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.D.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RRC_E()
+    {
+        _reg.E = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x0B;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RRC E");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.E.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RRC_H()
+    {
+        _reg.H = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x0C;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RRC H");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.H.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RRC_L()
+    {
+        _reg.L = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x0D;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RRC L");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.L.Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RRC_HL()
+    {
+        _reg.HL = 0x0200;
+        _mmu[0x0200] = 0b0000_0001;
+        _mmu[0x0100] = 0xCB;
+        _mmu[0x0101] = 0x0E;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RRC (HL)");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _mmu[0x0200].Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RRC_IX()
+    {
+        _reg.IX = 0x0200;
+        _mmu[0x0204] = 0b0000_0001;
+        _mmu[0x0100] = 0xDD;
+        _mmu[0x0101] = 0xCB;
+        _mmu[0x0102] = 0x04;
+        _mmu[0x0103] = 0x0E;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RRC (IX+4)");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0104);
+        _mmu[0x0204].Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    [Test]
+    public void RRC_IY()
+    {
+        _reg.IY = 0x0200;
+        _mmu[0x0204] = 0b0000_0001;
+        _mmu[0x0100] = 0xFD;
+        _mmu[0x0101] = 0xCB;
+        _mmu[0x0102] = 0x04;
+        _mmu[0x0103] = 0x0E;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RRC (IY+4)");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0104);
+        _mmu[0x0204].Should().Be(0b1000_0000);
+        _reg.FlagC.Should().BeTrue();
+    }
+
+    // The contents of the low-order nibble of (HL) are copied to the
+    // low-order nibble of A. The previous contents are copied to the
+    // high-order nibble of (HL). The previous contents are copied to
+    // the low-order nibble of (HL).
+    // A = 0x7F, (HL) = 0x12 => A = 0x72, (HL) = 0xF1
+    [Test]
+    public void RRD()
+    {
+        _reg.HL = 0x0200;
+        _reg.A = 0x7F;
+        _mmu[0x0200] = 0x12;
+        _mmu[0x0100] = 0xED;
+        _mmu[0x0101] = 0x67;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RRD");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.A.Should().Be(0x72);
+        _mmu[0x0200].Should().Be(0xF1);
+        _reg.FlagZ.Should().BeFalse();
+        _reg.FlagS.Should().BeFalse();
+    }
+
+    // The contents of the low-order nibble of (HL) are copied to the
+    // high-order nibble of (HL). The previous contents are copied to
+    // the low-order nibble of A. The previous contents are copied to
+    // the low-order nibble of (HL).
+    // A = 0x7F, (HL) = 0x12 => A = 0x71, (HL) = 0x2F
+    [Test]
+    public void RLD()
+    {
+        _reg.HL = 0x0200;
+        _reg.A = 0x7F;
+        _mmu[0x0200] = 0x12;
+        _mmu[0x0100] = 0xED;
+        _mmu[0x0101] = 0x6F;
+
+        var op = _opcodeHandler.FetchInstruction();
+
+        op.Should().NotBeNull();
+        op.Mnemonic.Should().Be("RLD");
+
+        op.Execute();
+
+        _reg.PC.Should().Be(0x0102);
+        _reg.A.Should().Be(0x71);
+        _mmu[0x0200].Should().Be(0x2F);
+        _reg.FlagZ.Should().BeFalse();
+        _reg.FlagS.Should().BeFalse();
+    }
 }
