@@ -5,6 +5,7 @@ namespace Z80Emu;
 using System;
 using System.Globalization;
 using System.Reflection;
+using Z80Emu.Core.Processor;
 
 internal class Monitor
 {
@@ -17,6 +18,12 @@ internal class Monitor
     public Monitor(Emulator emulator)
     {
         _emulator = emulator;
+        _emulator.OnPortChanged += OnPortChanged;
+    }
+
+    private void OnPortChanged(object sender, PortChangedEventArgs args)
+    {
+        ViewPort(args.Port, args.Value);
     }
 
     public int Run(string filename, word baseAddress = 0x0100)
@@ -50,16 +57,22 @@ internal class Monitor
                         lastCommand = "q";
                     break;
                 case "m":   // Memory
-                    if (parts.Length == 2 && parts[1].TryParseHex(out word memAddr))
+                    if (parts.Length == 2 && parts[1].TryParseHexWord(out word memAddr))
                         _lastMemAddr = memAddr;
 
                     ViewMemory(_lastMemAddr ?? 0x100);
+                    break;
+                case "p":   // Port
+                    if (parts.Length == 2 && parts[1].TryParseHexByte(out byte port))
+                        ViewPort(port, _emulator.Ports[port]);
+                    else if (parts.Length == 3 && parts[1].TryParseHexByte(out port) && parts[2].TryParseHexByte(out byte value))
+                        _emulator.Ports[port] = value;
                     break;
                 case "reg": // Registers
                     ViewRegisters();
                     break;
                 case "d":   // Disassemble
-                    if (parts.Length == 2 && parts[1].TryParseHex(out word disAddr))
+                    if (parts.Length == 2 && parts[1].TryParseHexWord(out word disAddr))
                         _lastDisAddr = disAddr;
 
                     ViewDisassembly(_lastDisAddr ?? _emulator.CPU.Registers.PC);
@@ -188,6 +201,8 @@ internal class Monitor
         AnsiConsole.MarkupLine("[blue]h[/][silver]elp[/]");
         AnsiConsole.MarkupLine("[blue]s[/][silver]tep[/]");
         AnsiConsole.MarkupLine("[blue]r[/][silver]un[/]");
+        AnsiConsole.MarkupLine("[silver]view[/] [blue]p[/][silver]ort[/] [yellow][[port]][/]");
+        AnsiConsole.MarkupLine("[silver]set[/] [blue]p[/][silver]ort[/] [yellow][[port]][/] [yellow][[byte]][/]");
         AnsiConsole.MarkupLine("[blue]reg[/][silver]isters[/]");
         AnsiConsole.MarkupLine("[blue]m[/][silver]emory[/] [yellow][[address]][/]");
         AnsiConsole.MarkupLine("[blue]d[/][silver]isassemble[/] [yellow][[address]][/]");
@@ -195,6 +210,11 @@ internal class Monitor
         AnsiConsole.MarkupLine("[blue]reset[/]");
         AnsiConsole.MarkupLine("[blue]q[/][silver]uit[/]");
         AnsiConsole.WriteLine();
+    }
+
+    public void ViewPort(byte port, byte value)
+    {
+        AnsiConsole.MarkupLine($"[blue]Port[[[/][cyan]0x{port:X2}[/][blue]]] = [/][cyan]0x{value:X2}[/]");
     }
 
     void ViewRegisters()
@@ -320,7 +340,7 @@ internal class Monitor
     private void AddBreakpoint()
     {
         string addr = AnsiConsole.Ask<string>("Address to break on (in HEX): ");
-        if (addr.TryParseHex(out ushort breakpoint))
+        if (addr.TryParseHexWord(out ushort breakpoint))
         {
             _breakpoints.Add(breakpoint);
         }
@@ -338,7 +358,7 @@ internal class Monitor
                 .Title("[blue]Select breakpoint to delete[/]")
                 .AddChoices(_breakpoints.Select(b => $"0x{b:X4}")));
 
-        if (delete.TryParseHex(out ushort breakpoint))
+        if (delete.TryParseHexWord(out ushort breakpoint))
         {
             _breakpoints.Remove(breakpoint);
         }

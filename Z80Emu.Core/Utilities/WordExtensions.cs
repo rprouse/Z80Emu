@@ -1,13 +1,13 @@
-﻿using System.Globalization;
+using System.Globalization;
 
 namespace Z80Emu.Core;
 
 public static class WordExtensions
 {
-    public static word ParseHex(this string s) =>
+    public static word ParseHexWord(this string s) =>
         word.Parse(StripHexIdentifiers(s), NumberStyles.HexNumber, null);
 
-    public static bool TryParseHex(this string s, out word hex) =>
+    public static bool TryParseHexWord(this string s, out word hex) =>
         word.TryParse(StripHexIdentifiers(s), NumberStyles.HexNumber, null, out hex);
 
     private static string StripHexIdentifiers(string s)

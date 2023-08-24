@@ -32,6 +32,8 @@ registers are displayed after every step or run.
 | `reg`     | `reg`     | Dump the registers and flags |
 | `m [<addr>]`     | `m 100`     | Dump the memory starting at the given address. If the address is not specified, defaults to 0x100 or the last memory address viewed |
 | `d [<addr>]` | `d 100` | Disassemble the program starting at the given address. If no address is given, will start disassembly at the program counter. If entered again, it will continue after the last disassembled address. |
+| `p <port>` | `p 0x42` | View the value in the given port. The port must be a hex number. |
+| `p <port> <byte>` | `p 0x42 0x0a` | Set the given byte into the given port. The port and byte must be a hex number. |
 | `b` | `b` | Manage breakpoints |
 | `q`     | `q`     | Quit the emulator |
 
