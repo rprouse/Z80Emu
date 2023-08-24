@@ -24,7 +24,7 @@ public class Opcode
             string d = _description;
             if (_nn != null) d = d.Replace("$nn", $"0x{_nn.Value:X4}");
             if (_n != null) d = d.Replace("$n", $"0x{_n.Value:X2}");
-            if (_d != null) d = d.Replace("$d", $"0x{_d.Value:X2}");
+            if (_d != null) d = d.Replace("$d", $"{_d.Value}");
             return d;
         }
     }
@@ -36,7 +36,7 @@ public class Opcode
             string m = _mnemonic;
             if (_nn != null) m = m.Replace("nn", $"0x{_nn.Value:X4}");
             if (_n != null) m = m.Replace("n", $"0x{_n.Value:X2}");
-            if (_d != null) m = m.Replace("d", $"0x{_d.Value:X2}");
+            if (_d != null) m = m.Replace("d", $"{_d.Value}");
             return m;
         }
     }
