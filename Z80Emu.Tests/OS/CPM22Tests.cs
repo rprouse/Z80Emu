@@ -87,7 +87,7 @@ public class CPM22Tests
 
         _cpm.Execute(_emulator);
 
-        _console.Output.ToString().Should().Be("BDOS call P_TERMCPM not implemented\r\n");
+        _console.Output.ToString().Should().Be("BDOS call P_TERMCPM not implemented" + Environment.NewLine);
         _emulator.CPU.Registers.PC.Should().Be(0x0302);
     }
 
