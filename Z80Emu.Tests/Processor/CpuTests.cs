@@ -4,7 +4,7 @@ using Z80Emu.Core.Processor.Opcodes;
 
 namespace Z80Emu.Tests.Processor;
 
-public class TestCpu
+public class CpuTests
 {
     CPU _cpu;
     MMU _mmu;

@@ -1,6 +1,6 @@
 namespace Z80Emu.Tests.Processor;
 
-public class TestInterupts
+public class InteruptTests
 {
     [Test]
     public void TestDisable()

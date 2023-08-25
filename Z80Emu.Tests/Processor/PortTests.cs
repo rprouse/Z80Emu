@@ -2,7 +2,7 @@ using Z80Emu.Core.Processor;
 
 namespace Z80Emu.Tests.Processor;
 
-public class TestPorts
+public class PortTests
 {
     Ports _ports;
 

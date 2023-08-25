@@ -2,7 +2,7 @@ using Z80Emu.Core.Processor;
 
 namespace Z80Emu.Tests.Processor;
 
-public class TestRegisters
+public class RegisterTests
 {
     Registers _reg;
 
@@ -258,5 +258,47 @@ public class TestRegisters
         _reg.HL_ = 0xDEAD;
         _reg.H_.Should().Be(0xDE);
         _reg.L_.Should().Be(0xAD);
+    }
+
+    [Test]
+    public void GetSetIX_()
+    {
+        _reg.IX_ = 0xDEAD;
+        _reg.IX_.Should().Be(0xDEAD);
+    }
+
+    [Test]
+    public void GetSetIY_()
+    {
+        _reg.IY_ = 0xDEAD;
+        _reg.IY_.Should().Be(0xDEAD);
+    }
+
+    [Test]
+    public void GetSetSP_()
+    {
+        _reg.SP_ = 0xDEAD;
+        _reg.SP_.Should().Be(0xDEAD);
+    }
+
+    [Test]
+    public void GetSetPC_()
+    {
+        _reg.PC_ = 0xDEAD;
+        _reg.PC_.Should().Be(0xDEAD);
+    }
+
+    [Test]
+    public void GetSetI()
+    {
+        _reg.I = 0xDE;
+        _reg.I.Should().Be(0xDE);
+    }
+
+    [Test]
+    public void GetSetR()
+    {
+        _reg.R = 0xDE;
+        _reg.R.Should().Be(0xDE);
     }
 }
