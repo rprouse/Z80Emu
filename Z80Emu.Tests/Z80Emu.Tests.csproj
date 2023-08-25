@@ -35,4 +35,10 @@
     <ProjectReference Include="..\Z80Emu.Core\Z80Emu.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Test.com">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -171,4 +171,92 @@ public class TestRegisters
         _reg.FlagC.Should().Be(false);
         _reg.F.Should().Be(0b1111_1110);
     }
+
+    [Test]
+    public void A_SetsHighNibbleOfAF_()
+    {
+        _reg.A_ = 0xCA;
+        _reg.AF_.Should().Be(0xCA00);
+    }
+
+    [Test]
+    public void F_SetsLowNibbleOfAF_()
+    {
+        _reg.F_ = 0xCA;
+        _reg.AF_.Should().Be(0x00CA);
+    }
+
+    [Test]
+    public void AF_SetsA_AndF_()
+    {
+        _reg.AF_ = 0xDEAD;
+        _reg.A_.Should().Be(0xDE);
+        _reg.F_.Should().Be(0xAD);
+    }
+
+    [Test]
+    public void B_SetsHighNibbleOfBC_()
+    {
+        _reg.B_ = 0xCA;
+        _reg.BC_.Should().Be(0xCA00);
+    }
+
+    [Test]
+    public void C_SetsLowNibbleOfBC_()
+    {
+        _reg.C_ = 0xCA;
+        _reg.BC_.Should().Be(0x00CA);
+    }
+
+    [Test]
+    public void BC_SetsBAndC_()
+    {
+        _reg.BC_ = 0xDEAD;
+        _reg.B_.Should().Be(0xDE);
+        _reg.C_.Should().Be(0xAD);
+    }
+
+    [Test]
+    public void D_SetsHighNibbleOfDE_()
+    {
+        _reg.D_ = 0xCA;
+        _reg.DE_.Should().Be(0xCA00);
+    }
+
+    [Test]
+    public void E_SetsLowNibbleOfDE_()
+    {
+        _reg.E_ = 0xCA;
+        _reg.DE_.Should().Be(0x00CA);
+    }
+
+    [Test]
+    public void DE_SetsDAndE_()
+    {
+        _reg.DE_ = 0xDEAD;
+        _reg.D_.Should().Be(0xDE);
+        _reg.E_.Should().Be(0xAD);
+    }
+
+    [Test]
+    public void H_SetsHighNibbleOfHL_()
+    {
+        _reg.H_ = 0xCA;
+        _reg.HL_.Should().Be(0xCA00);
+    }
+
+    [Test]
+    public void L_SetsLowNibbleOfHL_()
+    {
+        _reg.L_ = 0xCA;
+        _reg.HL_.Should().Be(0x00CA);
+    }
+
+    [Test]
+    public void HL_SetsH_AndL_()
+    {
+        _reg.HL_ = 0xDEAD;
+        _reg.H_.Should().Be(0xDE);
+        _reg.L_.Should().Be(0xAD);
+    }
 }

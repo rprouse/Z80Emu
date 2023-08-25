@@ -1,0 +1,15 @@
+Test.asm:
+     1                          ; Simple test program for my Z80 emulator
+     2                          ; Add the value at (op1) with (op2) and store the result at (res)
+     3                            org 100H      ; CPM Program start address
+     4                          
+     5  0100  3a0b00              ld a,(op1)    ; Get the data for op1
+     6  0103  210c00              ld hl,op2     ; Get the data for op2
+     7  0106  86                  add (hl)
+     8  0107  320d00              ld (res),a    ; Store the result
+     9  010a  c9                  ret
+    10                         
+    11  010b  38                op1:  db 38H
+    12  010c  2b                op2:  db 2BH
+    13  010d  00                res:  db 0      ; Result should be 63
+    14                          

@@ -1,6 +1,3 @@
-using System.Diagnostics;
-using System.Text;
-
 namespace Z80Emu.Core.Memory;
 
 /// <summary>
@@ -44,20 +41,16 @@ public class MMU
 
     private byte Read(int address)
     {
-        Debug.Assert(address >= 0 && address <= 0xFFFF);
-
         var memory = _memoryBlocks.FirstOrDefault(m => m.HandlesAddress(address));
         if (memory != null) return memory[address];
         
-        throw new NotImplementedException($"Address 0x{address:X2} not mapped");
+        throw new IndexOutOfRangeException($"Address 0x{address:X2} not mapped");
     }
 
     private void Write(int address, byte data)
     {
-        Debug.Assert(address >= 0 && address <= 0xFFFF);
-
         var memory = _memoryBlocks.FirstOrDefault(m => m.HandlesAddress(address));
         if (memory != null) memory[address] = data;
-        else throw new NotImplementedException($"Address 0x{address:X2} not mapped");
+        else throw new IndexOutOfRangeException($"Address 0x{address:X2} not mapped");
     }
 }
