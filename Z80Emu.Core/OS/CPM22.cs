@@ -1,5 +1,4 @@
 using System.Text;
-using Z80Emu.Core.Processor.Opcodes;
 
 namespace Z80Emu.Core.OS;
 
@@ -14,7 +13,9 @@ public class CPM22 : IDos
 {
     static readonly IEnumerable<word> _callVectors = new word[] { 0x0000, 0x0005 };
 
-    public enum SystemCalls
+    IDosConsole _console;
+
+    public enum SystemCalls : byte
     {
         P_TERMCPM = 0,
         C_READ = 1,
@@ -60,6 +61,11 @@ public class CPM22 : IDos
     public string Name => "CP/M 2.2";
 
     public IEnumerable<word> CallVectors => _callVectors;
+
+    public CPM22(IDosConsole console)
+    {
+        _console = console;
+    }
 
     public void Execute(Emulator emulator)
     {
@@ -109,18 +115,18 @@ public class CPM22 : IDos
         }
     }
 
-    private static void ExecuteBdosCall(Emulator emulator)
+    private void ExecuteBdosCall(Emulator emulator)
     { 
         var call = (SystemCalls)emulator.CPU.Registers.C;
 
         switch (call)
         {
             case SystemCalls.C_READ:
-                emulator.CPU.Registers.A = (byte)Console.Read();
+                emulator.CPU.Registers.A = _console.Read();
                 emulator.CPU.Registers.L = emulator.CPU.Registers.A;
                 break;
             case SystemCalls.C_WRITE:
-                Console.Write((char)emulator.CPU.Registers.E);
+                _console.Write((char)emulator.CPU.Registers.E);
                 break;
             case SystemCalls.C_READSTR:
                 ReadString(emulator);
@@ -129,41 +135,23 @@ public class CPM22 : IDos
                 WriteString(emulator);
                 break;
             default:
-                Console.WriteLine($"BDOS call {call} not implemented");
+                _console.WriteLine($"BDOS call {call} not implemented");
                 break;
         }
         emulator.CPU.Return();
     }
 
-    private static void ReadString(Emulator emulator)
+    private void ReadString(Emulator emulator)
     {
-        var addr = emulator.CPU.Registers.DE;
-        var sb = new StringBuilder();
-        while (true)
-        {
-            var c = Console.ReadKey(true);
-            if (c.Key == ConsoleKey.Enter)
-                break;
-            if (c.Key == ConsoleKey.Backspace || c.Key == ConsoleKey.Delete)
-            {
-                if (sb.Length > 0)
-                {
-                    sb.Remove(sb.Length - 1, 1);
-                    Console.Write("\b \b");
-                }
-                continue;
-            }
-            sb.Append(c.KeyChar);
-        }
-        var str = sb.ToString();
+        var addr = emulator.CPU.Registers.DE;        
+        var str = _console.ReadString();
         byte maxLen = emulator.Memory[addr];
         emulator.Memory[addr++] = (byte)Math.Min(str.Length, maxLen);
-        emulator.Memory[addr++] = (byte)'$';
         for (var i = 0; i < maxLen && i < str.Length; i++)
             emulator.Memory[addr++] = (byte)str[i];
     }
 
-    private static void WriteString(Emulator emulator)
+    private void WriteString(Emulator emulator)
     {
         var addr = emulator.CPU.Registers.DE;
         var sb = new StringBuilder();
@@ -174,6 +162,6 @@ public class CPM22 : IDos
                 break;
             sb.Append((char)c);
         }
-        Console.Write(sb.ToString());
+        _console.Write(sb.ToString());
     }
 }

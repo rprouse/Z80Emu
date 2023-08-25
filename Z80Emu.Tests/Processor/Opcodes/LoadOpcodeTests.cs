@@ -1,4 +1,4 @@
-﻿using Z80Emu.Core.Memory;
+using Z80Emu.Core.Memory;
 using Z80Emu.Core.Processor;
 using Z80Emu.Core.Processor.Opcodes;
 
@@ -22,6 +22,7 @@ public class LoadOpcodeTests
         _opcodeHandler = new OpcodeHandler(_reg, _mmu, _int, _ports);
         _reg.PC = 0x0100;
     }
+
     [Test]
     public void LD_NN_BC()
     {
