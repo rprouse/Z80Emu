@@ -36,7 +36,9 @@ public class Emulator
     {
         _filename = filename;
         _baseAddress = baseAddress;
-        return Memory.LoadProgram(filename, baseAddress);
+        bool result = Memory.LoadProgram(filename, baseAddress);
+        if (result) CPU.Registers.PC = baseAddress;
+        return result;
     }
 
     public void Reset()
