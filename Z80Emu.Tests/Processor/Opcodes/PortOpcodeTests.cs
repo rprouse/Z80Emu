@@ -50,12 +50,7 @@ public class PortOpcodeTests
         _mmu[0x0100] = 0xDB;
         _mmu[0x0101] = 0x01;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("IN A,(0x01)");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("IN A,(0x01)");
 
         _reg.PC.Should().Be(0x0102);
         _reg.A.Should().Be(0x69);
@@ -70,12 +65,7 @@ public class PortOpcodeTests
         _reg.B = 0x02;
         _reg.HL = 0x0200;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("IND");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("IND");
 
         _reg.PC.Should().Be(0x0102);
         _reg.B.Should().Be(0x01);
@@ -92,12 +82,7 @@ public class PortOpcodeTests
         _reg.B = 0x02;
         _reg.HL = 0x0200;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("INDR");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("INDR");
 
         _reg.PC.Should().Be(0x0100);
         _reg.B.Should().Be(0x01);
@@ -114,12 +99,7 @@ public class PortOpcodeTests
         _reg.B = 0x02;
         _reg.HL = 0x0200;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("INI");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("INI");
 
         _reg.PC.Should().Be(0x0102);
         _reg.B.Should().Be(0x01);
@@ -136,12 +116,7 @@ public class PortOpcodeTests
         _reg.B = 0x02;
         _reg.HL = 0x0200;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("INIR");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("INIR");
 
         _reg.PC.Should().Be(0x0100);
         _reg.B.Should().Be(0x01);
@@ -155,12 +130,7 @@ public class PortOpcodeTests
         _mmu[0x0100] = 0xED;
         _mmu[0x0101] = 0x78;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("IN A,(C)");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("IN A,(C)");
 
         _reg.PC.Should().Be(0x0102);
         _reg.A.Should().Be(0x69);
@@ -172,12 +142,7 @@ public class PortOpcodeTests
         _mmu[0x0100] = 0xED;
         _mmu[0x0101] = 0x40;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("IN B,(C)");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("IN B,(C)");
 
         _reg.PC.Should().Be(0x0102);
         _reg.B.Should().Be(0x69);
@@ -189,12 +154,7 @@ public class PortOpcodeTests
         _mmu[0x0100] = 0xED;
         _mmu[0x0101] = 0x48;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("IN C,(C)");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("IN C,(C)");
 
         _reg.PC.Should().Be(0x0102);
         _reg.C.Should().Be(0x69);
@@ -206,12 +166,7 @@ public class PortOpcodeTests
         _mmu[0x0100] = 0xED;
         _mmu[0x0101] = 0x50;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("IN D,(C)");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("IN D,(C)");
 
         _reg.PC.Should().Be(0x0102);
         _reg.D.Should().Be(0x69);
@@ -223,12 +178,7 @@ public class PortOpcodeTests
         _mmu[0x0100] = 0xED;
         _mmu[0x0101] = 0x58;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("IN E,(C)");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("IN E,(C)");
 
         _reg.PC.Should().Be(0x0102);
         _reg.E.Should().Be(0x69);
@@ -240,12 +190,7 @@ public class PortOpcodeTests
         _mmu[0x0100] = 0xED;
         _mmu[0x0101] = 0x60;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("IN H,(C)");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("IN H,(C)");
 
         _reg.PC.Should().Be(0x0102);
         _reg.H.Should().Be(0x69);
@@ -257,12 +202,7 @@ public class PortOpcodeTests
         _mmu[0x0100] = 0xED;
         _mmu[0x0101] = 0x68;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("IN L,(C)");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("IN L,(C)");
 
         _reg.PC.Should().Be(0x0102);
         _reg.L.Should().Be(0x69);
@@ -280,12 +220,7 @@ public class PortOpcodeTests
         _mmu[0x0100] = 0xED;
         _mmu[0x0101] = regByte;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be($"OUT (C),{reg}");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction($"OUT (C),{reg}");
 
         _reg.PC.Should().Be(0x0102);
 
@@ -301,12 +236,7 @@ public class PortOpcodeTests
         _mmu[0x0101] = 0x21;
         _reg.A = 0x69;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("OUT (0x21),A");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("OUT (0x21),A");
 
         _reg.PC.Should().Be(0x0102);
 
@@ -326,12 +256,7 @@ public class PortOpcodeTests
         _reg.B = 0x02;
         _reg.HL = 0x0200;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("OUTD");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("OUTD");
 
         _reg.PC.Should().Be(0x0102);
         _reg.B.Should().Be(0x01);
@@ -352,12 +277,7 @@ public class PortOpcodeTests
         _reg.B = 0x02;
         _reg.HL = 0x0200;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("OTDR");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("OTDR");
 
         _reg.PC.Should().Be(0x0100);
         _reg.B.Should().Be(0x01);
@@ -378,12 +298,7 @@ public class PortOpcodeTests
         _reg.B = 0x02;
         _reg.HL = 0x0200;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("OUTI");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("OUTI");
 
         _reg.PC.Should().Be(0x0102);
         _reg.B.Should().Be(0x01);
@@ -404,12 +319,7 @@ public class PortOpcodeTests
         _reg.B = 0x02;
         _reg.HL = 0x0200;
 
-        var op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("OTIR");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("OTIR");
 
         _reg.PC.Should().Be(0x0100);
         _reg.B.Should().Be(0x01);

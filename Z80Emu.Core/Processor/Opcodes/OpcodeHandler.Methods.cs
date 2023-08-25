@@ -187,7 +187,7 @@ public partial class OpcodeHandler
         _opcodes["E4 CALL PO,nn"].Execute = () =>
         {
             _address = NextWord();
-            if (!_reg.FlagPV) return;
+            if (_reg.FlagPV) return;
             _reg.SP--; _mmu[_reg.SP] = _reg.PC.Msb();
             _reg.SP--; _mmu[_reg.SP] = _reg.PC.Lsb();
             _reg.PC = _address;
@@ -358,9 +358,9 @@ public partial class OpcodeHandler
         _opcodes["ED INDR"].Execute = () => INDR();
         _opcodes["ED INI"].Execute = () => INI();
         _opcodes["ED INIR"].Execute = () => INIR();
-        _opcodes["E9 JP (HL)"].Execute = () => _reg.PC = _mmu[_reg.HL];
-        _opcodes["DD JP (IX)"].Execute = () => _reg.PC = _mmu[_reg.IX];
-        _opcodes["FD JP (IY)"].Execute = () => _reg.PC = _mmu[_reg.IY];
+        _opcodes["E9 JP (HL)"].Execute = () => _reg.PC = _reg.HL;
+        _opcodes["DD JP (IX)"].Execute = () => _reg.PC = _reg.IX;
+        _opcodes["FD JP (IY)"].Execute = () => _reg.PC = _reg.IY;
         _opcodes["DA JP C,nn"].Execute = () =>
         {
             _address = NextWord();
@@ -409,35 +409,35 @@ public partial class OpcodeHandler
             if (!_reg.FlagZ) return;
             _reg.PC = _address;
         };
-        _opcodes["C3 JP nn"].Execute = () => { _reg.PC = NextWord(); };
+        _opcodes["C3 JP nn"].Execute = () => _reg.PC = NextWord();
         _opcodes["38 JR C,d"].Execute = () =>
         {
             _operand = NextByte();
             if (!_reg.FlagC) return;
-            _reg.PC = (word)(_reg.PC + (sbyte)_operand);
+            _reg.PC = (word)(_reg.PC + (sbyte)_operand - 2);
         };
         _opcodes["30 JR NC,d"].Execute = () =>
         {
             _operand = NextByte();
             if (_reg.FlagC) return;
-            _reg.PC = (word)(_reg.PC + (sbyte)_operand);
+            _reg.PC = (word)(_reg.PC + (sbyte)_operand - 2);
         };
         _opcodes["20 JR NZ,d"].Execute = () =>
         {
             _operand = NextByte();
             if (_reg.FlagZ) return;
-            _reg.PC = (word)(_reg.PC + (sbyte)_operand);
+            _reg.PC = (word)(_reg.PC + (sbyte)_operand - 2);
         };
         _opcodes["28 JR Z,d"].Execute = () =>
         {
             _operand = NextByte();
             if (!_reg.FlagZ) return;
-            _reg.PC = (word)(_reg.PC + (sbyte)_operand);
+            _reg.PC = (word)(_reg.PC + (sbyte)_operand - 2);
         };
         _opcodes["18 JR d"].Execute = () => 
         { 
             _operand = NextByte();
-            _reg.PC = (word)(_reg.PC + (sbyte)_operand); 
+            _reg.PC = (word)(_reg.PC + (sbyte)_operand - 2); 
         };
         _opcodes["02 LD (BC),A"].Execute = () => _mmu[_reg.BC] = _reg.A;
         _opcodes["12 LD (DE),A"].Execute = () => _mmu[_reg.DE] = _reg.A;

@@ -38,14 +38,9 @@ public class ArithmeticOpcodeTests
         _mmu[0x0114] = b;
         _reg.FlagC = true;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("ADD A,(HL)");
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("ADD A,(HL)");
 
         _reg.PC.Should().Be(0x0101);
-
-        op.Execute();
 
         _reg.A.Should().Be(ex);
         _reg.FlagsShouldBe(s, z, h, pv, false, c);
@@ -72,14 +67,9 @@ public class ArithmeticOpcodeTests
         _mmu[0x0114] = b;
         _reg.FlagC = carry;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("ADC A,(HL)");
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("ADC A,(HL)");
 
         _reg.PC.Should().Be(0x0101);
-
-        op.Execute();
 
         _reg.A.Should().Be(ex);
         _reg.FlagsShouldBe(s, z, h, pv, false, c);
