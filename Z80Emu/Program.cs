@@ -1,7 +1,7 @@
 using Z80Emu.Core.OS;
 using Monitor = Z80Emu.Monitor;
 
-var operatingSystem = new CPM22();
+var operatingSystem = new CPM22(new DosConsole());
 var emulator = new Emulator(operatingSystem);
 var monitor = new Monitor(emulator);
 monitor.Banner();

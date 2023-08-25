@@ -3,6 +3,26 @@ using Z80Emu.Core.OS;
 
 namespace Z80Emu.Tests;
 
+internal class MockOperatingSytem : IDos
+{
+    public bool ExecuteCalled { get; set; } = false;
+    public bool InitializeCalled { get; set; } = false;
+
+    public string Name => "MockOperatingSytem";
+
+    public IEnumerable<ushort> CallVectors => new word[] { 0x0005 };
+
+    public void Execute(Emulator emulator)
+    {
+        ExecuteCalled = true;
+    }
+
+    public void Initialize(Emulator emulator)
+    {
+        InitializeCalled = true;
+    }
+}
+
 public class EmulatorTests
 {
     Emulator _emulator;
@@ -231,25 +251,5 @@ public class EmulatorTests
         _emulator.Tick();
 
         _os.ExecuteCalled.Should().BeTrue();
-    }
-}
-
-internal class MockOperatingSytem : IDos
-{
-    public bool ExecuteCalled { get; set; } = false;
-    public bool InitializeCalled { get; set; } = false;
-
-    public string Name => "MockOperatingSytem";
-
-    public IEnumerable<ushort> CallVectors => new word[] { 0x0005 };
-
-    public void Execute(Emulator emulator)
-    {
-        ExecuteCalled = true;
-    }
-
-    public void Initialize(Emulator emulator)
-    {
-        InitializeCalled = true;
     }
 }
