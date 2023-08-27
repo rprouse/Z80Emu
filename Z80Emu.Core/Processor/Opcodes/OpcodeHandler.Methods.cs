@@ -270,27 +270,27 @@ public partial class OpcodeHandler
         _opcodes["FB EI"].Execute = () => _int.Enable();
         _opcodes["E3 EX (SP),HL"].Execute = () =>
         {
-            _address = NextWord();
+            _address = _reg.SP;
             word temp = _reg.HL;
-            _reg.HL = _mmu[_address];
-            _mmu[_address] = temp.Lsb();
-            _mmu[_address + 1] = temp.Msb();
+            _reg.HL = BitUtils.ToWord(_mmu[_address+1], _mmu[_address]);
+            _mmu[_address] = temp.Msb();
+            _mmu[_address + 1] = temp.Lsb();
         };
         _opcodes["DD EX (SP),IX"].Execute = () =>
         {
-            _address = NextWord();
+            _address = _reg.SP;
             word temp = _reg.IX;
-            _reg.IX = _mmu[_address];
-            _mmu[_address] = temp.Lsb();
-            _mmu[_address + 1] = temp.Msb();
+            _reg.IX = BitUtils.ToWord(_mmu[_address + 1], _mmu[_address]);
+            _mmu[_address] = temp.Msb();
+            _mmu[_address + 1] = temp.Lsb();
         };
         _opcodes["FD EX (SP),IY"].Execute = () =>
         {
-            _address = NextWord();
+            _address = _reg.SP;
             word temp = _reg.IY;
-            _reg.IY = _mmu[_address];
-            _mmu[_address] = temp.Lsb();
-            _mmu[_address + 1] = temp.Msb();
+            _reg.IY = BitUtils.ToWord(_mmu[_address + 1], _mmu[_address]);
+            _mmu[_address] = temp.Msb();
+            _mmu[_address + 1] = temp.Lsb();
         };
         _opcodes["08 EX AF,AF'"].Execute = () =>
         {
