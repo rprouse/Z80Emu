@@ -33,12 +33,7 @@ public class LoadOpcodeTests
 
         _reg.BC = 0x2A0F;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD (0x0104),BC");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD (0x0104),BC");
 
         _reg.PC.Should().Be(0x0104);
 
@@ -56,12 +51,7 @@ public class LoadOpcodeTests
 
         _reg.DE = 0x2A0F;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD (0x0104),DE");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD (0x0104),DE");
 
         _reg.PC.Should().Be(0x0104);
 
@@ -78,12 +68,7 @@ public class LoadOpcodeTests
 
         _reg.HL = 0x2A0F;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD (0x0104),HL");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD (0x0104),HL");
 
         _reg.PC.Should().Be(0x0103);
 
@@ -101,12 +86,7 @@ public class LoadOpcodeTests
 
         _reg.IX = 0x2A0F;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD (0x0104),IX");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD (0x0104),IX");
 
         _reg.PC.Should().Be(0x0104);
 
@@ -124,12 +104,7 @@ public class LoadOpcodeTests
 
         _reg.IY = 0x2A0F;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD (0x0104),IY");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD (0x0104),IY");
 
         _reg.PC.Should().Be(0x0104);
 
@@ -147,12 +122,7 @@ public class LoadOpcodeTests
 
         _reg.SP = 0x2A0F;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD (0x0104),SP");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD (0x0104),SP");
 
         _reg.PC.Should().Be(0x0104);
 
@@ -170,12 +140,7 @@ public class LoadOpcodeTests
         _mmu[0x104] = 0x0F;
         _mmu[0x105] = 0x2A;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD BC,(0x0104)");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD BC,(0x0104)");
 
         _reg.PC.Should().Be(0x0104);
         _reg.BC.Should().Be(0x2A0F);
@@ -191,12 +156,7 @@ public class LoadOpcodeTests
         _mmu[0x104] = 0x0F;
         _mmu[0x105] = 0x2A;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD DE,(0x0104)");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD DE,(0x0104)");
 
         _reg.PC.Should().Be(0x0104);
         _reg.DE.Should().Be(0x2A0F);
@@ -211,12 +171,7 @@ public class LoadOpcodeTests
         _mmu[0x104] = 0x0F;
         _mmu[0x105] = 0x2A;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD HL,(0x0104)");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD HL,(0x0104)");
 
         _reg.PC.Should().Be(0x0103);
         _reg.HL.Should().Be(0x2A0F);
@@ -232,12 +187,7 @@ public class LoadOpcodeTests
         _mmu[0x104] = 0x0F;
         _mmu[0x105] = 0x2A;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD IX,(0x0104)");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD IX,(0x0104)");
 
         _reg.PC.Should().Be(0x0104);
         _reg.IX.Should().Be(0x2A0F);
@@ -253,12 +203,7 @@ public class LoadOpcodeTests
         _mmu[0x104] = 0x0F;
         _mmu[0x105] = 0x2A;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD IY,(0x0104)");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD IY,(0x0104)");
 
         _reg.PC.Should().Be(0x0104);
         _reg.IY.Should().Be(0x2A0F);
@@ -272,12 +217,7 @@ public class LoadOpcodeTests
         _mmu[0x102] = 0x0F;
         _mmu[0x103] = 0x2A;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD IX,0x2A0F");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD IX,0x2A0F");
 
         _reg.PC.Should().Be(0x0104);
         _reg.IX.Should().Be(0x2A0F);
@@ -291,12 +231,7 @@ public class LoadOpcodeTests
         _mmu[0x102] = 0x0F;
         _mmu[0x103] = 0x2A;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD IY,0x2A0F");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD IY,0x2A0F");
 
         _reg.PC.Should().Be(0x0104);
         _reg.IY.Should().Be(0x2A0F);
@@ -312,12 +247,7 @@ public class LoadOpcodeTests
         _mmu[0x104] = 0x0F;
         _mmu[0x105] = 0x2A;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD SP,(0x0104)");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD SP,(0x0104)");
 
         _reg.PC.Should().Be(0x0104);
         _reg.SP.Should().Be(0x2A0F);
@@ -330,12 +260,7 @@ public class LoadOpcodeTests
 
         _reg.HL = 0x2A0F;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD SP,HL");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD SP,HL");
 
         _reg.PC.Should().Be(0x0101);
         _reg.SP.Should().Be(0x2A0F);
@@ -349,12 +274,7 @@ public class LoadOpcodeTests
 
         _reg.IX = 0x2A0F;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD SP,IX");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD SP,IX");
 
         _reg.PC.Should().Be(0x0102);
         _reg.SP.Should().Be(0x2A0F);
@@ -368,12 +288,7 @@ public class LoadOpcodeTests
 
         _reg.IY = 0x2A0F;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD SP,IY");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD SP,IY");
 
         _reg.PC.Should().Be(0x0102);
         _reg.SP.Should().Be(0x2A0F);
@@ -386,12 +301,7 @@ public class LoadOpcodeTests
         _mmu[0x101] = 0x0F;
         _mmu[0x102] = 0x2A;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD BC,0x2A0F");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD BC,0x2A0F");
 
         _reg.PC.Should().Be(0x0103);
         _reg.BC.Should().Be(0x2A0F);
@@ -404,12 +314,7 @@ public class LoadOpcodeTests
         _mmu[0x101] = 0x0F;
         _mmu[0x102] = 0x2A;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD DE,0x2A0F");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD DE,0x2A0F");
 
         _reg.PC.Should().Be(0x0103);
         _reg.DE.Should().Be(0x2A0F);
@@ -422,12 +327,7 @@ public class LoadOpcodeTests
         _mmu[0x101] = 0x0F;
         _mmu[0x102] = 0x2A;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD HL,0x2A0F");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD HL,0x2A0F");
 
         _reg.PC.Should().Be(0x0103);
         _reg.HL.Should().Be(0x2A0F);
@@ -440,12 +340,7 @@ public class LoadOpcodeTests
         _mmu[0x101] = 0x0F;
         _mmu[0x102] = 0x2A;
 
-        Opcode op = _opcodeHandler.FetchInstruction();
-
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD SP,0x2A0F");
-
-        op.Execute();
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD SP,0x2A0F");
 
         _reg.PC.Should().Be(0x0103);
         _reg.SP.Should().Be(0x2A0F);

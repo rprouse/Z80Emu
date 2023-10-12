@@ -222,11 +222,10 @@ internal class Monitor
         _lastMemAddr = null;
         _lastDisAddr = null;
         var r = _emulator.CPU.Registers;
-        AnsiConsole.Markup($"[blue]AF [/][aqua]{r.AF:X4}[/] [blue]BC [/][aqua]{r.BC:X4}[/] [blue]DE [/][aqua]{r.DE:X4}[/] [blue]HL [/][aqua]{r.HL:X4}[/] [blue]IX [/][aqua]{r.IX:X4}[/]");
-        AnsiConsole.Markup($"   [blue]SP [/][aqua]{r.SP:X4}[/] [blue]PC [/][aqua]{r.PC:X4}[/]");
+        AnsiConsole.Markup($"[blue]AF [/][aqua]{r.AF:X4}[/] [blue]BC [/][aqua]{r.BC:X4}[/] [blue]DE [/][aqua]{r.DE:X4}[/] [blue]HL [/][aqua]{r.HL:X4}[/] [blue]=> [/][green]{_emulator.Memory[r.HL]:X4}[/]");
         AnsiConsole.MarkupLine($"   [maroon]S:[/][aqua]{(r.FlagS ? '1' : '0')}[/] [maroon]Z:[/][aqua]{(r.FlagZ ? '1' : '0')}[/] [maroon]H:[/][aqua]{(r.FlagH ? '1' : '0')}[/] [maroon]P/V:[/][aqua]{(r.FlagPV ? '1' : '0')}[/] [maroon]N:[/][aqua]{(r.FlagN ? '1' : '0')}[/] [maroon]C:[/][aqua]{(r.FlagC ? '1' : '0')}[/]");
-        AnsiConsole.Markup($"[blue]AF'[/][aqua]{r.AF_:X4}[/] [blue]BC'[/][aqua]{r.BC_:X4}[/] [blue]DE'[/][aqua]{r.DE_:X4}[/] [blue]HL'[/][aqua]{r.HL_:X4}[/] [blue]IX [/][aqua]{r.IY:X4}[/]");
-        AnsiConsole.MarkupLine($"   [blue]SP'[/][aqua]{r.SP_:X4}[/] [blue]PC'[/][aqua]{r.PC_:X4}[/]");
+        AnsiConsole.MarkupLine($"[dodgerblue2]AF'[/][dodgerblue1]{r.AF_:X4}[/] [dodgerblue2]BC'[/][dodgerblue1]{r.BC_:X4}[/] [dodgerblue2]DE'[/][dodgerblue1]{r.DE_:X4}[/] [dodgerblue2]HL'[/][dodgerblue1]{r.HL_:X4}[/] [dodgerblue2]=> [/][green3]{_emulator.Memory[r.HL_]:X4}[/]");
+        AnsiConsole.MarkupLine($"[blue]IX [/][aqua]{r.IX:X4}[/] [blue]IY [/][aqua]{r.IY:X4}[/] [blue]PC [/][aqua]{r.PC:X4}[/] [blue]SP [/][aqua]{r.SP:X4}[/] [blue]=> [/][green]{_emulator.Memory[r.SP]:X4}[/]");
         AnsiConsole.WriteLine();
     }
 

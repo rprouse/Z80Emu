@@ -229,11 +229,11 @@ public partial class OpcodeHandler
         Add(new Opcode("JP PO,nn", new [] { "E2", "nn" }, "10", "If the parity/overflow flag is unset, $nn is copied to PC."));
         Add(new Opcode("JP Z,nn", new [] { "CA", "nn" }, "10", "If the zero flag is set, $nn is copied to PC."));
         Add(new Opcode("JP nn", new [] { "C3", "nn" }, "10", "$nn is copied to PC."));
-        Add(new Opcode("JR C,d", new [] { "38", "d-$-2" }, "12/7", "If the carry flag is set, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
-        Add(new Opcode("JR NC,d", new [] { "30", "d-$-2" }, "12/7", "If the carry flag is unset, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
-        Add(new Opcode("JR NZ,d", new [] { "20", "d-$-2" }, "12/7", "If the zero flag is unset, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
-        Add(new Opcode("JR Z,d", new [] { "28", "d-$-2" }, "12/7", "If the zero flag is set, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
-        Add(new Opcode("JR d", new [] { "18", "d-$-2" }, "12", "The signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
+        Add(new Opcode("JR C,d", new [] { "38", "d" }, "12/7", "If the carry flag is set, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
+        Add(new Opcode("JR NC,d", new [] { "30", "d" }, "12/7", "If the carry flag is unset, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
+        Add(new Opcode("JR NZ,d", new [] { "20", "d" }, "12/7", "If the zero flag is unset, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
+        Add(new Opcode("JR Z,d", new [] { "28", "d" }, "12/7", "If the zero flag is set, the signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
+        Add(new Opcode("JR d", new [] { "18", "d" }, "12", "The signed value $d is added to PC. The jump is measured from the start of the instruction opcode."));
         Add(new Opcode("LD (BC),A", new [] { "02" }, "7", "Stores A into the memory location pointed to by BC."));
         Add(new Opcode("LD (DE),A", new [] { "12" }, "7", "Stores A into the memory location pointed to by DE."));
         Add(new Opcode("LD (HL),n", new [] { "36", "n" }, "10", "Loads $n into (HL)."));

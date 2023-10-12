@@ -261,34 +261,6 @@ public class RegisterTests
     }
 
     [Test]
-    public void GetSetIX_()
-    {
-        _reg.IX_ = 0xDEAD;
-        _reg.IX_.Should().Be(0xDEAD);
-    }
-
-    [Test]
-    public void GetSetIY_()
-    {
-        _reg.IY_ = 0xDEAD;
-        _reg.IY_.Should().Be(0xDEAD);
-    }
-
-    [Test]
-    public void GetSetSP_()
-    {
-        _reg.SP_ = 0xDEAD;
-        _reg.SP_.Should().Be(0xDEAD);
-    }
-
-    [Test]
-    public void GetSetPC_()
-    {
-        _reg.PC_ = 0xDEAD;
-        _reg.PC_.Should().Be(0xDEAD);
-    }
-
-    [Test]
     public void GetSetI()
     {
         _reg.I = 0xDE;

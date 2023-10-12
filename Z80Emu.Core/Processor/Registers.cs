@@ -113,12 +113,6 @@ public class Registers
         }
     }
 
-    public word IX_ { get; set; }
-    public word IY_ { get; set; }
-
-    public word SP_ { get; set; }
-    public word PC_ { get; set; }
-
     // Bit 7: Sign Flag
     // Bit 6: Zero Flag
     // Bit 5: Not Used
