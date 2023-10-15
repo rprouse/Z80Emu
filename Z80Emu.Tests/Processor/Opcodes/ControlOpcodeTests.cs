@@ -516,8 +516,9 @@ public class ControlOpcodeTests
         _reg.PC.Should().Be(0x0103);
     }
 
-    [TestCase(10, 0x010A)]
-    [TestCase(-2, 0x00FE)]
+    [TestCase(02, 0x104)]
+    [TestCase(10, 0x010C)]
+    [TestCase(-4, 0x00FE)]
     public void JR_POS(sbyte relative, int expectedPC)
     {
         _mmu[0x0100] = 0x18;
@@ -528,8 +529,9 @@ public class ControlOpcodeTests
         _reg.PC.Should().Be((word)expectedPC);
     }
 
-    [TestCase(10, 0x010A)]
-    [TestCase(-2, 0x00FE)]
+    [TestCase(02, 0x104)]
+    [TestCase(10, 0x010C)]
+    [TestCase(-4, 0x00FE)]
     public void JR_C_POS(sbyte relative, int expectedPC)
     {
         _mmu[0x0100] = 0x38;
@@ -554,8 +556,9 @@ public class ControlOpcodeTests
         _reg.PC.Should().Be(0x0102);
     }
 
-    [TestCase(10, 0x010A)]
-    [TestCase(-2, 0x00FE)]
+    [TestCase(02, 0x104)]
+    [TestCase(10, 0x010C)]
+    [TestCase(-4, 0x00FE)]
     public void JR_NC_POS(sbyte relative, int expectedPC)
     {
         _mmu[0x0100] = 0x30;
@@ -580,8 +583,9 @@ public class ControlOpcodeTests
         _reg.PC.Should().Be(0x0102);
     }
 
-    [TestCase(10, 0x010A)]
-    [TestCase(-2, 0x00FE)]
+    [TestCase(02, 0x104)]
+    [TestCase(10, 0x010C)]
+    [TestCase(-4, 0x00FE)]
     public void JR_Z_POS(sbyte relative, int expectedPC)
     {
         _mmu[0x0100] = 0x28;
@@ -606,8 +610,9 @@ public class ControlOpcodeTests
         _reg.PC.Should().Be(0x0102);
     }
 
-    [TestCase(10, 0x010A)]
-    [TestCase(-2, 0x00FE)]
+    [TestCase(02, 0x104)]
+    [TestCase(10, 0x010C)]
+    [TestCase(-4, 0x00FE)]
     public void JR_NZ_POS(sbyte relative, int expectedPC)
     {
         _mmu[0x0100] = 0x20;

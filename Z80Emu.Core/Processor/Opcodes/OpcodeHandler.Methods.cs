@@ -414,30 +414,30 @@ public partial class OpcodeHandler
         {
             _operand = NextByte();
             if (!_reg.FlagC) return;
-            _reg.PC = (word)(_reg.PC + (sbyte)_operand - 2);
+            _reg.PC = (word)(_reg.PC + (sbyte)_operand);
         };
         _opcodes["30 JR NC,d"].Execute = () =>
         {
             _operand = NextByte();
             if (_reg.FlagC) return;
-            _reg.PC = (word)(_reg.PC + (sbyte)_operand - 2);
+            _reg.PC = (word)(_reg.PC + (sbyte)_operand);
         };
         _opcodes["20 JR NZ,d"].Execute = () =>
         {
             _operand = NextByte();
             if (_reg.FlagZ) return;
-            _reg.PC = (word)(_reg.PC + (sbyte)_operand - 2);
+            _reg.PC = (word)(_reg.PC + (sbyte)_operand);
         };
         _opcodes["28 JR Z,d"].Execute = () =>
         {
             _operand = NextByte();
             if (!_reg.FlagZ) return;
-            _reg.PC = (word)(_reg.PC + (sbyte)_operand - 2);
+            _reg.PC = (word)(_reg.PC + (sbyte)_operand);
         };
         _opcodes["18 JR d"].Execute = () => 
         { 
             _operand = NextByte();
-            _reg.PC = (word)(_reg.PC + (sbyte)_operand - 2); 
+            _reg.PC = (word)(_reg.PC + (sbyte)_operand); 
         };
         _opcodes["02 LD (BC),A"].Execute = () => _mmu[_reg.BC] = _reg.A;
         _opcodes["12 LD (DE),A"].Execute = () => _mmu[_reg.DE] = _reg.A;
