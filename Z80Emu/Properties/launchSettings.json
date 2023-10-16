@@ -2,7 +2,7 @@
   "profiles": {
     "Z80Emu": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\src\\retro\\Z80\\RC2014\\asm\\cpm\\bin\\cmdline.com\""
+      "commandLineArgs": "\"D:\\src\\Retro\\Z80\\RC2014\\asm\\learning\\chap9\\bin\\16bsort.com\""
     }
   }
 }
