@@ -36,7 +36,7 @@ jobs:
       run: dotnet tool install -g dotnet-sonarscanner
 
     - name: 📊 Begin SonarQube scan
-      run: dotnet sonarscanner begin /k:"Z80Emu" /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}" /d:sonar.host.url="https://sonarqube.prouse/" /d:sonar.cs.opencover.reportsPaths="**/coverage.cobertura.xml" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+      run: dotnet sonarscanner begin /k:"Z80Emu" /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}" /d:sonar.host.url="https://sonarqube.prouse.org/" /d:sonar.cs.opencover.reportsPaths="**/coverage.cobertura.xml" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
 
     - name: 💉 Install dependencies
       run: dotnet restore
