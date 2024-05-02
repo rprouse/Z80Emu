@@ -1,7 +1,7 @@
 using System.Text.Json;
 using ParseOpcodes;
 
-string url = "https://raw.githubusercontent.com/deeptoaster/opcode-table/master/opcode-table.json";
+var url = "https://raw.githubusercontent.com/deeptoaster/opcode-table/master/opcode-table.json";
 string json = await new HttpClient().GetStringAsync(url);
 var opcodes = JsonSerializer.Deserialize<List<Opcode>>(json) ?? Enumerable.Empty<Opcode>();
 
