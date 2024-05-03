@@ -13,10 +13,10 @@ jobs:
 
     steps:
     - name: 📥 Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 🔧 Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 7.0.x
 
@@ -24,10 +24,10 @@ jobs:
       run: dotnet publish -c Release -r win-x64 --self-contained true
 
     - name: 📦 Package Windows Artifacts
-      run: zip -r Z80Emu-Windows.zip Z80Emu/bin/Release/net7.0/win-x64/publish
+      run: zip -r Z80Emu-Windows.zip Z80Emu/bin/Release/net8.0/win-x64/publish
 
     - name: 📤 Upload Windows Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: z80emu-win
         path: Z80Emu-Windows.zip
@@ -36,10 +36,10 @@ jobs:
       run: dotnet publish -c Release -r linux-x64 --self-contained true
 
     - name: 📦 Package Linux Artifacts
-      run: zip -r Z80Emu-Linux.zip Z80Emu/bin/Release/net7.0/linux-x64/publish
+      run: zip -r Z80Emu-Linux.zip Z80Emu/bin/Release/net8.0/linux-x64/publish
 
     - name: 📤 Upload Linux Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: z80emu-linux
         path: Z80Emu-Linux.zip
@@ -48,10 +48,10 @@ jobs:
       run: dotnet publish -c Release -r osx-x64 --self-contained true
 
     - name: 📦 Package macOS Artifacts
-      run: zip -r Z80Emu-macOS.zip Z80Emu/bin/Release/net7.0/osx-x64/publish
+      run: zip -r Z80Emu-macOS.zip Z80Emu/bin/Release/net8.0/osx-x64/publish
 
     - name: 📤 Upload macOS Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: z80emu-macos
         path: Z80Emu-macOS.zip

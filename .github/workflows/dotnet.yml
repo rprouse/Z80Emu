@@ -16,12 +16,27 @@ jobs:
 
     steps:
     - name: 📥 Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 🔧 Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 7.0.x
+
+    - name: ☕ Setup Java for SonarScanner
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21'
+
+    - name: 📈 Install dotnet-coverage
+      run: dotnet tool install -g dotnet-coverage
+
+    - name: 🧭 Install SonarScanner
+      run: dotnet tool install -g dotnet-sonarscanner
+
+    - name: 📊 Begin SonarQube scan
+      run: dotnet sonarscanner begin /k:"Z80Emu" /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}" /d:sonar.host.url="https://sonarqube.prouse.org/" /d:sonar.cs.opencover.reportsPaths="**/coverage.cobertura.xml" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
 
     - name: 💉 Install dependencies
       run: dotnet restore
@@ -29,11 +44,14 @@ jobs:
     - name: 🛠️ Build
       run: dotnet build -c Release --no-restore
 
-    - name: ✅ Test
-      run: dotnet test -c Release --no-build --verbosity normal
+    - name: ✅ Run test and collect coverage
+      run: dotnet-coverage collect "dotnet test -c Release --no-build --verbosity normal ./Z80Emu.sln" -f xml -o coverage.xml
+
+    - name: 🔚 End SonarQube scan
+      run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}"
 
     - name: 📤 Upload Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: z80emu
-        path: Z80Emu/bin/Release/net7.0/
+        path: Z80Emu/bin/Release/net8.0/

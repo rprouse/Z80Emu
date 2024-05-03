@@ -1,6 +1,5 @@
-using OC = Z80Emu.Core.Processor.Opcodes.Opcode;
-using System.Globalization;
 using Z80Emu.Core;
+using OC = Z80Emu.Core.Processor.Opcodes.Opcode;
 
 namespace ParseOpcodes;
 
