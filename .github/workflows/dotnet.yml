@@ -43,7 +43,7 @@ jobs:
 
     - name: 🛠️ Build
       run: dotnet build -c Release --no-restore
-      
+
     - name: ✅ Run test and collect coverage
       run: dotnet-coverage collect "dotnet test -c Release --no-build --verbosity normal ./Z80Emu.sln" -f xml -o coverage.xml
 
@@ -51,7 +51,7 @@ jobs:
       run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}"
 
     - name: 📤 Upload Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: z80emu
-        path: Z80Emu/bin/Release/net7.0/
+        path: Z80Emu/bin/Release/net8.0/
