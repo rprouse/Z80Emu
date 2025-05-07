@@ -18,7 +18,7 @@ jobs:
     - name: 📥 Checkout Code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Fetch all history for proper SonarQube analysis
+        fetch-depth: 0  # Fetch all history for proper analysis
 
     - name: 🔧 Setup .NET
       uses: actions/setup-dotnet@v4
@@ -32,17 +32,17 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
         restore-keys: ${{ runner.os }}-nuget-
 
-    - name: ☕ Setup Java for SonarScanner
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '21'
+    # - name: ☕ Setup Java for SonarScanner
+    #   uses: actions/setup-java@v4
+    #   with:
+    #     distribution: 'temurin'
+    #     java-version: '21'
 
     - name: 📈 Install dotnet-coverage
       run: dotnet tool install -g dotnet-coverage
 
-    - name: 🧭 Install SonarScanner
-      run: dotnet tool install -g dotnet-sonarscanner
+    # - name: 🧭 Install SonarScanner
+    #   run: dotnet tool install -g dotnet-sonarscanner
 
     # - name: 📊 Begin SonarQube scan
     #   run: dotnet sonarscanner begin /k:"Z80Emu" /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}" /d:sonar.host.url="https://sonarqube.prouse.org/" /d:sonar.cs.opencover.reportsPaths="**/coverage.cobertura.xml" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
@@ -53,11 +53,8 @@ jobs:
     - name: 🛠️ Build
       run: dotnet build -c Release --no-restore
 
-    - name: ✅ Run test and collect coverage
-      run: dotnet-coverage collect "dotnet test -c Release --no-build --verbosity normal ./Z80Emu.sln" -f xml -o coverage.xml
-
-    - name: 📊 Generate Cobertura coverage report
-      run: dotnet-coverage convert coverage.xml -f cobertura -o coverage.cobertura.xml
+    - name: ✅ Run tests and collect coverage
+      run: dotnet-coverage collect "dotnet test -c Release --no-build --verbosity normal ./Z80Emu.sln" -f cobertura -o coverage.cobertura.xml
 
     - name: 📈 Upload coverage to codecov
       uses: codecov/codecov-action@v3
