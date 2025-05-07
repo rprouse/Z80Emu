@@ -18,7 +18,7 @@ jobs:
     - name: 🔧 Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 7.0.x
+        dotnet-version: 8.0.x
 
     - name: 🪟 Build and Package for Windows
       run: dotnet publish -c Release -r win-x64 --self-contained true
