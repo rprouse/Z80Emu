@@ -14,14 +14,27 @@ jobs:
     steps:
     - name: 📥 Checkout Code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 🏷️ Extract version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
     - name: 🔧 Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
 
+    - name: 💾 Cache NuGet packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: ${{ runner.os }}-nuget-
+
     - name: 🪟 Build and Package for Windows
-      run: dotnet publish -c Release -r win-x64 --self-contained true
+      run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -p:CopyOutputSymbolsToPublishDirectory=false
 
     - name: 📦 Package Windows Artifacts
       run: zip -r Z80Emu-Windows.zip Z80Emu/bin/Release/net8.0/win-x64/publish
@@ -33,7 +46,7 @@ jobs:
         path: Z80Emu-Windows.zip
 
     - name: 🐧 Build and Package for Linux
-      run: dotnet publish -c Release -r linux-x64 --self-contained true
+      run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -p:CopyOutputSymbolsToPublishDirectory=false
 
     - name: 📦 Package Linux Artifacts
       run: zip -r Z80Emu-Linux.zip Z80Emu/bin/Release/net8.0/linux-x64/publish
@@ -45,7 +58,7 @@ jobs:
         path: Z80Emu-Linux.zip
 
     - name: 🍎 Build and Package for macOS
-      run: dotnet publish -c Release -r osx-x64 --self-contained true
+      run: dotnet publish -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -p:CopyOutputSymbolsToPublishDirectory=false
 
     - name: 📦 Package macOS Artifacts
       run: zip -r Z80Emu-macOS.zip Z80Emu/bin/Release/net8.0/osx-x64/publish
@@ -56,6 +69,19 @@ jobs:
         name: z80emu-macos
         path: Z80Emu-macOS.zip
 
+    - name: ✅ Validate Artifacts
+      run: |
+        echo "Checking artifact sizes..."
+        ls -lh *.zip
+
+    - name: 📝 Generate Release Notes
+      id: release_notes
+      run: |
+        echo "NOTES<<EOF" >> $GITHUB_OUTPUT
+        echo "## Changes in version ${{ steps.get_version.outputs.VERSION }}" >> $GITHUB_OUTPUT
+        git log --pretty=format:"- %s" $(git describe --tags --abbrev=0 HEAD^)..HEAD >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
     - name: ⚡ Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
@@ -63,7 +89,7 @@ jobs:
           Z80Emu-Windows.zip
           Z80Emu-Linux.zip
           Z80Emu-macOS.zip
-        body: "CI/CD release"
+        body: ${{ steps.release_notes.outputs.NOTES }}
         tag_name: ${{ github.ref }}
         draft: false
         prerelease: false

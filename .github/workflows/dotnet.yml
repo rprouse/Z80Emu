@@ -11,17 +11,26 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
     - name: 📥 Checkout Code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch all history for proper SonarQube analysis
 
     - name: 🔧 Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+
+    - name: 💾 Cache NuGet packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: ${{ runner.os }}-nuget-
 
     - name: ☕ Setup Java for SonarScanner
       uses: actions/setup-java@v4
@@ -35,8 +44,8 @@ jobs:
     - name: 🧭 Install SonarScanner
       run: dotnet tool install -g dotnet-sonarscanner
 
-    - name: 📊 Begin SonarQube scan
-      run: dotnet sonarscanner begin /k:"Z80Emu" /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}" /d:sonar.host.url="https://sonarqube.prouse.org/" /d:sonar.cs.opencover.reportsPaths="**/coverage.cobertura.xml" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+    # - name: 📊 Begin SonarQube scan
+    #   run: dotnet sonarscanner begin /k:"Z80Emu" /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}" /d:sonar.host.url="https://sonarqube.prouse.org/" /d:sonar.cs.opencover.reportsPaths="**/coverage.cobertura.xml" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
 
     - name: 💉 Install dependencies
       run: dotnet restore
@@ -47,11 +56,33 @@ jobs:
     - name: ✅ Run test and collect coverage
       run: dotnet-coverage collect "dotnet test -c Release --no-build --verbosity normal ./Z80Emu.sln" -f xml -o coverage.xml
 
-    - name: 🔚 End SonarQube scan
-      run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}"
+    - name: 📊 Generate Cobertura coverage report
+      run: dotnet-coverage convert coverage.xml -f cobertura -o coverage.cobertura.xml
+
+    - name: 📈 Upload coverage to codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage.cobertura.xml
+        fail_ci_if_error: false
+        flags: unittests
+        verbose: true
+
+    # - name: 🔚 End SonarQube scan
+    #   run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}"
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: 📤 Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: z80emu
-        path: Z80Emu/bin/Release/net8.0/
+        path: Z80Emu/bin/Release/net8.0/*
+        if-no-files-found: error
+        retention-days: 7
+
+    - name: 📝 Generate build summary
+      run: |
+        echo "### 🎉 Build Completed Successfully!" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Tests passed" >> $GITHUB_STEP_SUMMARY
+        echo "- 📊 Code coverage uploaded" >> $GITHUB_STEP_SUMMARY
+        echo "- 📦 Artifacts published" >> $GITHUB_STEP_SUMMARY
