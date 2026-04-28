@@ -63,6 +63,17 @@ Whenever making changes to the application, increase the version number in `Z80E
 
 `Opcode.Match` linear-scans the dictionary on every fetch — there is no prefix tree / jump table. Acceptable because the table is fixed-size and the project isn't aiming for cycle accuracy. `Opcode.Bytes` contains literal hex strings plus placeholders `"n"` (immediate byte), `"d"` (signed displacement), `"nn"` (immediate word) which get resolved by `SetSubstitutions` for display and consumed by the `Execute` lambda via `NextByte`/`NextWord`.
 
+### Interrupt model
+
+Interrupts are sampled at instruction boundaries the same way real Z80 hardware does, but the servicing is implemented as a synthetic pseudo-opcode at the **start** of `Emulator.Tick()` rather than the end. When `Interupts.IsRequested` (or `IsNmiRequested`) is set and not gated, `ServiceInterrupts()` performs only the entry sequence (push PC, IFF flips, jump to vector) and returns a synthetic `Opcode { Mnemonic = "INT"|"NMI", Length = 0 }`. The next `Tick()` fetches normally at the vector. This shape is deliberate: it lets the Monitor display interrupt entry as its own line in `step` output without any new rendering code (`Step()` already prints whatever `Tick()` returned). See `docs/superpowers/specs/2026-04-27-im-interrupt-instructions-design.md` for the full design rationale.
+
+Specifics worth knowing when modifying this code:
+- **IM 0 is hardcoded as `RST 38h`** (push PC, jump to `0x0038`). Real hardware reads an opcode off the data bus; we don't emulate the bus, and `0xFF`/`RST 38h` is what most production Z80 hardware actually drove. The `RequestData` byte is ignored in IM 0.
+- **EI shadow:** `EI` sets `IFF1=IFF2=true` AND `EiPending=true`. `ServiceInterrupts` skips sampling for one tick when `EiPending` is set so that `EI; RET` lets `RET` run before any pending IRQ re-enters the ISR. NMI is also delayed by the EI shadow.
+- **NMI semantics:** copies `IFF1 → IFF2` (the save slot for `RETN`) then clears `IFF1`. NMI is not gated by `IFF1`.
+- **Latch lifecycle:** `RaiseInterrupt()`/`RaiseNmi()` set the latches. `Emulator.ServiceInterrupts` calls `Interupts.ConsumeInterrupt()`/`ConsumeNmi()` to clear them once the entry sequence completes. While `IFF1=0`, a maskable INT latch persists until `EI` re-enables sampling.
+- **Don't add direct IFF mutation outside opcode bodies and `ServiceInterrupts`.** The existing pattern is: `EI`/`DI`/`RETI`/`RETN` opcode bodies write `_int.IFF1`/`IFF2` directly. Keep it that way — `Interupts` is a state container, not a method-rich abstraction.
+
 ### Memory, ports, OS
 
 - `MMU` is a thin facade over an array of `MemoryBlock`s (currently a single 64K RAM block at `0x0000–0xFFFF`); the structure is set up to support memory-mapped regions later. Indexer-style access: `_mmu[addr]`.
