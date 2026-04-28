@@ -50,6 +50,12 @@ public class CPU
     /// </summary>
     public void Return() => _opcodeHandler.RET();
 
-    public override string ToString() => 
+    /// <summary>
+    /// Push PC onto the stack and jump to the given vector. Used by
+    /// Emulator.ServiceInterrupts for INT and NMI entry.
+    /// </summary>
+    public void AcceptInterrupt(word vector) => _opcodeHandler.RST(vector);
+
+    public override string ToString() =>
         _reg.ToString();
 }
