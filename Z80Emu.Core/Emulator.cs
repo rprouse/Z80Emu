@@ -89,6 +89,24 @@ public class Emulator
             return new Opcode("NMI", new string[0], "0", "Non-maskable interrupt accepted -> 0x0066");
         }
 
+        if (Interupts.IsRequested && Interupts.IFF1)
+        {
+            // IM 0 is hardcoded as RST 38h; IM 1 also jumps to 0x0038.
+            // IM 2 lookup is added in a later task.
+            word vector = 0x0038;
+            string desc = Interupts.Mode switch
+            {
+                InterruptMode.Mode0 => "Maskable interrupt accepted (IM 0) -> 0x0038 (RST 38h)",
+                InterruptMode.Mode1 => "Maskable interrupt accepted (IM 1) -> 0x0038",
+                _                   => "Maskable interrupt accepted -> 0x0038",
+            };
+            CPU.AcceptInterrupt(vector);
+            Interupts.IFF1 = false;
+            Interupts.IFF2 = false;
+            Interupts.ConsumeInterrupt();
+            return new Opcode("INT", new string[0], "0", desc);
+        }
+
         return null;
     }
 

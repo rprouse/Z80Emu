@@ -49,4 +49,41 @@ public class InteruptsTests
         _emulator.Interupts.IFF2.ShouldBeTrue();   // took IFF1's value
         _emulator.Interupts.IFF1.ShouldBeFalse();  // cleared
     }
+
+    [Test]
+    public void Im1_Entry_PushesPC_JumpsTo0x0038_ClearsIffAndLatch()
+    {
+        _emulator.Interupts.Mode = InterruptMode.Mode1;
+        _emulator.Interupts.IFF1 = true;
+        _emulator.Interupts.IFF2 = true;
+        word originalPC = _emulator.CPU.Registers.PC;
+        word originalSP = _emulator.CPU.Registers.SP;
+
+        _emulator.Interupts.RaiseInterrupt();
+        var op = _emulator.Tick();
+
+        op.Mnemonic.ShouldBe("INT");
+        _emulator.CPU.Registers.PC.ShouldBe((word)0x0038);
+        _emulator.CPU.Registers.SP.ShouldBe((word)(originalSP - 2));
+        _emulator.Memory[(word)(originalSP - 2)].ShouldBe(originalPC.Lsb());
+        _emulator.Memory[(word)(originalSP - 1)].ShouldBe(originalPC.Msb());
+        _emulator.Interupts.IFF1.ShouldBeFalse();
+        _emulator.Interupts.IFF2.ShouldBeFalse();
+        _emulator.Interupts.IsRequested.ShouldBeFalse();
+    }
+
+    [Test]
+    public void Im0_Entry_BehavesLikeRst38h()
+    {
+        _emulator.Interupts.Mode = InterruptMode.Mode0;
+        _emulator.Interupts.IFF1 = true;
+        _emulator.Interupts.IFF2 = true;
+
+        _emulator.Interupts.RaiseInterrupt();
+        var op = _emulator.Tick();
+
+        op.Mnemonic.ShouldBe("INT");
+        _emulator.CPU.Registers.PC.ShouldBe((word)0x0038);
+        _emulator.Interupts.IFF1.ShouldBeFalse();
+    }
 }
