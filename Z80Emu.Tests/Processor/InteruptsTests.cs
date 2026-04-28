@@ -176,4 +176,66 @@ public class InteruptsTests
 
         _emulator.CPU.Registers.PC.ShouldBe((word)0x5678);
     }
+
+    [Test]
+    public void EiShadow_DefersInterruptByOneInstruction()
+    {
+        _emulator.Interupts.Mode = InterruptMode.Mode1;
+        // Program: EI ; NOP ; NOP
+        _emulator.Memory[0x0100] = 0xFB;  // EI
+        _emulator.Memory[0x0101] = 0x00;  // NOP
+        _emulator.Memory[0x0102] = 0x00;  // NOP
+
+        var op1 = _emulator.Tick();       // executes EI; sets IFF1=IFF2=true, EiPending=true
+        op1.Mnemonic.ShouldBe("EI");
+
+        _emulator.Interupts.RaiseInterrupt();
+
+        var op2 = _emulator.Tick();       // EI shadow active — should run NOP, not INT
+        op2.Mnemonic.ShouldBe("NOP");
+        _emulator.Interupts.IsRequested.ShouldBeTrue();   // still latched
+
+        var op3 = _emulator.Tick();       // shadow expired — should service now
+        op3.Mnemonic.ShouldBe("INT");
+        _emulator.CPU.Registers.PC.ShouldBe((word)0x0038);
+    }
+
+    [Test]
+    public void EiShadow_AlsoDefersNmi()
+    {
+        _emulator.Memory[0x0100] = 0xFB;  // EI
+        _emulator.Memory[0x0101] = 0x00;  // NOP
+
+        _emulator.Tick();                 // EI
+
+        _emulator.Interupts.RaiseNmi();
+
+        var op2 = _emulator.Tick();       // EI shadow defers NMI too
+        op2.Mnemonic.ShouldBe("NOP");
+        _emulator.Interupts.IsNmiRequested.ShouldBeTrue();
+
+        _emulator.Memory[0x0102] = 0x00;
+        var op3 = _emulator.Tick();
+        op3.Mnemonic.ShouldBe("NMI");
+    }
+
+    [Test]
+    public void Retn_RestoresIFF1_FromIFF2_AfterNmi()
+    {
+        // Pre-state: IFF1=IFF2=true (as if EI had run earlier)
+        _emulator.Interupts.IFF1 = true;
+        _emulator.Interupts.IFF2 = true;
+        // Place RETN at the NMI vector so the second tick will execute it.
+        _emulator.Memory[0x0066] = 0xED;
+        _emulator.Memory[0x0067] = 0x45;
+
+        _emulator.Interupts.RaiseNmi();
+        _emulator.Tick();   // NMI entry: IFF2 takes IFF1's value (still true), IFF1 cleared
+        _emulator.Interupts.IFF1.ShouldBeFalse();
+        _emulator.Interupts.IFF2.ShouldBeTrue();
+
+        var op2 = _emulator.Tick();   // executes RETN at 0x0066
+        op2.Mnemonic.ShouldBe("RETN");
+        _emulator.Interupts.IFF1.ShouldBeTrue();   // restored from IFF2
+    }
 }
