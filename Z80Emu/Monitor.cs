@@ -83,6 +83,13 @@ internal class Monitor
                 case "reset":   // Reset
                     _emulator.Reset();
                     break;
+                case "int":
+                    HandleInterruptCommand(parts);
+                    break;
+                case "nmi":
+                    _emulator.Interupts.RaiseNmi();
+                    AnsiConsole.MarkupLine("[yellow][[NMI latched]][/]");
+                    break;
                 case "h":   // Help
                     ViewHelp();
                     break;
@@ -175,6 +182,30 @@ internal class Monitor
         return IsTopLevelReturn(opcode);
     }
 
+    void HandleInterruptCommand(string[] parts)
+    {
+        byte? data = null;
+        if (parts.Length >= 2)
+        {
+            if (!parts[1].TryParseHexByte(out byte parsed))
+            {
+                AnsiConsole.MarkupLine("[red]Invalid byte (use hex, e.g. 'int 04')[/]");
+                return;
+            }
+            data = parsed;
+        }
+        _emulator.Interupts.RaiseInterrupt(data);
+        string modeLabel = _emulator.Interupts.Mode switch
+        {
+            InterruptMode.Mode0 => "IM0",
+            InterruptMode.Mode1 => "IM1",
+            InterruptMode.Mode2 => "IM2",
+            _ => "?",
+        };
+        string suffix = data.HasValue ? $", byte=0x{data.Value:X2}" : "";
+        AnsiConsole.MarkupLine($"[yellow][[INT latched: mode={modeLabel}{suffix}]][/]");
+    }
+
     bool Run()
     {
         _lastMemAddr = null;
@@ -208,6 +239,8 @@ internal class Monitor
         AnsiConsole.MarkupLine("[blue]d[/][silver]isassemble[/] [yellow][[address]][/]");
         AnsiConsole.MarkupLine("[blue]b[/][silver]reakpoints[/]");
         AnsiConsole.MarkupLine("[blue]reset[/]");
+        AnsiConsole.MarkupLine("[blue]int[/] [yellow][[byte]][/]");
+        AnsiConsole.MarkupLine("[blue]nmi[/]");
         AnsiConsole.MarkupLine("[blue]q[/][silver]uit[/]");
         AnsiConsole.WriteLine();
     }
