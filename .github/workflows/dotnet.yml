@@ -38,7 +38,7 @@ jobs:
       run: dotnet-coverage collect "dotnet test -c Release --no-build --verbosity normal ./Z80Emu.sln" -f cobertura -o coverage.cobertura.xml
 
     - name: 📈 Upload coverage to codecov
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v6
       with:
         files: ./coverage.cobertura.xml
         fail_ci_if_error: false
