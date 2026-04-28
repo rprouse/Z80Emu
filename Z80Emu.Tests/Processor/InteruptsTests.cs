@@ -86,4 +86,37 @@ public class InteruptsTests
         _emulator.CPU.Registers.PC.ShouldBe((word)0x0038);
         _emulator.Interupts.IFF1.ShouldBeFalse();
     }
+
+    [Test]
+    public void Im2_Entry_ReadsVectorFromTable()
+    {
+        _emulator.Interupts.Mode = InterruptMode.Mode2;
+        _emulator.Interupts.IFF1 = true;
+        _emulator.CPU.Registers.I = 0x80;
+        // Vector table at 0x80NN — entry 0x04 contains 0x1234 (little-endian).
+        _emulator.Memory[0x8004] = 0x34;
+        _emulator.Memory[0x8005] = 0x12;
+
+        _emulator.Interupts.RaiseInterrupt(0x04);
+        var op = _emulator.Tick();
+
+        op.Mnemonic.ShouldBe("INT");
+        _emulator.CPU.Registers.PC.ShouldBe((word)0x1234);
+    }
+
+    [Test]
+    public void Im2_Entry_DefaultByteIs0xFF()
+    {
+        _emulator.Interupts.Mode = InterruptMode.Mode2;
+        _emulator.Interupts.IFF1 = true;
+        _emulator.CPU.Registers.I = 0x80;
+        // No data byte supplied — should read from 0x80FF / 0x8100.
+        _emulator.Memory[0x80FF] = 0xCD;
+        _emulator.Memory[0x8100] = 0xAB;
+
+        _emulator.Interupts.RaiseInterrupt();
+        _emulator.Tick();
+
+        _emulator.CPU.Registers.PC.ShouldBe((word)0xABCD);
+    }
 }

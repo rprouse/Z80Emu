@@ -2,6 +2,7 @@ using Z80Emu.Core.Memory;
 using Z80Emu.Core.OS;
 using Z80Emu.Core.Processor;
 using Z80Emu.Core.Processor.Opcodes;
+using Z80Emu.Core.Utilities;
 
 namespace Z80Emu.Core;
 
@@ -91,15 +92,28 @@ public class Emulator
 
         if (Interupts.IsRequested && Interupts.IFF1)
         {
-            // IM 0 is hardcoded as RST 38h; IM 1 also jumps to 0x0038.
-            // IM 2 lookup is added in a later task.
-            word vector = 0x0038;
-            string desc = Interupts.Mode switch
+            word vector;
+            string desc;
+            switch (Interupts.Mode)
             {
-                InterruptMode.Mode0 => "Maskable interrupt accepted (IM 0) -> 0x0038 (RST 38h)",
-                InterruptMode.Mode1 => "Maskable interrupt accepted (IM 1) -> 0x0038",
-                _                   => "Maskable interrupt accepted -> 0x0038",
-            };
+                case InterruptMode.Mode2:
+                    {
+                        word vectorPtr = (word)((CPU.Registers.I << 8) | (Interupts.RequestData ?? 0xFF));
+                        byte lo = Memory[vectorPtr];
+                        byte hi = Memory[(word)(vectorPtr + 1)];
+                        vector = BitUtils.ToWord(hi, lo);
+                        desc = $"Maskable interrupt accepted (IM 2) -> 0x{vector:X4}";
+                        break;
+                    }
+                case InterruptMode.Mode1:
+                    vector = 0x0038;
+                    desc = "Maskable interrupt accepted (IM 1) -> 0x0038";
+                    break;
+                default: // Mode0
+                    vector = 0x0038;
+                    desc = "Maskable interrupt accepted (IM 0) -> 0x0038 (RST 38h)";
+                    break;
+            }
             CPU.AcceptInterrupt(vector);
             Interupts.IFF1 = false;
             Interupts.IFF2 = false;
