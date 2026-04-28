@@ -102,16 +102,16 @@ public class Emulator
                         byte lo = Memory[vectorPtr];
                         byte hi = Memory[(word)(vectorPtr + 1)];
                         vector = BitUtils.ToWord(hi, lo);
-                        desc = $"Maskable interrupt accepted (IM 2) -> 0x{vector:X4}";
+                        desc = $"Maskable interrupt accepted (IM 2) → 0x{vector:X4}";
                         break;
                     }
                 case InterruptMode.Mode1:
                     vector = 0x0038;
-                    desc = "Maskable interrupt accepted (IM 1) -> 0x0038";
+                    desc = "Maskable interrupt accepted (IM 1) → 0x0038";
                     break;
                 default: // Mode0
                     vector = 0x0038;
-                    desc = "Maskable interrupt accepted (IM 0) -> 0x0038 (RST 38h)";
+                    desc = "Maskable interrupt accepted (IM 0) → 0x0038 (RST 38h)";
                     break;
             }
             CPU.AcceptInterrupt(vector);
