@@ -33,8 +33,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL 0x0302");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -47,8 +47,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL C,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -61,8 +61,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL C,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0103);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -75,8 +75,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL NC,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -89,8 +89,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL NC,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0103);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -103,8 +103,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL M,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -117,8 +117,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL M,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0103);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -131,8 +131,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL P,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -145,8 +145,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL P,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0103);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -159,8 +159,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL Z,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -173,8 +173,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL Z,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0103);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -187,8 +187,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL NZ,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -201,8 +201,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL NZ,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0103);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -215,8 +215,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL PE,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -229,8 +229,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL PE,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0103);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -243,8 +243,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL PO,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -257,8 +257,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("CALL PO,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0103);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -270,7 +270,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP 0x0302");
 
-        _reg.PC.Should().Be(0x0302);
+        _reg.PC.ShouldBe(0x0302);
     }
 
     [Test]
@@ -281,7 +281,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP (HL)");
 
-        _reg.PC.Should().Be(0x0110);
+        _reg.PC.ShouldBe(0x0110);
     }
 
     [Test]
@@ -293,7 +293,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP (IX)");
 
-        _reg.PC.Should().Be(0x0110);
+        _reg.PC.ShouldBe(0x0110);
     }
 
     [Test]
@@ -305,7 +305,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP (IY)");
 
-        _reg.PC.Should().Be(0x0110);
+        _reg.PC.ShouldBe(0x0110);
     }
 
     [Test]
@@ -318,7 +318,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP C,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
+        _reg.PC.ShouldBe(0x0302);
     }
 
     [Test]
@@ -331,7 +331,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP C,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
+        _reg.PC.ShouldBe(0x0103);
     }
 
     [Test]
@@ -344,7 +344,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP NC,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
+        _reg.PC.ShouldBe(0x0302);
     }
 
     [Test]
@@ -357,7 +357,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP NC,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
+        _reg.PC.ShouldBe(0x0103);
     }
 
     [Test]
@@ -370,7 +370,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP M,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
+        _reg.PC.ShouldBe(0x0302);
     }
 
     [Test]
@@ -383,7 +383,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP M,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
+        _reg.PC.ShouldBe(0x0103);
     }
 
     [Test]
@@ -396,7 +396,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP P,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
+        _reg.PC.ShouldBe(0x0302);
     }
 
     [Test]
@@ -409,7 +409,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP P,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
+        _reg.PC.ShouldBe(0x0103);
     }
 
     [Test]
@@ -422,7 +422,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP Z,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
+        _reg.PC.ShouldBe(0x0302);
     }
 
     [Test]
@@ -435,7 +435,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP Z,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
+        _reg.PC.ShouldBe(0x0103);
     }
 
     [Test]
@@ -448,7 +448,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP NZ,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
+        _reg.PC.ShouldBe(0x0302);
     }
 
     [Test]
@@ -461,7 +461,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP NZ,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
+        _reg.PC.ShouldBe(0x0103);
     }
 
     [Test]
@@ -474,7 +474,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP PE,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
+        _reg.PC.ShouldBe(0x0302);
     }
 
     [Test]
@@ -487,7 +487,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP PE,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
+        _reg.PC.ShouldBe(0x0103);
     }
 
     [Test]
@@ -500,7 +500,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP PO,0x0302");
 
-        _reg.PC.Should().Be(0x0302);
+        _reg.PC.ShouldBe(0x0302);
     }
 
     [Test]
@@ -513,7 +513,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("JP PO,0x0302");
 
-        _reg.PC.Should().Be(0x0103);
+        _reg.PC.ShouldBe(0x0103);
     }
 
     [TestCase(02, 0x104)]
@@ -526,7 +526,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"JR {relative}");
 
-        _reg.PC.Should().Be((word)expectedPC);
+        _reg.PC.ShouldBe((word)expectedPC);
     }
 
     [TestCase(02, 0x104)]
@@ -540,7 +540,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"JR C,{relative}");
 
-        _reg.PC.Should().Be((word)expectedPC);
+        _reg.PC.ShouldBe((word)expectedPC);
     }
 
     [TestCase(10)]
@@ -553,7 +553,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"JR C,{relative}");
 
-        _reg.PC.Should().Be(0x0102);
+        _reg.PC.ShouldBe(0x0102);
     }
 
     [TestCase(02, 0x104)]
@@ -567,7 +567,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"JR NC,{relative}");
 
-        _reg.PC.Should().Be((word)expectedPC);
+        _reg.PC.ShouldBe((word)expectedPC);
     }
 
     [TestCase(10)]
@@ -580,7 +580,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"JR NC,{relative}");
 
-        _reg.PC.Should().Be(0x0102);
+        _reg.PC.ShouldBe(0x0102);
     }
 
     [TestCase(02, 0x104)]
@@ -594,7 +594,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"JR Z,{relative}");
 
-        _reg.PC.Should().Be((word)expectedPC);
+        _reg.PC.ShouldBe((word)expectedPC);
     }
 
     [TestCase(10)]
@@ -607,7 +607,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"JR Z,{relative}");
 
-        _reg.PC.Should().Be(0x0102);
+        _reg.PC.ShouldBe(0x0102);
     }
 
     [TestCase(02, 0x104)]
@@ -621,7 +621,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"JR NZ,{relative}");
 
-        _reg.PC.Should().Be((word)expectedPC);
+        _reg.PC.ShouldBe((word)expectedPC);
     }
 
     [TestCase(10)]
@@ -634,7 +634,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"JR NZ,{relative}");
 
-        _reg.PC.Should().Be(0x0102);
+        _reg.PC.ShouldBe(0x0102);
     }
 
     [Test]
@@ -644,7 +644,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("NOP");
 
-        _reg.PC.Should().Be(0x0101);
+        _reg.PC.ShouldBe(0x0101);
     }
 
     [Test]
@@ -657,8 +657,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -672,8 +672,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET C");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -687,8 +687,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET C");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0101);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -702,8 +702,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET NC");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -717,8 +717,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET NC");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0101);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -732,8 +732,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET Z");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -747,8 +747,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET Z");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0101);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -762,8 +762,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET NZ");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -777,8 +777,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET NZ");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0101);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -792,8 +792,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET M");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -807,8 +807,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET M");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0101);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -822,8 +822,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET P");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -837,8 +837,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET P");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0101);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -852,8 +852,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET PE");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -867,8 +867,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET PE");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0101);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 
     [Test]
@@ -882,8 +882,8 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET PO");
 
-        _reg.PC.Should().Be(0x0302);
-        _reg.SP.Should().Be(0xFFFE);
+        _reg.PC.ShouldBe(0x0302);
+        _reg.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -897,7 +897,7 @@ public class ControlOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RET PO");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.SP.Should().Be(0xFFFC);
+        _reg.PC.ShouldBe(0x0101);
+        _reg.SP.ShouldBe(0xFFFC);
     }
 }

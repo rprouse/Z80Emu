@@ -1,5 +1,5 @@
 global using NUnit.Framework;
-global using FluentAssertions;
+global using Shouldly;
 
 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
 #pragma warning disable CS8981

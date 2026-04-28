@@ -34,11 +34,11 @@ public class ExchangeOpcodes
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("EX (SP),HL");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.SP.Should().Be(0xFFFD);
-        _mmu[0xFFFD].Should().Be(0x21);
-        _mmu[0xFFFE].Should().Be(0xFA);
-        _reg.HL.Should().Be(0x3AE2);
+        _reg.PC.ShouldBe(0x0101);
+        _reg.SP.ShouldBe(0xFFFD);
+        _mmu[0xFFFD].ShouldBe(0x21);
+        _mmu[0xFFFE].ShouldBe(0xFA);
+        _reg.HL.ShouldBe(0x3AE2);
     }
 
     [Test]
@@ -50,11 +50,11 @@ public class ExchangeOpcodes
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("EX (SP),IX");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.SP.Should().Be(0xFFFD);
-        _mmu[0xFFFD].Should().Be(0x21);
-        _mmu[0xFFFE].Should().Be(0xFA);
-        _reg.IX.Should().Be(0x3AE2);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.SP.ShouldBe(0xFFFD);
+        _mmu[0xFFFD].ShouldBe(0x21);
+        _mmu[0xFFFE].ShouldBe(0xFA);
+        _reg.IX.ShouldBe(0x3AE2);
     }
 
     [Test]
@@ -66,11 +66,11 @@ public class ExchangeOpcodes
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("EX (SP),IY");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.SP.Should().Be(0xFFFD);
-        _mmu[0xFFFD].Should().Be(0x21);
-        _mmu[0xFFFE].Should().Be(0xFA);
-        _reg.IY.Should().Be(0x3AE2);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.SP.ShouldBe(0xFFFD);
+        _mmu[0xFFFD].ShouldBe(0x21);
+        _mmu[0xFFFE].ShouldBe(0xFA);
+        _reg.IY.ShouldBe(0x3AE2);
     }
 
     [Test]
@@ -82,9 +82,9 @@ public class ExchangeOpcodes
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("EX AF,AF'");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.AF.Should().Be(0x5678);
-        _reg.AF_.Should().Be(0x1234);
+        _reg.PC.ShouldBe(0x0101);
+        _reg.AF.ShouldBe(0x5678);
+        _reg.AF_.ShouldBe(0x1234);
     }
 
     [Test]
@@ -96,9 +96,9 @@ public class ExchangeOpcodes
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("EX DE,HL");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.DE.Should().Be(0x5678);
-        _reg.HL.Should().Be(0x1234);
+        _reg.PC.ShouldBe(0x0101);
+        _reg.DE.ShouldBe(0x5678);
+        _reg.HL.ShouldBe(0x1234);
     }
 
     [Test]
@@ -114,12 +114,12 @@ public class ExchangeOpcodes
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("EXX");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.BC.Should().Be(0x4321);
-        _reg.DE.Should().Be(0x8765);
-        _reg.HL.Should().Be(0xCBA9);
-        _reg.BC_.Should().Be(0x1234);
-        _reg.DE_.Should().Be(0x5678);
-        _reg.HL_.Should().Be(0x9ABC);
+        _reg.PC.ShouldBe(0x0101);
+        _reg.BC.ShouldBe(0x4321);
+        _reg.DE.ShouldBe(0x8765);
+        _reg.HL.ShouldBe(0xCBA9);
+        _reg.BC_.ShouldBe(0x1234);
+        _reg.DE_.ShouldBe(0x5678);
+        _reg.HL_.ShouldBe(0x9ABC);
     }
 }

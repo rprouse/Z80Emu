@@ -7,8 +7,8 @@ public static class OpcodeTestExtensions
     public static Opcode FetchVerifyAndExecuteInstruction(this OpcodeHandler opcodeHandler, string expectedMnemonic)
     {
         var op = opcodeHandler.FetchInstruction();
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be(expectedMnemonic);
+        op.ShouldNotBeNull();
+        op.Mnemonic.ShouldBe(expectedMnemonic);
         op.Execute();
         return op;
     }

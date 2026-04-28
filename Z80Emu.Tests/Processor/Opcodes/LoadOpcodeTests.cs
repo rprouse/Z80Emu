@@ -35,10 +35,10 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD (0x0104),BC");
 
-        _reg.PC.Should().Be(0x0104);
+        _reg.PC.ShouldBe(0x0104);
 
-        _mmu[0x0104].Should().Be(0x0F);
-        _mmu[0x0105].Should().Be(0x2A);
+        _mmu[0x0104].ShouldBe(0x0F);
+        _mmu[0x0105].ShouldBe(0x2A);
     }
 
     [Test]
@@ -53,10 +53,10 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD (0x0104),DE");
 
-        _reg.PC.Should().Be(0x0104);
+        _reg.PC.ShouldBe(0x0104);
 
-        _mmu[0x0104].Should().Be(0x0F);
-        _mmu[0x0105].Should().Be(0x2A);
+        _mmu[0x0104].ShouldBe(0x0F);
+        _mmu[0x0105].ShouldBe(0x2A);
     }
 
     [Test]
@@ -70,10 +70,10 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD (0x0104),HL");
 
-        _reg.PC.Should().Be(0x0103);
+        _reg.PC.ShouldBe(0x0103);
 
-        _mmu[0x0104].Should().Be(0x0F);
-        _mmu[0x0105].Should().Be(0x2A);
+        _mmu[0x0104].ShouldBe(0x0F);
+        _mmu[0x0105].ShouldBe(0x2A);
     }
 
     [Test]
@@ -88,10 +88,10 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD (0x0104),IX");
 
-        _reg.PC.Should().Be(0x0104);
+        _reg.PC.ShouldBe(0x0104);
 
-        _mmu[0x0104].Should().Be(0x0F);
-        _mmu[0x0105].Should().Be(0x2A);
+        _mmu[0x0104].ShouldBe(0x0F);
+        _mmu[0x0105].ShouldBe(0x2A);
     }
 
     [Test]
@@ -106,10 +106,10 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD (0x0104),IY");
 
-        _reg.PC.Should().Be(0x0104);
+        _reg.PC.ShouldBe(0x0104);
 
-        _mmu[0x0104].Should().Be(0x0F);
-        _mmu[0x0105].Should().Be(0x2A);
+        _mmu[0x0104].ShouldBe(0x0F);
+        _mmu[0x0105].ShouldBe(0x2A);
     }
 
     [Test]
@@ -124,10 +124,10 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD (0x0104),SP");
 
-        _reg.PC.Should().Be(0x0104);
+        _reg.PC.ShouldBe(0x0104);
 
-        _mmu[0x0104].Should().Be(0x0F);
-        _mmu[0x0105].Should().Be(0x2A);
+        _mmu[0x0104].ShouldBe(0x0F);
+        _mmu[0x0105].ShouldBe(0x2A);
     }
 
     [Test]
@@ -142,8 +142,8 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD BC,(0x0104)");
 
-        _reg.PC.Should().Be(0x0104);
-        _reg.BC.Should().Be(0x2A0F);
+        _reg.PC.ShouldBe(0x0104);
+        _reg.BC.ShouldBe(0x2A0F);
     }
 
     [Test]
@@ -158,8 +158,8 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD DE,(0x0104)");
 
-        _reg.PC.Should().Be(0x0104);
-        _reg.DE.Should().Be(0x2A0F);
+        _reg.PC.ShouldBe(0x0104);
+        _reg.DE.ShouldBe(0x2A0F);
     }
 
     [Test]
@@ -173,8 +173,8 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD HL,(0x0104)");
 
-        _reg.PC.Should().Be(0x0103);
-        _reg.HL.Should().Be(0x2A0F);
+        _reg.PC.ShouldBe(0x0103);
+        _reg.HL.ShouldBe(0x2A0F);
     }
 
     [Test]
@@ -189,8 +189,8 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD IX,(0x0104)");
 
-        _reg.PC.Should().Be(0x0104);
-        _reg.IX.Should().Be(0x2A0F);
+        _reg.PC.ShouldBe(0x0104);
+        _reg.IX.ShouldBe(0x2A0F);
     }
 
     [Test]
@@ -205,8 +205,8 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD IY,(0x0104)");
 
-        _reg.PC.Should().Be(0x0104);
-        _reg.IY.Should().Be(0x2A0F);
+        _reg.PC.ShouldBe(0x0104);
+        _reg.IY.ShouldBe(0x2A0F);
     }
 
     [Test]
@@ -219,8 +219,8 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD IX,0x2A0F");
 
-        _reg.PC.Should().Be(0x0104);
-        _reg.IX.Should().Be(0x2A0F);
+        _reg.PC.ShouldBe(0x0104);
+        _reg.IX.ShouldBe(0x2A0F);
     }
 
     [Test]
@@ -233,8 +233,8 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD IY,0x2A0F");
 
-        _reg.PC.Should().Be(0x0104);
-        _reg.IY.Should().Be(0x2A0F);
+        _reg.PC.ShouldBe(0x0104);
+        _reg.IY.ShouldBe(0x2A0F);
     }
 
     [Test]
@@ -249,8 +249,8 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD SP,(0x0104)");
 
-        _reg.PC.Should().Be(0x0104);
-        _reg.SP.Should().Be(0x2A0F);
+        _reg.PC.ShouldBe(0x0104);
+        _reg.SP.ShouldBe(0x2A0F);
     }
 
     [Test]
@@ -262,8 +262,8 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD SP,HL");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.SP.Should().Be(0x2A0F);
+        _reg.PC.ShouldBe(0x0101);
+        _reg.SP.ShouldBe(0x2A0F);
     }
 
     [Test]
@@ -276,8 +276,8 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD SP,IX");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.SP.Should().Be(0x2A0F);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.SP.ShouldBe(0x2A0F);
     }
 
     [Test]
@@ -290,8 +290,8 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD SP,IY");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.SP.Should().Be(0x2A0F);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.SP.ShouldBe(0x2A0F);
     }
 
     [Test]
@@ -303,8 +303,8 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD BC,0x2A0F");
 
-        _reg.PC.Should().Be(0x0103);
-        _reg.BC.Should().Be(0x2A0F);
+        _reg.PC.ShouldBe(0x0103);
+        _reg.BC.ShouldBe(0x2A0F);
     }
 
     [Test]
@@ -316,8 +316,8 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD DE,0x2A0F");
 
-        _reg.PC.Should().Be(0x0103);
-        _reg.DE.Should().Be(0x2A0F);
+        _reg.PC.ShouldBe(0x0103);
+        _reg.DE.ShouldBe(0x2A0F);
     }
 
     [Test]
@@ -329,8 +329,8 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD HL,0x2A0F");
 
-        _reg.PC.Should().Be(0x0103);
-        _reg.HL.Should().Be(0x2A0F);
+        _reg.PC.ShouldBe(0x0103);
+        _reg.HL.ShouldBe(0x2A0F);
     }
 
     [Test]
@@ -342,7 +342,7 @@ public class LoadOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("LD SP,0x2A0F");
 
-        _reg.PC.Should().Be(0x0103);
-        _reg.SP.Should().Be(0x2A0F);
+        _reg.PC.ShouldBe(0x0103);
+        _reg.SP.ShouldBe(0x2A0F);
     }
 }

@@ -9,20 +9,20 @@ public class TestBitUtils
     public void TestLsb()
     {
         word b = 0xABCD;
-        b.Lsb().Should().Be(0xCD);
+        b.Lsb().ShouldBe(0xCD);
     }
 
     [Test]
     public void TestMsb()
     {
         word b = 0xABCD;
-        b.Msb().Should().Be(0xAB);
+        b.Msb().ShouldBe(0xAB);
     }
 
     [Test]
     public void TestToWord()
     {
-        BitUtils.ToWord(0xAB, 0xCD).Should().Be(0xABCD);
+        BitUtils.ToWord(0xAB, 0xCD).ShouldBe(0xABCD);
     }
 
     [TestCase(0, 0b_0000_0001, true)]
@@ -43,7 +43,7 @@ public class TestBitUtils
     [TestCase(7, 0b_0111_1111, false)]
     public void TestIsBitSet(int bit, byte b, bool expected)
     {
-        b.IsBitSet(bit).Should().Be(expected);
+        b.IsBitSet(bit).ShouldBe(expected);
     }
 
     [TestCase(0, 0b_0000_0001)]
@@ -57,7 +57,7 @@ public class TestBitUtils
     public void TestSetBit(int bit, byte expected)
     {
         byte b = 0b_0000_0000;
-        b.SetBit(bit).Should().Be(expected);
+        b.SetBit(bit).ShouldBe(expected);
     }
 
     [TestCase(0, 0b_1111_1110)]
@@ -71,7 +71,7 @@ public class TestBitUtils
     public void TestResetBit(int bit, byte expected)
     {
         byte b = 0b_1111_1111;
-        b.ResetBit(bit).Should().Be(expected);
+        b.ResetBit(bit).ShouldBe(expected);
     }
 
     [TestCase(Registers.Flag.Carry, 0b_0000_0001, true)]
@@ -88,7 +88,7 @@ public class TestBitUtils
     [TestCase(Registers.Flag.Sign, 0b_0111_1111, false)]
     public void TestGetFlag(Registers.Flag flag, byte b, bool expected)
     {
-        b.GetFlag(flag).Should().Be(expected);
+        b.GetFlag(flag).ShouldBe(expected);
     }
 
     [TestCase(Registers.Flag.Carry, 0b_0000_0001)]
@@ -100,7 +100,7 @@ public class TestBitUtils
     public void TestSetFlag(Registers.Flag flag, byte expected)
     {
         byte b = 0b_0000_0000;
-        b.SetFlag(flag).Should().Be(expected);
+        b.SetFlag(flag).ShouldBe(expected);
     }
 
     [TestCase(Registers.Flag.Carry, 0b_1111_1110)]
@@ -112,7 +112,7 @@ public class TestBitUtils
     public void TestResetFlag(Registers.Flag flag, byte expected)
     {
         byte b = 0b_1111_1111;
-        b.ResetFlag(flag).Should().Be(expected);
+        b.ResetFlag(flag).ShouldBe(expected);
     }
 
     [TestCase(Registers.Flag.Carry, 0b_0000_0001)]
@@ -124,7 +124,7 @@ public class TestBitUtils
     public void TestSetFlagTrue(Registers.Flag flag, byte expected)
     {
         byte b = 0b_0000_0000;
-        b.SetFlag(flag, true).Should().Be(expected);
+        b.SetFlag(flag, true).ShouldBe(expected);
     }
 
     [TestCase(Registers.Flag.Carry, 0b_1111_1110)]
@@ -136,7 +136,7 @@ public class TestBitUtils
     public void TestSetFlagFalse(Registers.Flag flag, byte expected)
     {
         byte b = 0b_1111_1111;
-        b.SetFlag(flag, false).Should().Be(expected);
+        b.SetFlag(flag, false).ShouldBe(expected);
     }
 
     [TestCase(0b0000_0000, true)]
@@ -151,7 +151,7 @@ public class TestBitUtils
     [TestCase(0b1111_1111, true)]
     public void TestEvenParity(byte b, bool expected)
     {
-        b.IsEvenParity().Should().Be(expected);
+        b.IsEvenParity().ShouldBe(expected);
     }
 
     [TestCase(0b0000_0000, false)]
@@ -160,7 +160,7 @@ public class TestBitUtils
     [TestCase(0b1111_1111, true)]
     public void TestIsNegative(byte b, bool expected)
     {
-        b.IsNegative().Should().Be(expected);
+        b.IsNegative().ShouldBe(expected);
     }
 
     [TestCase(0b0000_0000_0000, false)]
@@ -173,6 +173,6 @@ public class TestBitUtils
     [TestCase(0b0001_1111_1111, true)]
     public void TestIsNegative(int b, bool expected)
     {
-        b.IsNegative().Should().Be(expected);
+        b.IsNegative().ShouldBe(expected);
     }
 }

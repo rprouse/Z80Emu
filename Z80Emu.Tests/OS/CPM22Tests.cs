@@ -42,22 +42,22 @@ public class CPM22Tests
     [Test]
     public void NameIsCorrect()
     {
-        _cpm.Name.Should().Be("CP/M 2.2");
+        _cpm.Name.ShouldBe("CP/M 2.2");
     }
 
     [Test]
     public void HasCorrectCallVectors()
     {
-        _cpm.CallVectors.Should().BeEquivalentTo(new ushort[] { 0x0000, 0x0005 });
+        _cpm.CallVectors.ShouldBe(new ushort[] { 0x0000, 0x0005 }, ignoreOrder: true);
     }
 
     [Test]
     public void SetsZeroPageMemory()
     {
         // Emulator initializes CPM22
-        _emulator.Memory[0x0000].Should().Be(0xC3); // JP to warm boot
-        _emulator.Memory[0x005C].Should().Be(0x01); // FCB
-        _emulator.Memory[0x0081].Should().Be((byte)'A'); // Command tail
+        _emulator.Memory[0x0000].ShouldBe(0xC3); // JP to warm boot
+        _emulator.Memory[0x005C].ShouldBe(0x01); // FCB
+        _emulator.Memory[0x0081].ShouldBe((byte)'A'); // Command tail
     }
 
     [Test]
@@ -65,7 +65,7 @@ public class CPM22Tests
     {
         _emulator.CPU.Registers.PC = 0x0010;
         Action action = () => _cpm.Execute(_emulator);
-        action.Should().Throw<InvalidOperationException>().WithMessage("Invalid CP/M Call");
+        Should.Throw<InvalidOperationException>(action).Message.ShouldBe("Invalid CP/M Call");
     }
 
     [Test]
@@ -75,8 +75,8 @@ public class CPM22Tests
 
         _cpm.Execute(_emulator);
 
-        _emulator.WarmBoot.Should().BeTrue();
-        _emulator.CPU.Registers.PC.Should().Be(0x0302);
+        _emulator.WarmBoot.ShouldBeTrue();
+        _emulator.CPU.Registers.PC.ShouldBe(0x0302);
     }
 
     [Test]
@@ -87,8 +87,8 @@ public class CPM22Tests
 
         _cpm.Execute(_emulator);
 
-        _console.Output.ToString().Should().Be("BDOS call P_TERMCPM not implemented" + Environment.NewLine);
-        _emulator.CPU.Registers.PC.Should().Be(0x0302);
+        _console.Output.ToString().ShouldBe("BDOS call P_TERMCPM not implemented" + Environment.NewLine);
+        _emulator.CPU.Registers.PC.ShouldBe(0x0302);
     }
 
     [Test]
@@ -99,9 +99,9 @@ public class CPM22Tests
 
         _cpm.Execute(_emulator);
 
-        _emulator.CPU.Registers.A.Should().Be(0xDE);
-        _emulator.CPU.Registers.L.Should().Be(0xDE);
-        _emulator.CPU.Registers.PC.Should().Be(0x0302);
+        _emulator.CPU.Registers.A.ShouldBe(0xDE);
+        _emulator.CPU.Registers.L.ShouldBe(0xDE);
+        _emulator.CPU.Registers.PC.ShouldBe(0x0302);
     }
 
     [Test]
@@ -113,8 +113,8 @@ public class CPM22Tests
 
         _cpm.Execute(_emulator);
 
-        _console.Output.ToString().Should().Be("A");
-        _emulator.CPU.Registers.PC.Should().Be(0x0302);
+        _console.Output.ToString().ShouldBe("A");
+        _emulator.CPU.Registers.PC.ShouldBe(0x0302);
     }
 
     [Test]
@@ -133,8 +133,8 @@ public class CPM22Tests
 
         _cpm.Execute(_emulator);
 
-        _console.Output.ToString().Should().Be("Hello");
-        _emulator.CPU.Registers.PC.Should().Be(0x0302);
+        _console.Output.ToString().ShouldBe("Hello");
+        _emulator.CPU.Registers.PC.ShouldBe(0x0302);
     }
 
     [Test]
@@ -147,14 +147,14 @@ public class CPM22Tests
 
         _cpm.Execute(_emulator);
 
-        _emulator.Memory[0x0200].Should().Be(5);
-        _emulator.Memory[0x0201].Should().Be((byte)'H');
-        _emulator.Memory[0x0202].Should().Be((byte)'e');
-        _emulator.Memory[0x0203].Should().Be((byte)'l');
-        _emulator.Memory[0x0204].Should().Be((byte)'l');
-        _emulator.Memory[0x0205].Should().Be((byte)'o');
-        _emulator.Memory[0x0206].Should().Be(0x00);
-        _emulator.CPU.Registers.PC.Should().Be(0x0302);
+        _emulator.Memory[0x0200].ShouldBe(5);
+        _emulator.Memory[0x0201].ShouldBe((byte)'H');
+        _emulator.Memory[0x0202].ShouldBe((byte)'e');
+        _emulator.Memory[0x0203].ShouldBe((byte)'l');
+        _emulator.Memory[0x0204].ShouldBe((byte)'l');
+        _emulator.Memory[0x0205].ShouldBe((byte)'o');
+        _emulator.Memory[0x0206].ShouldBe(0x00);
+        _emulator.CPU.Registers.PC.ShouldBe(0x0302);
     }
 
     [Test]
@@ -167,11 +167,11 @@ public class CPM22Tests
 
         _cpm.Execute(_emulator);
 
-        _emulator.Memory[0x0200].Should().Be(3);
-        _emulator.Memory[0x0201].Should().Be((byte)'H');
-        _emulator.Memory[0x0202].Should().Be((byte)'e');
-        _emulator.Memory[0x0203].Should().Be((byte)'l');
-        _emulator.Memory[0x0204].Should().Be(0x00);
-        _emulator.CPU.Registers.PC.Should().Be(0x0302);
+        _emulator.Memory[0x0200].ShouldBe(3);
+        _emulator.Memory[0x0201].ShouldBe((byte)'H');
+        _emulator.Memory[0x0202].ShouldBe((byte)'e');
+        _emulator.Memory[0x0203].ShouldBe((byte)'l');
+        _emulator.Memory[0x0204].ShouldBe(0x00);
+        _emulator.CPU.Registers.PC.ShouldBe(0x0302);
     }
 }

@@ -40,9 +40,9 @@ public class ArithmeticOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("ADD A,(HL)");
 
-        _reg.PC.Should().Be(0x0101);
+        _reg.PC.ShouldBe(0x0101);
 
-        _reg.A.Should().Be(ex);
+        _reg.A.ShouldBe(ex);
         _reg.FlagsShouldBe(s, z, h, pv, false, c);
     }
 
@@ -69,9 +69,9 @@ public class ArithmeticOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("ADC A,(HL)");
 
-        _reg.PC.Should().Be(0x0101);
+        _reg.PC.ShouldBe(0x0101);
 
-        _reg.A.Should().Be(ex);
+        _reg.A.ShouldBe(ex);
         _reg.FlagsShouldBe(s, z, h, pv, false, c);
     }
 }

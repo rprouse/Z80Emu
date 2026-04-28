@@ -17,7 +17,7 @@ public class WordExtensionTests
     public void TestParseHexWord(string s, int expected)
     {
         var actual = s.ParseHexWord();
-        actual.Should().Be((word)expected);
+        actual.ShouldBe((word)expected);
     }
 
     [TestCase("0x0000", 0x0000)]
@@ -33,8 +33,8 @@ public class WordExtensionTests
     public void TestTryParseHexWord_Success(string s, int expected)
     {
         var result = s.TryParseHexWord(out var actual);
-        result.Should().BeTrue();
-        actual.Should().Be((word)expected);
+        result.ShouldBeTrue();
+        actual.ShouldBe((word)expected);
     }
 
     [TestCase("-1")]
@@ -44,6 +44,6 @@ public class WordExtensionTests
     public void TestTryParseHexWord_Failure(string s)
     {
         var result = s.TryParseHexWord(out var actual);
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 }
