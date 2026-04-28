@@ -16,36 +16,17 @@ jobs:
 
     steps:
     - name: 📥 Checkout Code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0  # Fetch all history for proper analysis
+      uses: actions/checkout@v6
 
     - name: 🔧 Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 10.0.x
-
-    - name: 💾 Cache NuGet packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-        restore-keys: ${{ runner.os }}-nuget-
-
-    # - name: ☕ Setup Java for SonarScanner
-    #   uses: actions/setup-java@v4
-    #   with:
-    #     distribution: 'temurin'
-    #     java-version: '21'
+        cache: true
+        cache-dependency-path: '**/*.csproj'
 
     - name: 📈 Install dotnet-coverage
       run: dotnet tool install -g dotnet-coverage
-
-    # - name: 🧭 Install SonarScanner
-    #   run: dotnet tool install -g dotnet-sonarscanner
-
-    # - name: 📊 Begin SonarQube scan
-    #   run: dotnet sonarscanner begin /k:"Z80Emu" /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}" /d:sonar.host.url="https://sonarqube.prouse.org/" /d:sonar.cs.opencover.reportsPaths="**/coverage.cobertura.xml" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
 
     - name: 💉 Install dependencies
       run: dotnet restore
@@ -57,20 +38,15 @@ jobs:
       run: dotnet-coverage collect "dotnet test -c Release --no-build --verbosity normal ./Z80Emu.sln" -f cobertura -o coverage.cobertura.xml
 
     - name: 📈 Upload coverage to codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v5
       with:
         files: ./coverage.cobertura.xml
         fail_ci_if_error: false
         flags: unittests
         verbose: true
 
-    # - name: 🔚 End SonarQube scan
-    #   run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}"
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: 📤 Upload Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: z80emu
         path: Z80Emu/bin/Release/net10.0/*

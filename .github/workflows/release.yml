@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: 📥 Checkout Code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
@@ -22,16 +22,11 @@ jobs:
       run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
     - name: 🔧 Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 10.0.x
-
-    - name: 💾 Cache NuGet packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-        restore-keys: ${{ runner.os }}-nuget-
+        cache: true
+        cache-dependency-path: '**/*.csproj'
 
     - name: 🪟 Build and Package for Windows
       run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -p:CopyOutputSymbolsToPublishDirectory=false
@@ -40,7 +35,7 @@ jobs:
       run: zip -r Z80Emu-Windows.zip Z80Emu/bin/Release/net10.0/win-x64/publish
 
     - name: 📤 Upload Windows Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: z80emu-win
         path: Z80Emu-Windows.zip
@@ -52,7 +47,7 @@ jobs:
       run: zip -r Z80Emu-Linux.zip Z80Emu/bin/Release/net10.0/linux-x64/publish
 
     - name: 📤 Upload Linux Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: z80emu-linux
         path: Z80Emu-Linux.zip
@@ -64,7 +59,7 @@ jobs:
       run: zip -r Z80Emu-macOS.zip Z80Emu/bin/Release/net10.0/osx-x64/publish
 
     - name: 📤 Upload macOS Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: z80emu-macos
         path: Z80Emu-macOS.zip
@@ -83,7 +78,7 @@ jobs:
         echo "EOF" >> $GITHUB_OUTPUT
 
     - name: ⚡ Create GitHub Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         files: |
           Z80Emu-Windows.zip
