@@ -83,6 +83,7 @@ The generator writes to its own working directory (e.g. `ParseOpcodes/bin/...`);
 ## Testing patterns
 
 - NUnit with `Shouldly` (globally imported in `Z80Emu.Tests/Usings.cs`). Use `.ShouldBe(...)`.
+- `Z80Emu.Tests/ShouldlyByteWordExtensions.cs` adds `ShouldBe` overloads for `byte` and `ushort` — Shouldly only ships native overloads for `int`/`long`/`decimal`/etc., so without the shim a `byte`/`ushort` receiver with an `int` literal expected (e.g. `_reg.A.ShouldBe(0x3A)`) fails overload resolution. Don't delete the file; if you add tests that assert on a new narrow numeric type and hit the same error, extend the shim rather than casting at every call site.
 - `TestHelpers.FlagsShouldBe(s, z, h, pv, n, c)` is the canonical way to assert the flag register after an opcode — use it instead of asserting individual flags so failures show the full mismatch.
 - Opcode tests typically construct a `CPU` directly, write opcode bytes into the `MMU`, call `Tick()`, then assert register/flag state. See `OpcodeTestExtensions.cs` for the shared helpers.
 - A `MockOperatingSytem` (see `EmulatorTests.cs`) implements `IDos` for tests that need to verify the OS-call dispatch path without engaging full CP/M behavior.
