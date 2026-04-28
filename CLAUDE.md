@@ -8,12 +8,11 @@ A Z80 CPU emulator + interactive monitor written in C#. Loads a binary (typicall
 
 ## Solution layout
 
-Four projects in `Z80Emu.sln`, all targeting **.NET 10**. Both GitHub Actions workflows (`.github/workflows/dotnet.yml`, `release.yml`) install the matching `10.0.x` SDK and publish from `bin/Release/net10.0/...`.
+Three projects in `Z80Emu.sln`, all targeting **.NET 10**. Both GitHub Actions workflows (`.github/workflows/dotnet.yml`, `release.yml`) install the matching `10.0.x` SDK and publish from `bin/Release/net10.0/...`.
 
 - **`Z80Emu.Core/`** — pure emulator library. No console / UI dependencies. This is where CPU, memory, opcode dispatch, ports, interrupts, and OS-call abstractions live.
 - **`Z80Emu/`** — console front-end ("Monitor"). Uses Spectre.Console for output and references `Z80Emu.Core`. `Program.cs` constructs `CPM22 → Emulator → Monitor` and dispatches commands.
 - **`Z80Emu.Tests/`** — NUnit + Shouldly tests. Tests live under folders that mirror `Z80Emu.Core` (`Processor/`, `Memory/`, `OS/`, `Utilities/`). Opcode tests are grouped by category (`ArithmeticOpcodeTests.cs`, `BitOpcodeTests.cs`, etc.).
-- **`ParseOpcodes/`** — code generator. Run manually to regenerate the opcode table — see the section below.
 
 ## Common commands
 
@@ -31,9 +30,6 @@ dotnet test --filter "Name=ResetClearsWarmBoot"
 # Run the emulator against a CP/M binary (default load address 0x0100)
 dotnet run --project Z80Emu -- path/to/program.com
 dotnet run --project Z80Emu -- path/to/program.com 0x0100
-
-# Run the opcode-table code generator (writes the two files to its working dir)
-dotnet run --project ParseOpcodes
 ```
 
 A test binary `Z80Emu.Tests/Test.com` (built from `Test.asm`) is copied to test output and used by integration-style tests.
@@ -54,19 +50,10 @@ A test binary `Z80Emu.Tests/Test.com` (built from `Test.asm`) is copied to test 
 `OpcodeHandler` is a `partial class` split across three files:
 
 - `OpcodeHandler.cs` — fetch/peek logic, helpers (`NextByte`, `NextWord`, `AddSubtractByte`, etc.), the `_opcodes` dictionary keyed by `"<first-byte> <mnemonic>"`.
-- `OpcodeHandler.Initialize.cs` — generated. ~1500 `Add(new Opcode(...))` calls registering the table.
-- `OpcodeHandler.Methods.cs` — generated stubs (`= () => { }`) that are then **filled in by hand** with the actual semantics (e.g. `_opcodes["8E ADC A,(HL)"].Execute = () => ADC(_mmu[_reg.HL]);`).
+- `OpcodeHandler.Initialize.cs` — ~1500 `Add(new Opcode(...))` calls registering the table.
+- `OpcodeHandler.Methods.cs` — assigns the `Execute` lambda for each registered opcode (e.g. `_opcodes["8E ADC A,(HL)"].Execute = () => ADC(_mmu[_reg.HL]);`).
 
 `Opcode.Match` linear-scans the dictionary on every fetch — there is no prefix tree / jump table. Acceptable because the table is fixed-size and the project isn't aiming for cycle accuracy. `Opcode.Bytes` contains literal hex strings plus placeholders `"n"` (immediate byte), `"d"` (signed displacement), `"nn"` (immediate word) which get resolved by `SetSubstitutions` for display and consumed by the `Execute` lambda via `NextByte`/`NextWord`.
-
-### `ParseOpcodes` — what it regenerates and what it doesn't
-
-`ParseOpcodes/Program.cs` downloads `https://raw.githubusercontent.com/deeptoaster/opcode-table/master/opcode-table.json`, filters out `undocumented` / `z180` rows, and expands rows with parameterized register/bit fields (`r`, `r1`, `r2`, `b`, `dd`, `p`, plus offsets like `r+$C0`) into concrete opcodes. It then writes:
-
-- `OpcodeHandler.Initialize.cs` — safe to regenerate.
-- `OpcodeHandler.Methods.cs` — written with empty `() => { }` stubs. **Regenerating this file destroys all hand-written opcode implementations.** Only run the generator when adding new opcode rows, and merge carefully (or run, diff, and only copy the new entries).
-
-The generator writes to its own working directory (e.g. `ParseOpcodes/bin/...`); files must be moved to `Z80Emu.Core/Processor/Opcodes/` manually.
 
 ### Memory, ports, OS
 
@@ -90,7 +77,6 @@ The generator writes to its own working directory (e.g. `ParseOpcodes/bin/...`);
 
 ## When adding a new Z80 opcode
 
-1. Confirm the row exists in the upstream JSON table; if not, you'll need a manual `Add(new Opcode(...))` in `OpcodeHandler.Initialize.cs`.
-2. If using the generator: run `ParseOpcodes`, diff the new `Initialize.cs`, copy across only the new lines (don't blow away `Methods.cs`).
-3. Implement the lambda in `OpcodeHandler.Methods.cs` — follow neighbours; arithmetic ops route through `ADC` / `ADD` / `AddSubtractByte`, bit ops have their own helpers, etc.
-4. Add tests under `Z80Emu.Tests/Processor/Opcodes/<Category>OpcodeTests.cs` covering both the result and `FlagsShouldBe(...)`.
+1. Add an `Add(new Opcode(...))` row in `OpcodeHandler.Initialize.cs` next to neighbouring opcodes.
+2. Implement the lambda in `OpcodeHandler.Methods.cs` — follow neighbours; arithmetic ops route through `ADC` / `ADD` / `AddSubtractByte`, bit ops have their own helpers, etc.
+3. Add tests under `Z80Emu.Tests/Processor/Opcodes/<Category>OpcodeTests.cs` covering both the result and `FlagsShouldBe(...)`.
