@@ -1,11 +1,7 @@
-using Z80Emu.Core.Memory;
-
 namespace Z80Emu.Core.Processor;
 
 public class Interupts
 {
-    private readonly MMU _mmu;
-
     public bool IFF1 { get; set; }
     public bool IFF2 { get; set; }
 
@@ -21,11 +17,6 @@ public class Interupts
     public bool IsRequested { get; private set; }
     public byte? RequestData { get; private set; }
     public bool IsNmiRequested { get; private set; }
-
-    public Interupts(MMU mmu)
-    {
-        _mmu = mmu;
-    }
 
     /// <summary>
     /// Latch a maskable interrupt request. The optional data byte is used

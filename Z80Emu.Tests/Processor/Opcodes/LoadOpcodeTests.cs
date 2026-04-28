@@ -17,7 +17,7 @@ public class LoadOpcodeTests
     {
         _reg = new Registers();
         _mmu = new MMU();
-        _int = new Interupts(_mmu);
+        _int = new Interupts();
         _ports = new Ports();
         _opcodeHandler = new OpcodeHandler(_reg, _mmu, _int, _ports);
         _reg.PC = 0x0100;

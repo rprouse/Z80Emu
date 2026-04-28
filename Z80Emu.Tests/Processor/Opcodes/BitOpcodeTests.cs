@@ -18,7 +18,7 @@ public class BitOpcodeTests
         _reg = new Registers();
         _reg.PC = 0x0100;
         _mmu = new MMU();
-        _int = new Interupts(_mmu);
+        _int = new Interupts();
         _ports = new Ports();
         _opcodeHandler = new OpcodeHandler(_reg, _mmu, _int, _ports);
     }

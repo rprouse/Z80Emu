@@ -46,7 +46,7 @@ public class Emulator
     {
         WarmBoot = false;
         Memory = new MMU();
-        Interupts = new Interupts(Memory);
+        Interupts = new Interupts();
         Ports = new Ports();
         Ports.OnPortChanged += (sender, args) => OnPortChanged?.Invoke(sender, args);
         CPU = new CPU(Interupts, Memory, Ports);
@@ -87,7 +87,7 @@ public class Emulator
             Interupts.IFF2 = Interupts.IFF1;
             Interupts.IFF1 = false;
             Interupts.ConsumeNmi();
-            return new Opcode("NMI", new string[0], "0", "Non-maskable interrupt accepted -> 0x0066");
+            return new Opcode("NMI", new string[0], "0", "Non-maskable interrupt accepted → 0x0066");
         }
 
         if (Interupts.IsRequested && Interupts.IFF1)
