@@ -24,7 +24,7 @@ jobs:
     - name: 🔧 Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 10.0.x
 
     - name: 💾 Cache NuGet packages
       uses: actions/cache@v3
@@ -37,7 +37,7 @@ jobs:
       run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -p:CopyOutputSymbolsToPublishDirectory=false
 
     - name: 📦 Package Windows Artifacts
-      run: zip -r Z80Emu-Windows.zip Z80Emu/bin/Release/net8.0/win-x64/publish
+      run: zip -r Z80Emu-Windows.zip Z80Emu/bin/Release/net10.0/win-x64/publish
 
     - name: 📤 Upload Windows Artifacts
       uses: actions/upload-artifact@v4
@@ -49,7 +49,7 @@ jobs:
       run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -p:CopyOutputSymbolsToPublishDirectory=false
 
     - name: 📦 Package Linux Artifacts
-      run: zip -r Z80Emu-Linux.zip Z80Emu/bin/Release/net8.0/linux-x64/publish
+      run: zip -r Z80Emu-Linux.zip Z80Emu/bin/Release/net10.0/linux-x64/publish
 
     - name: 📤 Upload Linux Artifacts
       uses: actions/upload-artifact@v4
@@ -61,7 +61,7 @@ jobs:
       run: dotnet publish -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -p:CopyOutputSymbolsToPublishDirectory=false
 
     - name: 📦 Package macOS Artifacts
-      run: zip -r Z80Emu-macOS.zip Z80Emu/bin/Release/net8.0/osx-x64/publish
+      run: zip -r Z80Emu-macOS.zip Z80Emu/bin/Release/net10.0/osx-x64/publish
 
     - name: 📤 Upload macOS Artifacts
       uses: actions/upload-artifact@v4

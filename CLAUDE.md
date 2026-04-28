@@ -8,7 +8,7 @@ A Z80 CPU emulator + interactive monitor written in C#. Loads a binary (typicall
 
 ## Solution layout
 
-Four projects in `Z80Emu.sln`, all targeting **.NET 10** (the CI workflow at `.github/workflows/dotnet.yml` and the release workflow still pin `dotnet-version: 8.0.x` and reference `bin/Release/net8.0/...` paths — there is a known mismatch between the SDK targeted by the csprojs and the workflow files; verify before editing CI).
+Four projects in `Z80Emu.sln`, all targeting **.NET 10**. Both GitHub Actions workflows (`.github/workflows/dotnet.yml`, `release.yml`) install the matching `10.0.x` SDK and publish from `bin/Release/net10.0/...`.
 
 - **`Z80Emu.Core/`** — pure emulator library. No console / UI dependencies. This is where CPU, memory, opcode dispatch, ports, interrupts, and OS-call abstractions live.
 - **`Z80Emu/`** — console front-end ("Monitor"). Uses Spectre.Console for output and references `Z80Emu.Core`. `Program.cs` constructs `CPM22 → Emulator → Monitor` and dispatches commands.
