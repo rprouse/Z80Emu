@@ -1,4 +1,3 @@
-using Z80Emu.Core.Memory;
 using Z80Emu.Core.Utilities;
 
 namespace Z80Emu.Core.Processor.Opcodes;
