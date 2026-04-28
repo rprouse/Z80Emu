@@ -32,8 +32,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"BIT {bit},B");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.FlagZ.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.FlagZ.ShouldBeFalse();
     }
 
     [Test]
@@ -45,8 +45,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"BIT {bit},C");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.FlagZ.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.FlagZ.ShouldBeFalse();
     }
 
     [Test]
@@ -58,8 +58,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"BIT {bit},D");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.FlagZ.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.FlagZ.ShouldBeFalse();
     }
 
     [Test]
@@ -71,8 +71,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"BIT {bit},E");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.FlagZ.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.FlagZ.ShouldBeFalse();
     }
 
     [Test]
@@ -84,8 +84,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"BIT {bit},H");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.FlagZ.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.FlagZ.ShouldBeFalse();
     }
 
     [Test]
@@ -97,8 +97,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"BIT {bit},L");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.FlagZ.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.FlagZ.ShouldBeFalse();
     }
 
     [Test]
@@ -110,8 +110,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"BIT {bit},A");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.FlagZ.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.FlagZ.ShouldBeFalse();
     }
 
     [Test]
@@ -124,8 +124,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"BIT {bit},(HL)");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.FlagZ.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.FlagZ.ShouldBeFalse();
     }
 
     [Test]
@@ -140,8 +140,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"BIT {bit},(IX+4)");
 
-        _reg.PC.Should().Be(0x0104);
-        _reg.FlagZ.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0104);
+        _reg.FlagZ.ShouldBeFalse();
     }
 
     [Test]
@@ -156,8 +156,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"BIT {bit},(IY+4)");
 
-        _reg.PC.Should().Be(0x0104);
-        _reg.FlagZ.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0104);
+        _reg.FlagZ.ShouldBeFalse();
     }
 
     [Test]
@@ -169,8 +169,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"RES {bit},B");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.B.Should().Be(0x00);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.B.ShouldBe(0x00);
     }
 
     [Test]
@@ -182,8 +182,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"RES {bit},C");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.C.Should().Be(0x00);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.C.ShouldBe(0x00);
     }
 
     [Test]
@@ -195,8 +195,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"RES {bit},D");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.D.Should().Be(0x00);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.D.ShouldBe(0x00);
     }
 
     [Test]
@@ -208,8 +208,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"RES {bit},E");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.E.Should().Be(0x00);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.E.ShouldBe(0x00);
     }
 
     [Test]
@@ -221,8 +221,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"RES {bit},H");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.H.Should().Be(0x00);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.H.ShouldBe(0x00);
     }
 
     [Test]
@@ -234,8 +234,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"RES {bit},L");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.L.Should().Be(0x00);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.L.ShouldBe(0x00);
     }
 
     [Test]
@@ -247,8 +247,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"RES {bit},A");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.A.Should().Be(0x00);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.A.ShouldBe(0x00);
     }
 
     [Test]
@@ -261,8 +261,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"RES {bit},(HL)");
 
-        _reg.PC.Should().Be(0x0102);
-        _mmu[0x0200].Should().Be(0x00);
+        _reg.PC.ShouldBe(0x0102);
+        _mmu[0x0200].ShouldBe(0x00);
     }
 
     [Test]
@@ -277,8 +277,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"RES {bit},(IX+4)");
 
-        _reg.PC.Should().Be(0x0104);
-        _mmu[0x0204].Should().Be(0x00);
+        _reg.PC.ShouldBe(0x0104);
+        _mmu[0x0204].ShouldBe(0x00);
     }
 
     [Test]
@@ -293,8 +293,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"RES {bit},(IY+4)");
 
-        _reg.PC.Should().Be(0x0104);
-        _mmu[0x0204].Should().Be(0x00);
+        _reg.PC.ShouldBe(0x0104);
+        _mmu[0x0204].ShouldBe(0x00);
     }
 
     [Test]
@@ -306,8 +306,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"SET {bit},B");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.B.Should().Be((byte)(0b0000_0001 << bit));
+        _reg.PC.ShouldBe(0x0102);
+        _reg.B.ShouldBe((byte)(0b0000_0001 << bit));
     }
 
     [Test]
@@ -319,8 +319,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"SET {bit},C");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.C.Should().Be((byte)(0b0000_0001 << bit));
+        _reg.PC.ShouldBe(0x0102);
+        _reg.C.ShouldBe((byte)(0b0000_0001 << bit));
     }
 
     [Test]
@@ -332,8 +332,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"SET {bit},D");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.D.Should().Be((byte)(0b0000_0001 << bit));
+        _reg.PC.ShouldBe(0x0102);
+        _reg.D.ShouldBe((byte)(0b0000_0001 << bit));
     }
 
     [Test]
@@ -345,8 +345,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"SET {bit},E");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.E.Should().Be((byte)(0b0000_0001 << bit));
+        _reg.PC.ShouldBe(0x0102);
+        _reg.E.ShouldBe((byte)(0b0000_0001 << bit));
     }
 
     [Test]
@@ -358,8 +358,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"SET {bit},H");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.H.Should().Be((byte)(0b0000_0001 << bit));
+        _reg.PC.ShouldBe(0x0102);
+        _reg.H.ShouldBe((byte)(0b0000_0001 << bit));
     }
 
     [Test]
@@ -371,8 +371,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"SET {bit},L");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.L.Should().Be((byte)(0b0000_0001 << bit));
+        _reg.PC.ShouldBe(0x0102);
+        _reg.L.ShouldBe((byte)(0b0000_0001 << bit));
     }
 
     [Test]
@@ -384,8 +384,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"SET {bit},A");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.A.Should().Be((byte)(0b0000_0001 << bit));
+        _reg.PC.ShouldBe(0x0102);
+        _reg.A.ShouldBe((byte)(0b0000_0001 << bit));
     }
 
     [Test]
@@ -398,8 +398,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"SET {bit},(HL)");
 
-        _reg.PC.Should().Be(0x0102);
-        _mmu[0x0200].Should().Be((byte)(0b0000_0001 << bit));
+        _reg.PC.ShouldBe(0x0102);
+        _mmu[0x0200].ShouldBe((byte)(0b0000_0001 << bit));
     }
 
     [Test]
@@ -414,8 +414,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"SET {bit},(IX+4)");
 
-        _reg.PC.Should().Be(0x0104);
-        _mmu[0x0204].Should().Be((byte)(0b0000_0001 << bit));
+        _reg.PC.ShouldBe(0x0104);
+        _mmu[0x0204].ShouldBe((byte)(0b0000_0001 << bit));
     }
 
     [Test]
@@ -430,8 +430,8 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"SET {bit},(IY+4)");
 
-        _reg.PC.Should().Be(0x0104);
-        _mmu[0x0204].Should().Be((byte)(0b0000_0001 << bit));
+        _reg.PC.ShouldBe(0x0104);
+        _mmu[0x0204].ShouldBe((byte)(0b0000_0001 << bit));
     }
 
     [Test]
@@ -443,10 +443,10 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RLA");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.A.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
-        _reg.FlagZ.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0101);
+        _reg.A.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
+        _reg.FlagZ.ShouldBeFalse();
     }
 
     [Test]
@@ -459,9 +459,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RL A");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.A.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.A.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -474,9 +474,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RL B");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.B.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.B.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -489,9 +489,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RL C");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.C.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.C.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -504,9 +504,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RL D");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.D.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.D.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -519,9 +519,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RL E");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.E.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.E.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -534,9 +534,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RL H");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.H.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.H.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -549,9 +549,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RL L");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.L.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.L.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -565,9 +565,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RL (HL)");
 
-        _reg.PC.Should().Be(0x0102);
-        _mmu[0x0200].Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _mmu[0x0200].ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -583,9 +583,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RL (IX+4)");
 
-        _reg.PC.Should().Be(0x0104);
-        _mmu[0x0204].Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0104);
+        _mmu[0x0204].ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -601,9 +601,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RL (IY+4)");
 
-        _reg.PC.Should().Be(0x0104);
-        _mmu[0x0204].Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0104);
+        _mmu[0x0204].ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -615,10 +615,10 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RRA");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.A.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
-        _reg.FlagZ.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0101);
+        _reg.A.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
+        _reg.FlagZ.ShouldBeFalse();
     }
 
     [Test]
@@ -631,9 +631,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RR A");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.A.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.A.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -646,9 +646,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RR B");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.B.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.B.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -661,9 +661,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RR C");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.C.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.C.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -676,9 +676,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RR D");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.D.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.D.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -691,9 +691,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RR E");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.E.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.E.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -706,9 +706,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RR H");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.H.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.H.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -721,9 +721,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RR L");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.L.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.L.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -737,9 +737,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RR (HL)");
 
-        _reg.PC.Should().Be(0x0102);
-        _mmu[0x0200].Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _mmu[0x0200].ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -755,9 +755,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RR (IX+4)");
 
-        _reg.PC.Should().Be(0x0104);
-        _mmu[0x0204].Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0104);
+        _mmu[0x0204].ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -773,9 +773,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RR (IY+4)");
 
-        _reg.PC.Should().Be(0x0104);
-        _mmu[0x0204].Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0104);
+        _mmu[0x0204].ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -786,10 +786,10 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RLCA");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.A.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
-        _reg.FlagZ.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0101);
+        _reg.A.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
+        _reg.FlagZ.ShouldBeFalse();
     }
 
     [Test]
@@ -801,9 +801,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RLC A");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.A.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.A.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -815,9 +815,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RLC B");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.B.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.B.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -829,9 +829,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RLC C");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.C.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.C.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -843,9 +843,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RLC D");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.D.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.D.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -857,9 +857,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RLC E");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.E.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.E.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -871,9 +871,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RLC H");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.H.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.H.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -885,9 +885,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RLC L");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.L.Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.L.ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -900,9 +900,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RLC (HL)");
 
-        _reg.PC.Should().Be(0x0102);
-        _mmu[0x0200].Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _mmu[0x0200].ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -917,9 +917,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RLC (IX+4)");
 
-        _reg.PC.Should().Be(0x0104);
-        _mmu[0x0204].Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0104);
+        _mmu[0x0204].ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -934,9 +934,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RLC (IY+4)");
 
-        _reg.PC.Should().Be(0x0104);
-        _mmu[0x0204].Should().Be(0b0000_0001);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0104);
+        _mmu[0x0204].ShouldBe(0b0000_0001);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -947,10 +947,10 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RRCA");
 
-        _reg.PC.Should().Be(0x0101);
-        _reg.A.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
-        _reg.FlagZ.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0101);
+        _reg.A.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
+        _reg.FlagZ.ShouldBeFalse();
     }
 
     [Test]
@@ -962,9 +962,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RRC A");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.A.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.A.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -976,9 +976,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RRC B");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.B.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.B.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -990,9 +990,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RRC C");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.C.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.C.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -1004,9 +1004,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RRC D");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.D.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.D.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -1018,9 +1018,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RRC E");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.E.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.E.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -1032,9 +1032,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RRC H");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.H.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.H.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -1046,9 +1046,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RRC L");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.L.Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.L.ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -1061,9 +1061,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RRC (HL)");
 
-        _reg.PC.Should().Be(0x0102);
-        _mmu[0x0200].Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0102);
+        _mmu[0x0200].ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -1078,9 +1078,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RRC (IX+4)");
 
-        _reg.PC.Should().Be(0x0104);
-        _mmu[0x0204].Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0104);
+        _mmu[0x0204].ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     [Test]
@@ -1095,9 +1095,9 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RRC (IY+4)");
 
-        _reg.PC.Should().Be(0x0104);
-        _mmu[0x0204].Should().Be(0b1000_0000);
-        _reg.FlagC.Should().BeTrue();
+        _reg.PC.ShouldBe(0x0104);
+        _mmu[0x0204].ShouldBe(0b1000_0000);
+        _reg.FlagC.ShouldBeTrue();
     }
 
     // The contents of the low-order nibble of (HL) are copied to the
@@ -1116,11 +1116,11 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RRD");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.A.Should().Be(0x72);
-        _mmu[0x0200].Should().Be(0xF1);
-        _reg.FlagZ.Should().BeFalse();
-        _reg.FlagS.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.A.ShouldBe(0x72);
+        _mmu[0x0200].ShouldBe(0xF1);
+        _reg.FlagZ.ShouldBeFalse();
+        _reg.FlagS.ShouldBeFalse();
     }
 
     // The contents of the low-order nibble of (HL) are copied to the
@@ -1139,10 +1139,10 @@ public class BitOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RLD");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.A.Should().Be(0x71);
-        _mmu[0x0200].Should().Be(0x2F);
-        _reg.FlagZ.Should().BeFalse();
-        _reg.FlagS.Should().BeFalse();
+        _reg.PC.ShouldBe(0x0102);
+        _reg.A.ShouldBe(0x71);
+        _mmu[0x0200].ShouldBe(0x2F);
+        _reg.FlagZ.ShouldBeFalse();
+        _reg.FlagS.ShouldBeFalse();
     }
 }

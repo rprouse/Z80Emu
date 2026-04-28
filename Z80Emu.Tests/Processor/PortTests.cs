@@ -21,13 +21,13 @@ public class PortTests
         _ports.OnPortChanged += (sender, args) =>
         {
             eventFired = true;
-            args.Port.Should().Be(port);
-            args.Value.Should().Be(value);
+            args.Port.ShouldBe(port);
+            args.Value.ShouldBe(value);
         };
 
         _ports[port] = value;
 
-        eventFired.Should().BeTrue();
+        eventFired.ShouldBeTrue();
     }
 
     [Test]
@@ -38,6 +38,6 @@ public class PortTests
 
         _ports[port] = value;
 
-        _ports[port].Should().Be(value);
+        _ports[port].ShouldBe(value);
     }
 }

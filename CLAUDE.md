@@ -12,7 +12,7 @@ Four projects in `Z80Emu.sln`, all targeting **.NET 10**. Both GitHub Actions wo
 
 - **`Z80Emu.Core/`** — pure emulator library. No console / UI dependencies. This is where CPU, memory, opcode dispatch, ports, interrupts, and OS-call abstractions live.
 - **`Z80Emu/`** — console front-end ("Monitor"). Uses Spectre.Console for output and references `Z80Emu.Core`. `Program.cs` constructs `CPM22 → Emulator → Monitor` and dispatches commands.
-- **`Z80Emu.Tests/`** — NUnit + FluentAssertions tests. Tests live under folders that mirror `Z80Emu.Core` (`Processor/`, `Memory/`, `OS/`, `Utilities/`). Opcode tests are grouped by category (`ArithmeticOpcodeTests.cs`, `BitOpcodeTests.cs`, etc.).
+- **`Z80Emu.Tests/`** — NUnit + Shouldly tests. Tests live under folders that mirror `Z80Emu.Core` (`Processor/`, `Memory/`, `OS/`, `Utilities/`). Opcode tests are grouped by category (`ArithmeticOpcodeTests.cs`, `BitOpcodeTests.cs`, etc.).
 - **`ParseOpcodes/`** — code generator. Run manually to regenerate the opcode table — see the section below.
 
 ## Common commands
@@ -82,7 +82,7 @@ The generator writes to its own working directory (e.g. `ParseOpcodes/bin/...`);
 
 ## Testing patterns
 
-- NUnit with `FluentAssertions` (globally imported in `Z80Emu.Tests/Usings.cs`). Use `.Should().Be(...)`.
+- NUnit with `Shouldly` (globally imported in `Z80Emu.Tests/Usings.cs`). Use `.ShouldBe(...)`.
 - `TestHelpers.FlagsShouldBe(s, z, h, pv, n, c)` is the canonical way to assert the flag register after an opcode — use it instead of asserting individual flags so failures show the full mismatch.
 - Opcode tests typically construct a `CPU` directly, write opcode bytes into the `MMU`, call `Tick()`, then assert register/flag state. See `OpcodeTestExtensions.cs` for the shared helpers.
 - A `MockOperatingSytem` (see `EmulatorTests.cs`) implements `IDos` for tests that need to verify the OS-call dispatch path without engaging full CP/M behavior.

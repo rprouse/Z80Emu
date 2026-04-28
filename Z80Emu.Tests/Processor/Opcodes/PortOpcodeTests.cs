@@ -52,8 +52,8 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("IN A,(0x01)");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.A.Should().Be(0x69);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.A.ShouldBe(0x69);
     }
 
     [Test]
@@ -67,10 +67,10 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("IND");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.B.Should().Be(0x01);
-        _reg.HL.Should().Be(0x01FF);
-        _mmu[0x0200].Should().Be(0x69);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.B.ShouldBe(0x01);
+        _reg.HL.ShouldBe(0x01FF);
+        _mmu[0x0200].ShouldBe(0x69);
     }
 
     [Test]
@@ -84,10 +84,10 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("INDR");
 
-        _reg.PC.Should().Be(0x0100);
-        _reg.B.Should().Be(0x01);
-        _reg.HL.Should().Be(0x01FF);
-        _mmu[0x0200].Should().Be(0x69);
+        _reg.PC.ShouldBe(0x0100);
+        _reg.B.ShouldBe(0x01);
+        _reg.HL.ShouldBe(0x01FF);
+        _mmu[0x0200].ShouldBe(0x69);
     }
 
     [Test]
@@ -101,10 +101,10 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("INI");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.B.Should().Be(0x01);
-        _reg.HL.Should().Be(0x0201);
-        _mmu[0x0200].Should().Be(0x69);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.B.ShouldBe(0x01);
+        _reg.HL.ShouldBe(0x0201);
+        _mmu[0x0200].ShouldBe(0x69);
     }
 
     [Test]
@@ -118,10 +118,10 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("INIR");
 
-        _reg.PC.Should().Be(0x0100);
-        _reg.B.Should().Be(0x01);
-        _reg.HL.Should().Be(0x0201);
-        _mmu[0x0200].Should().Be(0x69);
+        _reg.PC.ShouldBe(0x0100);
+        _reg.B.ShouldBe(0x01);
+        _reg.HL.ShouldBe(0x0201);
+        _mmu[0x0200].ShouldBe(0x69);
     }
 
     [Test]
@@ -132,8 +132,8 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("IN A,(C)");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.A.Should().Be(0x69);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.A.ShouldBe(0x69);
     }
 
     [Test]
@@ -144,8 +144,8 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("IN B,(C)");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.B.Should().Be(0x69);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.B.ShouldBe(0x69);
     }
 
     [Test]
@@ -156,8 +156,8 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("IN C,(C)");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.C.Should().Be(0x69);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.C.ShouldBe(0x69);
     }
 
     [Test]
@@ -168,8 +168,8 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("IN D,(C)");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.D.Should().Be(0x69);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.D.ShouldBe(0x69);
     }
 
     [Test]
@@ -180,8 +180,8 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("IN E,(C)");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.E.Should().Be(0x69);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.E.ShouldBe(0x69);
     }
 
     [Test]
@@ -192,8 +192,8 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("IN H,(C)");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.H.Should().Be(0x69);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.H.ShouldBe(0x69);
     }
 
     [Test]
@@ -204,8 +204,8 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("IN L,(C)");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.L.Should().Be(0x69);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.L.ShouldBe(0x69);
     }
 
     [TestCase(0x79, 'A', 0xAA)]
@@ -222,11 +222,11 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction($"OUT (C),{reg}");
 
-        _reg.PC.Should().Be(0x0102);
+        _reg.PC.ShouldBe(0x0102);
 
-        _ports[0xCC].Should().Be(expected);
-        _lastPort.Should().Be(0xCC);
-        _lastValue.Should().Be(expected);
+        _ports[0xCC].ShouldBe(expected);
+        _lastPort.ShouldBe(0xCC);
+        _lastValue.ShouldBe(expected);
     }
 
     [Test]
@@ -238,11 +238,11 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("OUT (0x21),A");
 
-        _reg.PC.Should().Be(0x0102);
+        _reg.PC.ShouldBe(0x0102);
 
-        _ports[0x21].Should().Be(0x69);
-        _lastPort.Should().Be(0x21);
-        _lastValue.Should().Be(0x69);
+        _ports[0x21].ShouldBe(0x69);
+        _lastPort.ShouldBe(0x21);
+        _lastValue.ShouldBe(0x69);
     }
 
     [Test]
@@ -258,12 +258,12 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("OUTD");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.B.Should().Be(0x01);
-        _reg.HL.Should().Be(0x01FF);
-        _ports[0xCC].Should().Be(0x51);
-        _lastPort.Should().Be(0xCC);
-        _lastValue.Should().Be(0x51);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.B.ShouldBe(0x01);
+        _reg.HL.ShouldBe(0x01FF);
+        _ports[0xCC].ShouldBe(0x51);
+        _lastPort.ShouldBe(0xCC);
+        _lastValue.ShouldBe(0x51);
     }
 
     [Test]
@@ -279,12 +279,12 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("OTDR");
 
-        _reg.PC.Should().Be(0x0100);
-        _reg.B.Should().Be(0x01);
-        _reg.HL.Should().Be(0x01FF);
-        _ports[0xCC].Should().Be(0x51);
-        _lastPort.Should().Be(0xCC);
-        _lastValue.Should().Be(0x51);
+        _reg.PC.ShouldBe(0x0100);
+        _reg.B.ShouldBe(0x01);
+        _reg.HL.ShouldBe(0x01FF);
+        _ports[0xCC].ShouldBe(0x51);
+        _lastPort.ShouldBe(0xCC);
+        _lastValue.ShouldBe(0x51);
     }
 
     [Test]
@@ -300,12 +300,12 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("OUTI");
 
-        _reg.PC.Should().Be(0x0102);
-        _reg.B.Should().Be(0x01);
-        _reg.HL.Should().Be(0x0201);
-        _ports[0xCC].Should().Be(0x51);
-        _lastPort.Should().Be(0xCC);
-        _lastValue.Should().Be(0x51);
+        _reg.PC.ShouldBe(0x0102);
+        _reg.B.ShouldBe(0x01);
+        _reg.HL.ShouldBe(0x0201);
+        _ports[0xCC].ShouldBe(0x51);
+        _lastPort.ShouldBe(0xCC);
+        _lastValue.ShouldBe(0x51);
     }
 
     [Test]
@@ -321,11 +321,11 @@ public class PortOpcodeTests
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("OTIR");
 
-        _reg.PC.Should().Be(0x0100);
-        _reg.B.Should().Be(0x01);
-        _reg.HL.Should().Be(0x0201);
-        _ports[0xCC].Should().Be(0x51);
-        _lastPort.Should().Be(0xCC);
-        _lastValue.Should().Be(0x51);
+        _reg.PC.ShouldBe(0x0100);
+        _reg.B.ShouldBe(0x01);
+        _reg.HL.ShouldBe(0x0201);
+        _ports[0xCC].ShouldBe(0x51);
+        _lastPort.ShouldBe(0xCC);
+        _lastValue.ShouldBe(0x51);
     }
 }

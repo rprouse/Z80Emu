@@ -17,7 +17,7 @@ public class ByteExtensionTests
     public void TestParseHexByte(string s, byte expected)
     {
         var actual = s.ParseHexByte();
-        actual.Should().Be(expected);
+        actual.ShouldBe(expected);
     }
 
     [TestCase("0x00", 0x00)]
@@ -33,8 +33,8 @@ public class ByteExtensionTests
     public void TestTryParseHexByte_Success(string s, byte expected)
     {
         var result = s.TryParseHexByte(out var actual);
-        result.Should().BeTrue();
-        actual.Should().Be(expected);
+        result.ShouldBeTrue();
+        actual.ShouldBe(expected);
     }
 
     [TestCase("-1")]
@@ -44,6 +44,6 @@ public class ByteExtensionTests
     public void TestTryParseHex_Failure(string s)
     {
         var result = s.TryParseHexByte(out var actual);
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 }

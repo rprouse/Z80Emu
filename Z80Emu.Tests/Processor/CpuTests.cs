@@ -19,12 +19,12 @@ public class CpuTests
     [Test]
     public void RegistersAreInitialisedCorrectly()
     {
-        _cpu.Registers.AF.Should().Be(0x0000);
-        _cpu.Registers.BC.Should().Be(0x0000);
-        _cpu.Registers.DE.Should().Be(0x0000);
-        _cpu.Registers.HL.Should().Be(0x0000);
-        _cpu.Registers.PC.Should().Be(0x0100);
-        _cpu.Registers.SP.Should().Be(0xFFFE);
+        _cpu.Registers.AF.ShouldBe(0x0000);
+        _cpu.Registers.BC.ShouldBe(0x0000);
+        _cpu.Registers.DE.ShouldBe(0x0000);
+        _cpu.Registers.HL.ShouldBe(0x0000);
+        _cpu.Registers.PC.ShouldBe(0x0100);
+        _cpu.Registers.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
@@ -39,13 +39,13 @@ public class CpuTests
 
         Opcode op = _cpu.Tick();
 
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD (0x0104),BC");
+        op.ShouldNotBeNull();
+        op.Mnemonic.ShouldBe("LD (0x0104),BC");
 
-        _cpu.Registers.PC.Should().Be(0x0104);
+        _cpu.Registers.PC.ShouldBe(0x0104);
 
-        _mmu[0x0104].Should().Be(0x0F);
-        _mmu[0x0105].Should().Be(0x2A);
+        _mmu[0x0104].ShouldBe(0x0F);
+        _mmu[0x0105].ShouldBe(0x2A);
     }
 
     [Test]
@@ -60,12 +60,12 @@ public class CpuTests
 
         Opcode op = _cpu.PeekInstruction(0x100);
 
-        op.Should().NotBeNull();
-        op.Mnemonic.Should().Be("LD (0x0104),BC");
+        op.ShouldNotBeNull();
+        op.Mnemonic.ShouldBe("LD (0x0104),BC");
 
-        _cpu.Registers.PC.Should().Be(0x0100);
+        _cpu.Registers.PC.ShouldBe(0x0100);
 
-        _mmu[0x0104].Should().Be(0x00);
+        _mmu[0x0104].ShouldBe(0x00);
     }
 
     [Test]
@@ -77,13 +77,13 @@ public class CpuTests
 
         _cpu.Return();
 
-        _cpu.Registers.PC.Should().Be(0x0302);
-        _cpu.Registers.SP.Should().Be(0xFFFE);
+        _cpu.Registers.PC.ShouldBe(0x0302);
+        _cpu.Registers.SP.ShouldBe(0xFFFE);
     }
 
     [Test]
     public void ToStringReturnsRegisters()
     {
-        _cpu.ToString().Should().Be(_cpu.Registers.ToString());
+        _cpu.ToString().ShouldBe(_cpu.Registers.ToString());
     }
 }
