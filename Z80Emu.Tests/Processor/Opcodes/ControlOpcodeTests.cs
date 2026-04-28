@@ -904,14 +904,17 @@ public class ControlOpcodeTests
     [Test]
     public void RST_0()
     {
-        _mmu[0x0100] = 0xC7;
+        // Place the opcode at 0x1234 so the pushed return address (0x1235)
+        // has distinct MSB (0x12) and LSB (0x35), proving byte-order correctness.
+        _reg.PC = 0x1234;
+        _mmu[0x1234] = 0xC7;
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction("RST 0");
 
         _reg.PC.ShouldBe((word)0x0000);
         _reg.SP.ShouldBe((word)0xFFFC);
-        _mmu[0xFFFC].ShouldBe((byte)0x01);  // PC.Lsb() pushed at lower addr
-        _mmu[0xFFFD].ShouldBe((byte)0x01);  // PC.Msb() pushed at higher addr
+        _mmu[0xFFFC].ShouldBe((byte)0x35);  // LSB of return address 0x1235 pushed at lower addr
+        _mmu[0xFFFD].ShouldBe((byte)0x12);  // MSB of return address 0x1235 pushed at higher addr
     }
 
     [TestCase((byte)0xCF, (word)0x0008, "RST 8")]
@@ -923,13 +926,16 @@ public class ControlOpcodeTests
     [TestCase((byte)0xFF, (word)0x0038, "RST 56")]
     public void RST_NonZero(byte opcode, word vector, string mnemonic)
     {
-        _mmu[0x0100] = opcode;
+        // Place the opcode at 0x1234 so the pushed return address (0x1235)
+        // has distinct MSB (0x12) and LSB (0x35), proving byte-order correctness.
+        _reg.PC = 0x1234;
+        _mmu[0x1234] = opcode;
 
         _opcodeHandler.FetchVerifyAndExecuteInstruction(mnemonic);
 
         _reg.PC.ShouldBe(vector);
         _reg.SP.ShouldBe((word)0xFFFC);
-        _mmu[0xFFFC].ShouldBe((byte)0x01);
-        _mmu[0xFFFD].ShouldBe((byte)0x01);
+        _mmu[0xFFFC].ShouldBe((byte)0x35);  // LSB of return address 0x1235 pushed at lower addr
+        _mmu[0xFFFD].ShouldBe((byte)0x12);  // MSB of return address 0x1235 pushed at higher addr
     }
 }
