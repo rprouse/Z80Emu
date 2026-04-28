@@ -900,4 +900,36 @@ public class ControlOpcodeTests
         _reg.PC.ShouldBe(0x0101);
         _reg.SP.ShouldBe(0xFFFC);
     }
+
+    [Test]
+    public void RST_0()
+    {
+        _mmu[0x0100] = 0xC7;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("RST 0");
+
+        _reg.PC.ShouldBe((word)0x0000);
+        _reg.SP.ShouldBe((word)0xFFFC);
+        _mmu[0xFFFC].ShouldBe((byte)0x01);  // PC.Lsb() pushed at lower addr
+        _mmu[0xFFFD].ShouldBe((byte)0x01);  // PC.Msb() pushed at higher addr
+    }
+
+    [TestCase((byte)0xCF, (word)0x0008, "RST 8")]
+    [TestCase((byte)0xD7, (word)0x0010, "RST 16")]
+    [TestCase((byte)0xDF, (word)0x0018, "RST 24")]
+    [TestCase((byte)0xE7, (word)0x0020, "RST 32")]
+    [TestCase((byte)0xEF, (word)0x0028, "RST 40")]
+    [TestCase((byte)0xF7, (word)0x0030, "RST 48")]
+    [TestCase((byte)0xFF, (word)0x0038, "RST 56")]
+    public void RST_NonZero(byte opcode, word vector, string mnemonic)
+    {
+        _mmu[0x0100] = opcode;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction(mnemonic);
+
+        _reg.PC.ShouldBe(vector);
+        _reg.SP.ShouldBe((word)0xFFFC);
+        _mmu[0xFFFC].ShouldBe((byte)0x01);
+        _mmu[0xFFFD].ShouldBe((byte)0x01);
+    }
 }
