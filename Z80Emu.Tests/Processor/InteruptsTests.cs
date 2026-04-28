@@ -119,4 +119,61 @@ public class InteruptsTests
 
         _emulator.CPU.Registers.PC.ShouldBe((word)0xABCD);
     }
+
+    [Test]
+    public void MaskableInt_NotServiced_When_IFF1_False()
+    {
+        _emulator.Interupts.Mode = InterruptMode.Mode1;
+        _emulator.Interupts.IFF1 = false;
+
+        _emulator.Interupts.RaiseInterrupt();
+        var op = _emulator.Tick();
+
+        op.Mnemonic.ShouldBe("NOP");                          // executed memory, not INT
+        _emulator.Interupts.IsRequested.ShouldBeTrue();       // latch still set
+        _emulator.CPU.Registers.PC.ShouldNotBe((word)0x0038);
+    }
+
+    [Test]
+    public void MaskableInt_OneShot_DoesNotReFire()
+    {
+        _emulator.Interupts.Mode = InterruptMode.Mode1;
+        _emulator.Interupts.IFF1 = true;
+
+        _emulator.Interupts.RaiseInterrupt();
+        _emulator.Tick();   // services the interrupt
+        // Put a NOP at the vector so the next tick has something to fetch.
+        _emulator.Memory[0x0038] = 0x00;
+        var op = _emulator.Tick();
+
+        op.Mnemonic.ShouldBe("NOP");                          // not another INT
+    }
+
+    [Test]
+    public void Nmi_NotGatedBy_IFF1()
+    {
+        _emulator.Interupts.IFF1 = false;
+
+        _emulator.Interupts.RaiseNmi();
+        var op = _emulator.Tick();
+
+        op.Mnemonic.ShouldBe("NMI");
+        _emulator.CPU.Registers.PC.ShouldBe((word)0x0066);
+    }
+
+    [Test]
+    public void Im2_Entry_VectorPointerWrapsAt0xFFFF()
+    {
+        _emulator.Interupts.Mode = InterruptMode.Mode2;
+        _emulator.Interupts.IFF1 = true;
+        _emulator.CPU.Registers.I = 0xFF;
+        // RequestData = 0xFF -> vectorPtr = 0xFFFF; high-byte read should wrap to 0x0000.
+        _emulator.Memory[0xFFFF] = 0x78;
+        _emulator.Memory[0x0000] = 0x56;
+
+        _emulator.Interupts.RaiseInterrupt(0xFF);
+        _emulator.Tick();
+
+        _emulator.CPU.Registers.PC.ShouldBe((word)0x5678);
+    }
 }
