@@ -58,6 +58,10 @@ public class Emulator
 
     public Opcode Tick()
     {
+        Opcode? interruptOpcode = ServiceInterrupts();
+        if (interruptOpcode != null)
+            return interruptOpcode;
+
         Opcode opcode = CPU.Tick();
 
         // If we are using an OS, check if we need to make a system call
@@ -65,6 +69,27 @@ public class Emulator
             OperatingSystem.Execute(this);
 
         return opcode;
+    }
+
+    private Opcode? ServiceInterrupts()
+    {
+        if (Interupts.EiPending)
+        {
+            // EI shadow expires — skip sampling for this tick.
+            Interupts.EiPending = false;
+            return null;
+        }
+
+        if (Interupts.IsNmiRequested)
+        {
+            CPU.AcceptInterrupt(0x0066);
+            Interupts.IFF2 = Interupts.IFF1;
+            Interupts.IFF1 = false;
+            Interupts.ConsumeNmi();
+            return new Opcode("NMI", new string[0], "0", "Non-maskable interrupt accepted -> 0x0066");
+        }
+
+        return null;
     }
 
     public Opcode PeekInstruction() => CPU.PeekInstruction(CPU.Registers.PC);
