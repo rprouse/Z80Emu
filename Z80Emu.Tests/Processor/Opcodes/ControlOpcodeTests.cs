@@ -938,4 +938,38 @@ public class ControlOpcodeTests
         _mmu[0xFFFC].ShouldBe((byte)0x35);  // LSB of return address 0x1235 pushed at lower addr
         _mmu[0xFFFD].ShouldBe((byte)0x12);  // MSB of return address 0x1235 pushed at higher addr
     }
+
+    [Test]
+    public void IM_0()
+    {
+        _int.Mode = InterruptMode.Mode2;  // start in a non-default mode to prove it changes
+        _mmu[0x0100] = 0xED;
+        _mmu[0x0101] = 0x46;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("IM 0");
+
+        _int.Mode.ShouldBe(InterruptMode.Mode0);
+    }
+
+    [Test]
+    public void IM_1()
+    {
+        _mmu[0x0100] = 0xED;
+        _mmu[0x0101] = 0x56;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("IM 1");
+
+        _int.Mode.ShouldBe(InterruptMode.Mode1);
+    }
+
+    [Test]
+    public void IM_2()
+    {
+        _mmu[0x0100] = 0xED;
+        _mmu[0x0101] = 0x5E;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("IM 2");
+
+        _int.Mode.ShouldBe(InterruptMode.Mode2);
+    }
 }

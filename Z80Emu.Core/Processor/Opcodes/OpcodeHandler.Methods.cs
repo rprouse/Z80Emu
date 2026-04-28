@@ -319,9 +319,9 @@ public partial class OpcodeHandler
             _reg.HL_ = temp;
         };
         _opcodes["76 HALT"].Execute = () => _reg.PC--;
-        _opcodes["ED IM 0"].Execute = () => { };
-        _opcodes["ED IM 1"].Execute = () => { };
-        _opcodes["ED IM 2"].Execute = () => { };
+        _opcodes["ED IM 0"].Execute = () => _int.Mode = InterruptMode.Mode0;
+        _opcodes["ED IM 1"].Execute = () => _int.Mode = InterruptMode.Mode1;
+        _opcodes["ED IM 2"].Execute = () => _int.Mode = InterruptMode.Mode2;
         _opcodes["DB IN A,(n)"].Execute = () => _reg.A = _ports[NextByte()];
         _opcodes["ED IN B,(C)"].Execute = () => _reg.B = _ports[_reg.C];
         _opcodes["ED IN C,(C)"].Execute = () => _reg.C = _ports[_reg.C];
