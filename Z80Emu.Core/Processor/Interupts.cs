@@ -28,20 +28,6 @@ public class Interupts
     }
 
     /// <summary>
-    /// Disable Interrupts
-    /// </summary>
-    public void Disable()
-    {
-    }
-
-    /// <summary>
-    /// Enable Interrupts
-    /// </summary>
-    public void Enable()
-    {
-    }
-
-    /// <summary>
     /// Latch a maskable interrupt request. The optional data byte is used
     /// as the IM 2 vector low byte; ignored in IM 0 / IM 1.
     /// </summary>

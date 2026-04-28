@@ -258,7 +258,12 @@ public partial class OpcodeHandler
         _opcodes["25 DEC H"].Execute = () => _reg.H = DEC(_reg.H);
         _opcodes["2D DEC L"].Execute = () => _reg.L = DEC(_reg.L);
         _opcodes["3D DEC A"].Execute = () => _reg.A = DEC(_reg.A);
-        _opcodes["F3 DI"].Execute = () => _int.Disable();
+        _opcodes["F3 DI"].Execute = () =>
+        {
+            _int.IFF1 = false;
+            _int.IFF2 = false;
+            _int.EiPending = false;
+        };
         _opcodes["10 DJNZ d"].Execute = () =>
         {
             _operand = NextByte();
@@ -266,7 +271,12 @@ public partial class OpcodeHandler
             if (_reg.B == 0) return;
             _reg.PC = (word)(_reg.PC + (sbyte)_operand);
         };
-        _opcodes["FB EI"].Execute = () => _int.Enable();
+        _opcodes["FB EI"].Execute = () =>
+        {
+            _int.IFF1 = true;
+            _int.IFF2 = true;
+            _int.EiPending = true;
+        };
         _opcodes["E3 EX (SP),HL"].Execute = () =>
         {
             _address = _reg.SP;

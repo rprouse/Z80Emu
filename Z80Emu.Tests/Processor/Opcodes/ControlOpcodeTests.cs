@@ -972,4 +972,50 @@ public class ControlOpcodeTests
 
         _int.Mode.ShouldBe(InterruptMode.Mode2);
     }
+
+    [Test]
+    public void EI()
+    {
+        _int.IFF1 = false;
+        _int.IFF2 = false;
+        _int.EiPending = false;
+        _mmu[0x0100] = 0xFB;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("EI");
+
+        _int.IFF1.ShouldBeTrue();
+        _int.IFF2.ShouldBeTrue();
+        _int.EiPending.ShouldBeTrue();
+    }
+
+    [Test]
+    public void DI()
+    {
+        _int.IFF1 = true;
+        _int.IFF2 = true;
+        _int.EiPending = true;
+        _mmu[0x0100] = 0xF3;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("DI");
+
+        _int.IFF1.ShouldBeFalse();
+        _int.IFF2.ShouldBeFalse();
+        _int.EiPending.ShouldBeFalse();
+    }
+
+    [Test]
+    public void LD_A_I_FlagPV_ReflectsIFF2_AfterEI()
+    {
+        // EI; LD A,I — FlagPV should be 1 because IFF2 is now true
+        _mmu[0x0100] = 0xFB;        // EI
+        _mmu[0x0101] = 0xED;        // LD A,I
+        _mmu[0x0102] = 0x57;
+        _reg.I = 0x42;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("EI");
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD A,I");
+
+        _reg.A.ShouldBe((byte)0x42);
+        _reg.FlagPV.ShouldBeTrue();
+    }
 }
