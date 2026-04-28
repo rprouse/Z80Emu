@@ -22,6 +22,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Z80Emu", "Z80Emu\Z80Emu.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParseOpcodes", "ParseOpcodes\ParseOpcodes.csproj", "{F5F792B6-9654-4BB5-BB08-1C103A08FA86}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".claude", ".claude", "{608DFD7C-44D4-47B5-B01A-D8F22F81E3BC}"
+	ProjectSection(SolutionItems) = preProject
+		.claude\settings.json = .claude\settings.json
+		.claude\settings.local.json = .claude\settings.local.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
