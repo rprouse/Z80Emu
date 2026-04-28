@@ -34,6 +34,14 @@ dotnet run --project Z80Emu -- path/to/program.com 0x0100
 
 A test binary `Z80Emu.Tests/Test.com` (built from `Test.asm`) is copied to test output and used by integration-style tests.
 
+## Local environment
+
+When working on Windows. **Always run `git push` via the PowerShell tool, not the Bash tool.** The same applies to any other interactive git command that needs the platform's credential helper. Other git commands (status, add, commit, log, diff) are fine through Bash.
+
+## Application versioning
+
+Whenever making changes to the application, increase the version number in `Z80Emu.csproj` (e.g. `0.1.0` → `0.2.0`) to keep track of iterations and ensure the latest test assembly is built. Use semantic versioning principles: increment the patch version for bug fixes, the minor version for new features, and the major version for breaking changes.
+
 ## Architecture
 
 ### Core execution flow
