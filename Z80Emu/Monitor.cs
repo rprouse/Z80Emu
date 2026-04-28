@@ -3,7 +3,6 @@ using Z80Emu.Core.Processor.Opcodes;
 namespace Z80Emu;
 
 using System;
-using System.Globalization;
 using System.Reflection;
 using Z80Emu.Core.Processor;
 
