@@ -17,7 +17,7 @@ public class ControlOpcodeTests
     {
         _reg = new Registers();
         _mmu = new MMU();
-        _int = new Interupts(_mmu);
+        _int = new Interupts();
         _ports = new Ports();
         _opcodeHandler = new OpcodeHandler(_reg, _mmu, _int, _ports);
         _reg.PC = 0x0100;
@@ -899,5 +899,123 @@ public class ControlOpcodeTests
 
         _reg.PC.ShouldBe(0x0101);
         _reg.SP.ShouldBe(0xFFFC);
+    }
+
+    [Test]
+    public void RST_0()
+    {
+        // Place the opcode at 0x1234 so the pushed return address (0x1235)
+        // has distinct MSB (0x12) and LSB (0x35), proving byte-order correctness.
+        _reg.PC = 0x1234;
+        _mmu[0x1234] = 0xC7;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("RST 0");
+
+        _reg.PC.ShouldBe((word)0x0000);
+        _reg.SP.ShouldBe((word)0xFFFC);
+        _mmu[0xFFFC].ShouldBe((byte)0x35);  // LSB of return address 0x1235 pushed at lower addr
+        _mmu[0xFFFD].ShouldBe((byte)0x12);  // MSB of return address 0x1235 pushed at higher addr
+    }
+
+    [TestCase((byte)0xCF, (word)0x0008, "RST 8")]
+    [TestCase((byte)0xD7, (word)0x0010, "RST 16")]
+    [TestCase((byte)0xDF, (word)0x0018, "RST 24")]
+    [TestCase((byte)0xE7, (word)0x0020, "RST 32")]
+    [TestCase((byte)0xEF, (word)0x0028, "RST 40")]
+    [TestCase((byte)0xF7, (word)0x0030, "RST 48")]
+    [TestCase((byte)0xFF, (word)0x0038, "RST 56")]
+    public void RST_NonZero(byte opcode, word vector, string mnemonic)
+    {
+        // Place the opcode at 0x1234 so the pushed return address (0x1235)
+        // has distinct MSB (0x12) and LSB (0x35), proving byte-order correctness.
+        _reg.PC = 0x1234;
+        _mmu[0x1234] = opcode;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction(mnemonic);
+
+        _reg.PC.ShouldBe(vector);
+        _reg.SP.ShouldBe((word)0xFFFC);
+        _mmu[0xFFFC].ShouldBe((byte)0x35);  // LSB of return address 0x1235 pushed at lower addr
+        _mmu[0xFFFD].ShouldBe((byte)0x12);  // MSB of return address 0x1235 pushed at higher addr
+    }
+
+    [Test]
+    public void IM_0()
+    {
+        _int.Mode = InterruptMode.Mode2;  // start in a non-default mode to prove it changes
+        _mmu[0x0100] = 0xED;
+        _mmu[0x0101] = 0x46;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("IM 0");
+
+        _int.Mode.ShouldBe(InterruptMode.Mode0);
+    }
+
+    [Test]
+    public void IM_1()
+    {
+        _mmu[0x0100] = 0xED;
+        _mmu[0x0101] = 0x56;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("IM 1");
+
+        _int.Mode.ShouldBe(InterruptMode.Mode1);
+    }
+
+    [Test]
+    public void IM_2()
+    {
+        _mmu[0x0100] = 0xED;
+        _mmu[0x0101] = 0x5E;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("IM 2");
+
+        _int.Mode.ShouldBe(InterruptMode.Mode2);
+    }
+
+    [Test]
+    public void EI()
+    {
+        _int.IFF1 = false;
+        _int.IFF2 = false;
+        _int.EiPending = false;
+        _mmu[0x0100] = 0xFB;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("EI");
+
+        _int.IFF1.ShouldBeTrue();
+        _int.IFF2.ShouldBeTrue();
+        _int.EiPending.ShouldBeTrue();
+    }
+
+    [Test]
+    public void DI()
+    {
+        _int.IFF1 = true;
+        _int.IFF2 = true;
+        _int.EiPending = true;
+        _mmu[0x0100] = 0xF3;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("DI");
+
+        _int.IFF1.ShouldBeFalse();
+        _int.IFF2.ShouldBeFalse();
+        _int.EiPending.ShouldBeFalse();
+    }
+
+    [Test]
+    public void LD_A_I_FlagPV_ReflectsIFF2_AfterEI()
+    {
+        // EI; LD A,I — FlagPV should be 1 because IFF2 is now true
+        _mmu[0x0100] = 0xFB;        // EI
+        _mmu[0x0101] = 0xED;        // LD A,I
+        _mmu[0x0102] = 0x57;
+        _reg.I = 0x42;
+
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("EI");
+        _opcodeHandler.FetchVerifyAndExecuteInstruction("LD A,I");
+
+        _reg.A.ShouldBe((byte)0x42);
+        _reg.FlagPV.ShouldBeTrue();
     }
 }

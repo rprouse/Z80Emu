@@ -506,13 +506,13 @@ public partial class OpcodeHandler
         _reg.FlagN = false;
     }
 
-    Action RST(word address) =>
-        () =>
-        {
-            _mmu[--_reg.SP] = _reg.PC.Msb();
-            _mmu[--_reg.SP] = _reg.PC.Lsb();
-            _reg.PC = address;
-        };
+    // This is public so interrupt entry can push PC and jump to a vector.
+    public void RST(word address)
+    {
+        _mmu[--_reg.SP] = _reg.PC.Msb();
+        _mmu[--_reg.SP] = _reg.PC.Lsb();
+        _reg.PC = address;
+    }
 
     void SBC(byte value)
     {

@@ -1,8 +1,9 @@
 # Z80Emu
 
-A Z80 emulator/monitor program written in C#. Opcodes are generated automatically
-using the [JSON Opcode Table](https://github.com/deeptoaster/opcode-table/blob/master/opcode-table.json)
-from [Z80 Opcode Table](https://clrhome.org/table/).
+A Z80 emulator/monitor program written in C#. The opcode table was originally
+seeded from the [JSON Opcode Table](https://github.com/deeptoaster/opcode-table/blob/master/opcode-table.json)
+([Z80 Opcode Table](https://clrhome.org/table/)) and is now hand-maintained in
+`Z80Emu.Core/Processor/Opcodes/`.
 
 ![CI/CD Build](https://github.com/rprouse/z80emu/actions/workflows/dotnet.yml/badge.svg)
 
@@ -34,6 +35,9 @@ registers are displayed after every step or run.
 | `d [<addr>]` | `d 100` | Disassemble the program starting at the given address. If no address is given, will start disassembly at the program counter. If entered again, it will continue after the last disassembled address. |
 | `p <port>` | `p 0x42` | View the value in the given port. The port must be a hex number. |
 | `p <port> <byte>` | `p 0x42 0x0a` | Set the given byte into the given port. The port and byte must be a hex number. |
+| `int` | `int` | Latch a maskable interrupt request (uses current `IM` mode and `I` register) |
+| `int <byte>` | `int 04` | Latch a maskable interrupt with a bus byte. Used as the IM 2 vector low byte; ignored in IM 0 / IM 1 |
+| `nmi` | `nmi` | Latch a non-maskable interrupt request |
 | `b` | `b` | Manage breakpoints |
 | `q`     | `q`     | Quit the emulator |
 

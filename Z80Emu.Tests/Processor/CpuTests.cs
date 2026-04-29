@@ -13,7 +13,7 @@ public class CpuTests
     public void Setup()
     {
         _mmu = new MMU();
-        _cpu = new CPU(new Interupts(_mmu), _mmu, new Ports());
+        _cpu = new CPU(new Interupts(), _mmu, new Ports());
     }
 
     [Test]

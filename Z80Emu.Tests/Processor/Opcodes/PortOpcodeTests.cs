@@ -32,7 +32,7 @@ public class PortOpcodeTests
             PC = 0x0100,
         };
         _mmu = new MMU();
-        _int = new Interupts(_mmu);
+        _int = new Interupts();
         _ports = new Ports();
         _ports[0xCC] = 0x69;
         _ports.OnPortChanged += (sender, args) =>
