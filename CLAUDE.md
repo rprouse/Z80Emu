@@ -42,6 +42,15 @@ When working on Windows. **Always run `git push` via the PowerShell tool, not th
 
 Whenever making changes to the application, increase the version number in `Z80Emu.csproj` (e.g. `0.1.0` → `0.2.0`) to keep track of iterations and ensure the latest test assembly is built. Use semantic versioning principles: increment the patch version for bug fixes, the minor version for new features, and the major version for breaking changes.
 
+## Release workflow
+
+`.github/workflows/release.yml` builds self-contained, trimmed, single-file binaries for Windows / Linux / macOS on every `v*` tag push. Two non-obvious requirements:
+
+- **`dotnet publish` must target `Z80Emu/Z80Emu.csproj` explicitly**, not the solution. At solution scope the SDK tries to publish `Z80Emu.Core` (fails NETSDK1099 — single-file requires an executable) and `Z80Emu.Tests` (fails NETSDK1098 — needs `UseAppHost=true`). Only the console front-end is a publishable executable.
+- **The release-notes step uses `git log --pretty=tformat:`, not `format:`.** `format:` omits the trailing newline on the last commit, which causes the closing `EOF` heredoc delimiter to glue onto the final commit-message line and breaks `$GITHUB_OUTPUT` parsing ("Matching delimiter not found 'EOF'"). `tformat:` terminates each line including the last.
+
+Tags must use the `vX.Y.Z` form to match the `push: tags: v*` trigger. The `<Version>` in `Z80Emu.csproj` should match the tag (binaries embed it via SDK-generated assembly metadata).
+
 ## Architecture
 
 ### Core execution flow
@@ -58,7 +67,7 @@ Whenever making changes to the application, increase the version number in `Z80E
 `OpcodeHandler` is a `partial class` split across three files:
 
 - `OpcodeHandler.cs` — fetch/peek logic, helpers (`NextByte`, `NextWord`, `AddSubtractByte`, etc.), the `_opcodes` dictionary keyed by `"<first-byte> <mnemonic>"`.
-- `OpcodeHandler.Initialize.cs` — ~1500 `Add(new Opcode(...))` calls registering the table.
+- `OpcodeHandler.Initialize.cs` — ~700 `Add(new Opcode(...))` calls registering the table (one per documented Z80 opcode across the unprefixed, `CB`, `DD`, `ED`, `FD`, `DDCB`, and `FDCB` planes).
 - `OpcodeHandler.Methods.cs` — assigns the `Execute` lambda for each registered opcode (e.g. `_opcodes["8E ADC A,(HL)"].Execute = () => ADC(_mmu[_reg.HL]);`).
 
 `Opcode.Match` linear-scans the dictionary on every fetch — there is no prefix tree / jump table. Acceptable because the table is fixed-size and the project isn't aiming for cycle accuracy. `Opcode.Bytes` contains literal hex strings plus placeholders `"n"` (immediate byte), `"d"` (signed displacement), `"nn"` (immediate word) which get resolved by `SetSubstitutions` for display and consumed by the `Execute` lambda via `NextByte`/`NextWord`.
