@@ -74,7 +74,7 @@ jobs:
       run: |
         echo "NOTES<<EOF" >> $GITHUB_OUTPUT
         echo "## Changes in version ${{ steps.get_version.outputs.VERSION }}" >> $GITHUB_OUTPUT
-        git log --pretty=format:"- %s" $(git describe --tags --abbrev=0 HEAD^)..HEAD >> $GITHUB_OUTPUT
+        git log --pretty=tformat:"- %s" $(git describe --tags --abbrev=0 HEAD^)..HEAD >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
 
     - name: ⚡ Create GitHub Release
