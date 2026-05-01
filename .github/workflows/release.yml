@@ -29,7 +29,7 @@ jobs:
         cache-dependency-path: '**/*.csproj'
 
     - name: 🪟 Build and Package for Windows
-      run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -p:CopyOutputSymbolsToPublishDirectory=false
+      run: dotnet publish Z80Emu/Z80Emu.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -p:CopyOutputSymbolsToPublishDirectory=false
 
     - name: 📦 Package Windows Artifacts
       run: zip -r Z80Emu-Windows.zip Z80Emu/bin/Release/net10.0/win-x64/publish
@@ -41,7 +41,7 @@ jobs:
         path: Z80Emu-Windows.zip
 
     - name: 🐧 Build and Package for Linux
-      run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -p:CopyOutputSymbolsToPublishDirectory=false
+      run: dotnet publish Z80Emu/Z80Emu.csproj -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -p:CopyOutputSymbolsToPublishDirectory=false
 
     - name: 📦 Package Linux Artifacts
       run: zip -r Z80Emu-Linux.zip Z80Emu/bin/Release/net10.0/linux-x64/publish
@@ -53,7 +53,7 @@ jobs:
         path: Z80Emu-Linux.zip
 
     - name: 🍎 Build and Package for macOS
-      run: dotnet publish -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -p:CopyOutputSymbolsToPublishDirectory=false
+      run: dotnet publish Z80Emu/Z80Emu.csproj -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -p:CopyOutputSymbolsToPublishDirectory=false
 
     - name: 📦 Package macOS Artifacts
       run: zip -r Z80Emu-macOS.zip Z80Emu/bin/Release/net10.0/osx-x64/publish
